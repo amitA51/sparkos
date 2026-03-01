@@ -1,0 +1,5 @@
+[
+  { "id": "space-p1", "name": "כללי", "icon": "clipboard", "color": "#A78BFA", "type": "personal", "order": 0 },
+  { "id": "space-p2", "name": "למידה", "icon": "brain", "color": "#38BDF8", "type": "personal", "order": 1 },
+  { "id": "space-f1", "name": "חדשות כלליות", "icon": "feed", "color": "#60A5FA", "type": "feed", "order": 0 }
+]

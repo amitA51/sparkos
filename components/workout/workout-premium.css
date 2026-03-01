@@ -1,0 +1,964 @@
+/* ===========================================
+   WORKOUT PREMIUM DESIGN SYSTEM - CLEAN EDITION
+   Optimized for Android Web/WebView Performance
+   Balanced: Premium look without visual overload
+   =========================================== */
+
+/* ===== DESIGN TOKENS ===== */
+:root {
+    /* Background Layers - Subtle hierarchy */
+    --cosmos-bg-primary: #0a0a0a;
+    --cosmos-bg-secondary: #121212;
+    --cosmos-bg-tertiary: #1a1a1a;
+    
+    /* Card System - Clean surfaces */
+    --cosmos-card-bg: #1c1c1e;
+    --cosmos-card-elevated: #2c2c2e;
+    --cosmos-card-border: rgba(255, 255, 255, 0.08);
+    
+    /* Primary Accent - Fitness Green */
+    --cosmos-accent-primary: #a3e635;
+    --cosmos-accent-secondary: #22d3ee;
+    --cosmos-accent-tertiary: #f97316;
+    
+    /* Semantic Colors */
+    --cosmos-success: #34c759;
+    --cosmos-warning: #ff9f0a;
+    --cosmos-error: #ff453a;
+    --cosmos-info: #0a84ff;
+    
+    /* Text Hierarchy */
+    --cosmos-text-primary: #ffffff;
+    --cosmos-text-secondary: #8e8e93;
+    --cosmos-text-muted: #636366;
+    --cosmos-text-ghost: rgba(255, 255, 255, 0.25);
+    
+    /* Typography */
+    --cosmos-font: Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --cosmos-font-mono: "Roboto Mono", "SF Mono", monospace;
+    
+    /* Shadows - Subtle depth */
+    --cosmos-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --cosmos-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --cosmos-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+    
+    /* Timing - Fast and responsive */
+    --cosmos-timing-instant: 0ms;
+    --cosmos-timing-fast: 100ms;
+    --cosmos-timing-normal: 150ms;
+    
+    /* Easing */
+    --cosmos-ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+    --cosmos-ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+    
+    /* Android Touch Target */
+    --cosmos-touch-target: 48px;
+    
+    /* Spacing Scale */
+    --cosmos-space-xs: 4px;
+    --cosmos-space-sm: 8px;
+    --cosmos-space-md: 16px;
+    --cosmos-space-lg: 24px;
+    --cosmos-space-xl: 32px;
+}
+
+/* ===== BASE STYLES ===== */
+.workout-premium-container {
+    font-family: var(--cosmos-font);
+    background-color: var(--cosmos-bg-primary);
+    color: var(--cosmos-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== CARD STYLES - Clean & Simple ===== */
+.premium-card {
+    background: var(--cosmos-card-bg);
+    border: 1px solid var(--cosmos-card-border);
+    border-radius: 16px;
+    transition: background-color var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.premium-card-elevated {
+    background: var(--cosmos-card-elevated);
+    border: 1px solid var(--cosmos-card-border);
+    border-radius: 16px;
+    box-shadow: var(--cosmos-shadow-sm);
+}
+
+/* Hover only on devices that support it */
+@media (hover: hover) {
+    .premium-card:hover {
+        background: var(--cosmos-card-elevated);
+    }
+}
+
+/* ===== MINIMAL ANIMATIONS ===== */
+
+/* Value change flash - subtle */
+@keyframes value-flash {
+    0% { background-color: rgba(163, 230, 53, 0.2); }
+    100% { background-color: transparent; }
+}
+
+.workout-value-updated {
+    animation: value-flash 0.3s var(--cosmos-ease-out);
+}
+
+/* Simple fade in */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.workout-fade-in {
+    animation: fade-in 0.2s var(--cosmos-ease-out);
+}
+
+/* Slide up */
+@keyframes slide-up {
+    from { 
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.workout-slide-up {
+    animation: slide-up 0.25s var(--cosmos-ease-out);
+}
+
+/* Success checkmark draw */
+@keyframes checkmark-draw {
+    from { stroke-dashoffset: 24; }
+    to { stroke-dashoffset: 0; }
+}
+
+.workout-checkmark {
+    stroke-dasharray: 24;
+    animation: checkmark-draw 0.3s var(--cosmos-ease-out) forwards;
+}
+
+/* Progress bar fill */
+@keyframes progress-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+.workout-progress-animate {
+    transform-origin: left;
+    animation: progress-fill 0.4s var(--cosmos-ease-out) forwards;
+}
+
+/* Loading skeleton */
+@keyframes skeleton-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.workout-skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.04) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+/* ===== TOUCH TARGETS - Android HIG ===== */
+.touch-target {
+    min-height: var(--cosmos-touch-target);
+    min-width: var(--cosmos-touch-target);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.touch-target-lg {
+    min-height: 56px;
+    min-width: 56px;
+}
+
+/* ===== BUTTON STYLES ===== */
+.btn-primary {
+    background: var(--cosmos-accent-primary);
+    color: #000;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 14px 24px;
+    transition: transform var(--cosmos-timing-fast) var(--cosmos-ease-out), filter var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--cosmos-text-primary);
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 14px 24px;
+    transition: background-color var(--cosmos-timing-fast) var(--cosmos-ease-out), transform var(--cosmos-timing-fast) var(--cosmos-ease-out), filter var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.btn-secondary:active {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(0.98);
+    filter: brightness(0.9);
+}
+
+/* ===== INPUT STYLES ===== */
+.input-field {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--cosmos-text-primary);
+    font-size: 16px;
+    transition: border-color var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--cosmos-accent-primary);
+}
+
+/* ===== TOGGLE SWITCH ===== */
+.toggle-track {
+    width: 52px;
+    height: 32px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background-color var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.toggle-track.active {
+    background: var(--cosmos-success);
+}
+
+.toggle-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    background: white;
+    box-shadow: var(--cosmos-shadow-sm);
+    transition: transform var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.toggle-track.active .toggle-thumb {
+    transform: translateX(20px);
+}
+
+/* ===== PROGRESS ELEMENTS ===== */
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--cosmos-accent-primary);
+    border-radius: 2px;
+    transition: width var(--cosmos-timing-normal) var(--cosmos-ease-out);
+}
+
+.progress-ring-bg {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+.progress-ring-fill {
+    stroke: var(--cosmos-accent-primary);
+    transition: stroke-dashoffset var(--cosmos-timing-normal) var(--cosmos-ease-out);
+}
+
+/* ===== BADGE STYLES ===== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: rgba(52, 199, 89, 0.15);
+    color: var(--cosmos-success);
+}
+
+.badge-warning {
+    background: rgba(255, 159, 10, 0.15);
+    color: var(--cosmos-warning);
+}
+
+.badge-error {
+    background: rgba(255, 69, 58, 0.15);
+    color: var(--cosmos-error);
+}
+
+.badge-gold {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+}
+
+/* ===== OVERLAY STYLES ===== */
+.overlay-backdrop {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.overlay-sheet {
+    background: var(--cosmos-bg-secondary);
+    border-radius: 24px 24px 0 0;
+}
+
+.overlay-handle {
+    width: 48px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 12px auto;
+}
+
+/* ===== SAFE AREA SUPPORT ===== */
+.safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* ===== SCROLLABLE AREAS ===== */
+.scrollable {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* ===== TOUCH OPTIMIZATIONS ===== */
+.touch-none {
+    touch-action: none;
+}
+
+.touch-pan-x {
+    touch-action: pan-x;
+}
+
+.touch-pan-y {
+    touch-action: pan-y;
+}
+
+.no-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ===== NUMBER DISPLAY ===== */
+.number-display {
+    font-feature-settings: "tnum" 1;
+    letter-spacing: -0.02em;
+}
+
+.number-large {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.number-hero {
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* ===== INTENSITY ZONES ===== */
+.zone-warmup { color: #30d158; }
+.zone-fatburn { color: #ffd60a; }
+.zone-cardio { color: #ff9f0a; }
+.zone-peak { color: #ff453a; }
+.zone-max { color: #bf5af2; }
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .workout-countdown-pulse,
+    .workout-rest-breathe,
+    .workout-skeleton {
+        animation: none !important;
+    }
+}
+
+/* ===== MOBILE BREAKPOINTS ===== */
+@media (max-width: 380px) {
+    :root {
+        --cosmos-touch-target: 44px;
+    }
+    
+    .number-hero {
+        font-size: 56px;
+    }
+    
+    .number-large {
+        font-size: 40px;
+    }
+}
+
+@media (min-width: 640px) {
+    :root {
+        --cosmos-touch-target: 48px;
+    }
+    
+    .premium-card {
+        border-radius: 20px;
+    }
+}
+
+/* ===== DARK/OLED MODE ===== */
+.oled-mode {
+    --cosmos-bg-primary: #000000;
+    --cosmos-bg-secondary: #000000;
+    --cosmos-bg-tertiary: #0a0a0a;
+    --cosmos-card-bg: #0a0a0a;
+    --cosmos-card-elevated: #1a1a1a;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-balance {
+    text-wrap: balance;
+}
+
+.truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gradient-mask-b {
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+/* Focus visible for accessibility */
+.focus-ring:focus-visible {
+    outline: 2px solid var(--cosmos-accent-primary);
+    outline-offset: 2px;
+}
+
+/* ===== LIVE ACTIVITY STYLE (Compact Header) ===== */
+.live-activity-pill {
+    background: rgba(28, 28, 30, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    padding: 8px 16px;
+}
+
+/* ===== SWIPE COMPLETE STYLES ===== */
+.swipe-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+}
+
+.swipe-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--cosmos-success);
+    opacity: 0;
+    transition: opacity var(--cosmos-timing-fast) var(--cosmos-ease-out);
+}
+
+.swipe-thumb {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 48px;
+    height: 48px;
+    border-radius: 100px;
+    background: var(--cosmos-accent-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--cosmos-shadow-sm);
+}
+
+/* ===== REST TIMER STYLES ===== */
+.rest-timer-ring {
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.rest-timer-bg {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+.rest-timer-progress {
+    stroke: var(--cosmos-accent-tertiary);
+    transition: stroke-dashoffset 0.5s linear;
+}
+
+.rest-timer-glow {
+    filter: drop-shadow(0 0 8px var(--cosmos-accent-tertiary));
+}
+
+/* ===== ACCESSIBILITY - User Settings ===== */
+
+/* Reduced motion - applied via JS when user enables setting */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+.reduce-motion .workout-skeleton,
+.reduce-motion .workout-pulse-glow {
+    animation: none !important;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+    :root {
+        --cosmos-text-primary: #ffffff;
+        --cosmos-text-secondary: #e0e0e0;
+        --cosmos-text-muted: #b0b0b0;
+        --cosmos-text-ghost: rgba(255, 255, 255, 0.5);
+        --cosmos-card-border: rgba(255, 255, 255, 0.25);
+        --cosmos-accent-primary: #c4ff00;
+    }
+
+    .premium-card,
+    .premium-card-elevated {
+        border-width: 2px;
+    }
+
+    .badge,
+    .btn-primary,
+    .btn-secondary {
+        font-weight: 700;
+    }
+}
+
+/* Large text - scaled via --font-scale CSS variable */
+html {
+    font-size: calc(16px * var(--font-scale, 1));
+}
+
+/* Ensure large text doesn't break layouts */
+.large-text .number-hero {
+    font-size: calc(72px * var(--font-scale, 1));
+}
+
+.large-text .number-large {
+    font-size: calc(48px * var(--font-scale, 1));
+}
+
+/* ===== COMPACT MODE ===== */
+.compact-mode .premium-card {
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.compact-mode .workout-set-card {
+    padding: 8px 12px;
+}
+
+.compact-mode .number-large {
+    font-size: 40px;
+}
+
+.compact-mode .number-hero {
+    font-size: 56px;
+}
+
+.compact-mode .touch-target {
+    min-height: 40px;
+}
+
+/* ===== LAYOUT SHIFT PREVENTION ===== */
+
+/* Fixed heights for elements that change content */
+.workout-set-input-card {
+    min-height: 220px; /* Prevent layout shift when value changes */
+}
+
+.workout-exercise-header {
+    min-height: 72px; /* Fixed height for exercise name area */
+}
+
+.workout-set-badge {
+    min-width: 60px; /* Fixed width for set counter badge */
+    text-align: center;
+}
+
+.workout-timer-display {
+    min-width: 80px; /* Fixed width for timer display */
+    text-align: center;
+}
+
+.workout-volume-preview {
+    min-height: 40px; /* Fixed height for volume preview */
+}
+
+.workout-swipe-complete {
+    min-height: 76px; /* Fixed height for swipe to complete */
+}
+
+.workout-rest-overlay-mini {
+    min-height: 80px; /* Fixed height for mini rest timer */
+}
+
+.workout-action-buttons {
+    min-height: 56px; /* Fixed height for action button row */
+}
+
+/* Tabular numbers for all numeric displays */
+.workout-numeric,
+.workout-timer-display,
+.workout-set-badge,
+.workout-volume-preview,
+.number-display,
+.number-large,
+.number-hero {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+/* Prevent content jump during loading */
+.workout-loading-placeholder {
+    background: var(--cosmos-card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.workout-loading-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
+    );
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+/* Skeleton for input cards */
+.workout-skeleton-input-card {
+    height: 220px;
+    width: 100%;
+}
+
+/* Skeleton for swipe complete */
+.workout-skeleton-swipe {
+    height: 76px;
+    width: 100%;
+}
+
+/* ===== GYM MODE ===== */
+
+.gym-mode {
+    /* Larger touch targets */
+    --cosmos-touch-target: 56px;
+}
+
+.gym-mode .premium-card {
+    border-radius: 20px;
+}
+
+.gym-mode .number-hero {
+    font-size: 96px;
+}
+
+.gym-mode .number-large {
+    font-size: 64px;
+}
+
+.gym-mode .btn-primary,
+.gym-mode .btn-secondary {
+    padding: 18px 32px;
+    font-size: 18px;
+}
+
+.gym-mode .workout-set-input-card {
+    min-height: 280px;
+}
+
+.gym-mode .touch-target {
+    min-height: 56px;
+    min-width: 56px;
+}
+
+/* Gym mode auto-lock overlay */
+.gym-mode-lock-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+}
+
+.gym-mode-lock-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.gym-mode-lock-text {
+    color: var(--cosmos-text-secondary);
+    font-size: 14px;
+    text-align: center;
+}
+
+.gym-mode-unlock-area {
+    margin-top: 32px;
+    padding: 16px 32px;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    color: var(--cosmos-text-muted);
+    font-size: 12px;
+}
+
+/* ===== MINI TIMER HEADER ===== */
+
+.mini-timer-header {
+    position: fixed;
+    top: env(safe-area-inset-top, 0);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: rgba(28, 28, 30, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-timer-header .timer-value {
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--cosmos-accent-tertiary);
+}
+
+.mini-timer-header .timer-label {
+    font-size: 11px;
+    color: var(--cosmos-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ===== SUPERSET STYLES ===== */
+
+.superset-indicator {
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background: linear-gradient(
+        180deg,
+        var(--cosmos-accent-secondary),
+        var(--cosmos-accent-primary)
+    );
+    border-radius: 2px;
+}
+
+.superset-badge {
+    background: linear-gradient(
+        135deg,
+        var(--cosmos-accent-secondary),
+        var(--cosmos-accent-primary)
+    );
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ===== PR CELEBRATION STYLES ===== */
+
+.pr-celebration-subtle {
+    border: 2px solid var(--cosmos-warning);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.pr-celebration-full {
+    border: 2px solid var(--cosmos-warning);
+    position: relative;
+    isolation: isolate;
+}
+
+.pr-celebration-full::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+    opacity: 0.5;
+    animation: pr-glow 1s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes pr-glow {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* ===== PROGRESSIVE OVERLOAD INDICATOR ===== */
+
+.progressive-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.progressive-indicator.up {
+    background: rgba(52, 199, 89, 0.15);
+    color: var(--cosmos-success);
+}
+
+.progressive-indicator.down {
+    background: rgba(255, 69, 58, 0.15);
+    color: var(--cosmos-error);
+}
+
+.progressive-indicator.same {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--cosmos-text-muted);
+}
+
+/* ===== SMART REST INDICATOR ===== */
+
+.smart-rest-badge {
+    background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.smart-rest-badge.short {
+    background: linear-gradient(135deg, #22c55e, #10b981);
+}
+
+.smart-rest-badge.medium {
+    background: linear-gradient(135deg, #f59e0b, #eab308);
+}
+
+.smart-rest-badge.long {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* ===== PREMIUM APPLE-STYLE UTILITIES ===== */
+
+/* Heavy Glass - for backgrounds, modals, sheets */
+.spark-glass-heavy {
+    background: rgba(18, 18, 20, 0.65);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .spark-glass-heavy {
+        background: rgba(18, 18, 20, 0.95);
+    }
+}
+
+/* Light Glass - for cards, badges, small elements */
+.spark-glass-light {
+    background: rgba(30, 30, 32, 0.45);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .spark-glass-light {
+        background: rgba(30, 30, 32, 0.9);
+    }
+}
+
+/* Ambient Background - Subtle glowing gradients */
+.workout-bg-ambient {
+    background: radial-gradient(circle at top right, rgba(163, 230, 53, 0.05), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(34, 211, 238, 0.05), transparent 40%);
+}
+
+.workout-bg-ambient-intense {
+    background: radial-gradient(circle at top center, rgba(163, 230, 53, 0.1), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.08), transparent 40%);
+}
+
+/* Apple-style Action Button Shadow */
+.shadow-apple-action {
+    box-shadow: 0 4px 14px 0 rgba(0,0,0,0.39);
+}
+
+/* Clean border for glass elements */
+.border-glass {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}

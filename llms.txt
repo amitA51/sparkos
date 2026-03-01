@@ -1,0 +1,52 @@
+# Spark Personal OS
+
+> AI-powered personal productivity and life management system with Hebrew UI support.
+
+## Core Files
+
+- [App.tsx](./App.tsx): Root component with providers
+- [components/app/AppCore.tsx](./components/app/AppCore.tsx): Main app orchestrator  
+- [components/app/AppRouter.tsx](./components/app/AppRouter.tsx): Screen routing with lazy loading
+- [types.ts](./types.ts): TypeScript type definitions
+- [constants.ts](./constants.ts): App constants and configuration
+
+## Screens (13 lazy-loaded)
+
+- HomeScreen: Dashboard with tasks, habits, widgets
+- FeedScreen: RSS feed reader with AI summaries
+- LibraryScreen: Notes, projects, books, learning items
+- AddScreen: Quick capture with AI categorization
+- SettingsScreen: App configuration
+- AssistantScreen: AI chat interface
+- CalendarScreen: Google Calendar integration
+- PasswordManagerScreen: Encrypted vault
+- SearchScreen: Global search
+- InvestmentsScreen: Portfolio tracker
+
+## Key Concepts
+
+- **PersonalItem**: Universal item type (task, habit, note, goal, etc.)
+- **FeedItem**: RSS/Atom feed entries with AI summaries
+- **Space**: Organizational groups for items
+- **Workout**: Exercise tracking with sets, reps, PRs
+- **Settings**: User preferences (theme, language, features)
+
+## Tech Stack
+
+- React 18 + TypeScript
+- Vite 6 + Tailwind CSS 4
+- Framer Motion animations
+- Firebase (Auth, Firestore, Storage)
+- Google Gemini AI
+- PWA with offline support
+
+## API Integrations
+
+- Google Gemini: Summarization, categorization, chat
+- Firebase Auth: Google OAuth
+- Google Calendar API: Calendar sync
+- RSS Parser: Feed aggregation
+
+## RTL Support
+
+Full Hebrew UI with RTL layout (dir="rtl" on html element).

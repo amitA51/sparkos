@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7B61FF" />
+      <stop offset="100%" stop-color="#FF006E" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="200" height="200" fill="#0A0A0F" rx="40" />
+
+  <g transform="translate(40,40) scale(0.6)">
+    <!-- Top Curve -->
+    <path
+      d="M10 50 C 10 20, 90 20, 90 50 C 90 80, 10 80, 10 110 C 10 140, 90 140, 90 110"
+      fill="none"
+      stroke="url(#grad2)"
+      stroke-width="25"
+      stroke-linecap="round"
+    />
+     <!-- Accent Dot -->
+    <circle cx="90" cy="50" r="15" fill="#FF006E" />
+  </g>
+  <!-- Pulse Lines -->
+  <path
+    d="M120 40 L180 40 M130 60 L170 60 M140 80 L160 80"
+    stroke="rgba(255,255,255,0.4)"
+    stroke-width="8"
+    stroke-linecap="round"
+  />
+</svg>

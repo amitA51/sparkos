@@ -1,0 +1,15 @@
+@import './atoms/_colors.css';
+@import './physics/_obsidian-air.css';
+@import './physics/_neon-protocol.css';
+@import './physics/_deep-ocean.css';
+@import './physics/_solar-flare.css';
+@import './physics/_minimal-white.css';
+
+/* Default Theme Fallback */
+:root {
+    /* Maps to Obsidian by default */
+    --bg-app: var(--color-obsidian-void);
+    --surface-glass: var(--color-obsidian-glass);
+    --glass-blur: 25px;
+    --radius-primary: 24px;
+}

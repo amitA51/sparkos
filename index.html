@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Spark - מערכת ההפעלה האישית שלך. ניהול משימות, הרגלים, אימונים, פידים ועוד במקום אחד. מונע AI, מצב חשוך, עברית." />
+  <meta name="keywords" content="productivity, task manager, habit tracker, workout, Hebrew, PWA, AI, personal OS" />
+  <meta name="author" content="Spark OS" />
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Spark - Personal Operating System" />
+  <meta property="og:description" content="מערכת ההפעלה האישית שלך. ניהול משימות, הרגלים ואימונים במקום אחד." />
+  <meta property="og:image" content="/images/spark512.png" />
+  <meta property="og:locale" content="he_IL" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spark - Personal OS" />
+  <meta name="twitter:description" content="מערכת ההפעלה האישית שלך עם AI" />
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon-180.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-180.png">
+  <meta name="application-name" content="Spark">
+  <meta name="apple-mobile-web-app-title" content="Spark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: light)">
+  <!-- Apple Splash Screens -->
+  <link rel="apple-touch-startup-image" href="/images/splash-iphone.png">
+
+  <!-- Security: Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://*.firebaseio.com https://*.googleapis.com;
+    style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com;
+    font-src 'self' https://api.fontshare.com https://fonts.gstatic.com;
+    img-src 'self' data: blob: https: http:;
+    connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://generativelanguage.googleapis.com;
+    frame-src 'self' https://accounts.google.com https://*.firebaseapp.com;
+    worker-src 'self' blob:;
+  ">
+
+  <title>Spark - Personal OS</title>
+
+  <!-- Performance: Preconnect to critical origins -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="preconnect" href="https://apis.google.com">
+  <link rel="preconnect" href="https://accounts.google.com">
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+
+  <!-- Font Preloading for LCP improvement -->
+  <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=satoshi@700&display=swap" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@700&display=swap">
+  </noscript>
+
+  <link
+    href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,300,400&f[]=clash-display@200,400,700,500,600,300&f[]=general-sans@200,500,300,600,400,700&display=swap"
+    rel="stylesheet">
+  <script async defer src="https://apis.google.com/js/api.js"></script>
+  <script async defer src="https://accounts.google.com/gsi/client"></script>
+
+
+</head>
+
+<body>
+  <!-- Accessibility: Skip to main content link -->
+  <a href="#root"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:right-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[var(--cosmos-accent-primary)] focus:text-black focus:rounded-lg focus:font-bold">
+    דלג לתוכן הראשי
+  </a>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

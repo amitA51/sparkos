@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A26" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+    <linearGradient id="prism" x1="0%" y1="50%" x2="100%" y2="50%">
+       <stop offset="0%" stop-color="#00F0FF" />
+       <stop offset="50%" stop-color="#FFFFFF" />
+       <stop offset="100%" stop-color="#FF006E" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Squircle -->
+  <path
+    d="M40 0 H160 C182.091 0 200 17.9086 200 40 V160 C200 182.091 182.091 200 160 200 H40 C17.9086 200 0 182.091 0 160 V40 C0 17.9086 17.9086 0 40 0Z"
+    fill="url(#grad4)"
+  />
+  
+  <!-- Triangle Prism -->
+  <path
+    d="M100 40 L160 150 H40 Z"
+    stroke="url(#prism)"
+    stroke-width="8"
+    fill="none"
+    stroke-linejoin="round"
+  />
+   <!-- Inner Glow -->
+   <circle cx="100" cy="110" r="30" fill="rgba(255,255,255,0.2)" filter="blur(15px)" />
+</svg>

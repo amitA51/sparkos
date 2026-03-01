@@ -1,0 +1,39 @@
+[data-theme="light"] {
+  /* Atmosphere — Minimal Studio White */
+  --bg-app: #f5f7fb;
+  --bg-mesh:
+    radial-gradient(ellipse at 10% 0%, rgba(148, 163, 184, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 0%, rgba(59, 130, 246, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at 50% 100%, rgba(37, 99, 235, 0.12) 0%, transparent 45%);
+  --bg-image: var(--bg-mesh);
+
+  /* Glass Physics — Soft elevated cards on white */
+  --surface-glass: rgba(255, 255, 255, 0.96);
+  --glass-blur: 22px;
+  --glass-saturate: 160%;
+  --glass-border: rgba(15, 23, 42, 0.06);
+  --glass-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+
+  /* Geometry */
+  --radius-primary: 24px;
+
+  /* Semantic colors tuned for light UI */
+  --bg-primary: #f5f7fb;
+  --bg-secondary: #e5e9f2;
+  --bg-card: rgba(255, 255, 255, 0.98);
+  --color-surface-hover: rgba(15, 23, 42, 0.04);
+
+  --text-primary: #020617;   /* near-black for good readability */
+  --text-secondary: #1f2937;
+  --text-muted: #64748b;
+
+  --border-primary: rgba(15, 23, 42, 0.12);
+
+  /* Accent RGB for dynamic glow effects (tailored for blue accent) */
+  --dynamic-accent-rgb: 37, 99, 235;
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --btn-primary-text: #0f172a;
+}
+

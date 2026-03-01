@@ -1,0 +1,38 @@
+[
+  {
+    "id": "template-1",
+    "name": "סקירה שבועית",
+    "type": "journal",
+    "content": {
+      "title": "סקירה שבועית - {DATE}",
+      "content": "## ✅ השבוע הצלחתי\n\n- \n\n## 챌린지 השבוע\n\n- \n\n## 🎯 פוקוס לשבוע הבא\n\n- "
+    }
+  },
+  {
+    "id": "template-2",
+    "name": "אימון רגליים",
+    "type": "workout",
+    "content": {
+      "title": "אימון רגליים",
+      "exercises": [
+        {
+          "id": "t-ex1",
+          "name": "סקוואט",
+          "sets": [
+            { "reps": 8, "weight": 0 },
+            { "reps": 8, "weight": 0 },
+            { "reps": 8, "weight": 0 }
+          ]
+        },
+        {
+          "id": "t-ex2",
+          "name": "דדליפט רומני",
+          "sets": [
+            { "reps": 10, "weight": 0 },
+            { "reps": 10, "weight": 0 }
+          ]
+        }
+      ]
+    }
+  }
+]

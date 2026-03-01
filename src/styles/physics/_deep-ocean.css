@@ -1,0 +1,26 @@
+[data-theme="ocean"] {
+  /* Atmosphere — Deep aqua ambient light */
+  --bg-app: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  --bg-mesh:
+    radial-gradient(ellipse at 30% 0%, rgba(14, 165, 233, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 10%, rgba(56, 189, 248, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.06) 0%, transparent 40%);
+  --bg-image: var(--bg-mesh);
+
+  /* Glass Physics (Fluid) — Enhanced depth */
+  --surface-glass: rgba(15, 23, 42, 0.70);
+  --glass-blur: 20px;
+  --glass-saturate: 140%;
+  --glass-border: rgba(56, 189, 248, 0.18);
+  --glass-inner-glow: inset 0 1px 0 0 rgba(56, 189, 248, 0.08);
+
+  /* Geometry */
+  --radius-primary: 16px; /* Standard Curve */
+
+  /* Accent RGB */
+  --dynamic-accent-rgb: 14, 165, 233;
+
+  /* Buttons */
+  --btn-primary-bg: linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
+  --btn-primary-text: #F0F9FF;
+}

@@ -1,0 +1,250 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * INVESTMENTS SCREEN - PREMIUM DESIGN TOKENS
+ * Apple-Style $100M Interface Design System
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+:root {
+  /* ================================================================
+     INVESTMENT COLOR PALETTE
+     ================================================================ */
+  
+  /* Premium Surface Colors */
+  --inv-surface-base: rgba(15, 15, 20, 0.95);
+  --inv-surface-card: rgba(28, 28, 35, 0.85);
+  --inv-surface-elevated: rgba(38, 38, 48, 0.9);
+  --inv-surface-overlay: rgba(255, 255, 255, 0.03);
+  
+  /* Border Colors */
+  --inv-border-subtle: rgba(255, 255, 255, 0.06);
+  --inv-border-default: rgba(255, 255, 255, 0.1);
+  --inv-border-strong: rgba(255, 255, 255, 0.15);
+  
+  /* Semantic Colors - Apple Stock App Inspired */
+  --inv-positive: #34C759;
+  --inv-positive-bg: rgba(52, 199, 89, 0.12);
+  --inv-positive-glow: rgba(52, 199, 89, 0.4);
+  
+  --inv-negative: #FF3B30;
+  --inv-negative-bg: rgba(255, 59, 48, 0.12);
+  --inv-negative-glow: rgba(255, 59, 48, 0.4);
+  
+  --inv-neutral: rgba(255, 255, 255, 0.6);
+  
+  /* Accent Colors */
+  --inv-accent-primary: #007AFF;
+  --inv-accent-secondary: #5856D6;
+  --inv-accent-gold: #FFD60A;
+  
+  /* ================================================================
+     PREMIUM GRADIENTS
+     ================================================================ */
+  
+  /* Hero Section Gradient */
+  --inv-hero-gradient: linear-gradient(
+    180deg,
+    rgba(0, 122, 255, 0.08) 0%,
+    rgba(88, 86, 214, 0.05) 50%,
+    transparent 100%
+  );
+  
+  /* Card Gradient */
+  --inv-card-gradient: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  
+  /* Ticker Tape Gradient */
+  --inv-ticker-gradient: linear-gradient(
+    90deg,
+    var(--inv-surface-base) 0%,
+    transparent 5%,
+    transparent 95%,
+    var(--inv-surface-base) 100%
+  );
+  
+  /* Hot Asset Gradient */
+  --inv-hot-gradient: linear-gradient(
+    135deg,
+    rgba(255, 149, 0, 0.2) 0%,
+    rgba(255, 59, 48, 0.15) 100%
+  );
+  
+  /* ================================================================
+     SHADOWS - Apple-Style Depth
+     ================================================================ */
+  
+  --inv-shadow-card: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  --inv-shadow-card-hover: 
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  
+  --inv-shadow-elevated: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 24px 48px rgba(0, 0, 0, 0.3);
+  
+  --inv-shadow-glow-positive: 
+    0 0 20px var(--inv-positive-glow),
+    0 0 40px rgba(52, 199, 89, 0.2);
+  
+  --inv-shadow-glow-negative: 
+    0 0 20px var(--inv-negative-glow),
+    0 0 40px rgba(255, 59, 48, 0.2);
+  
+  /* ================================================================
+     TYPOGRAPHY - SF Pro Inspired
+     ================================================================ */
+  
+  --inv-font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  --inv-font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  --inv-font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* ================================================================
+     MOTION - iOS Spring Physics
+     ================================================================ */
+  
+  --inv-ease-spring: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --inv-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --inv-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  --inv-duration-fast: 150ms;
+  --inv-duration-normal: 250ms;
+  --inv-duration-slow: 400ms;
+  
+  /* ================================================================
+     BLUR & GLASS
+     ================================================================ */
+  
+  --inv-blur-card: 24px;
+  --inv-blur-modal: 40px;
+  --inv-blur-light: 12px;
+}
+
+/* ================================================================
+   PREMIUM INVESTMENT ANIMATIONS
+   ================================================================ */
+
+/* Shimmer Loading Effect */
+@keyframes inv-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Price Pulse Animation */
+@keyframes inv-price-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Chart Draw Animation */
+@keyframes inv-chart-draw {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Card Enter Animation */
+@keyframes inv-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Ticker Scroll Animation */
+@keyframes inv-ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Glow Pulse for Hot Assets */
+@keyframes inv-hot-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 149, 0, 0.5), 0 0 40px rgba(255, 59, 48, 0.3);
+  }
+}
+
+/* Value Change Flash */
+@keyframes inv-flash-positive {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: var(--inv-positive-bg);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes inv-flash-negative {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: var(--inv-negative-bg);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* ================================================================
+   ANIMATION UTILITY CLASSES
+   ================================================================ */
+
+.inv-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: inv-shimmer 1.5s ease-in-out infinite;
+}
+
+.inv-card-animate {
+  animation: inv-card-enter 0.5s var(--inv-ease-spring) forwards;
+}
+
+.inv-hot-glow {
+  animation: inv-hot-glow 2s ease-in-out infinite;
+}
+
+.inv-flash-positive {
+  animation: inv-flash-positive 0.6s ease-out;
+}
+
+.inv-flash-negative {
+  animation: inv-flash-negative 0.6s ease-out;
+}

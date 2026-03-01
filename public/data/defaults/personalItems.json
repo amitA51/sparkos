@@ -1,0 +1,70 @@
+[
+  {
+    "id": "p6",
+    "type": "task",
+    "title": "להכין מצגת לפגישת צוות",
+    "content": "להכין מצגת קצרה עם עדכונים מהשבוע האחרון",
+    "isCompleted": false,
+    "priority": "high",
+    "dueDate": null,
+    "spaceId": "space-p1"
+  },
+  {
+    "id": "p5",
+    "type": "task",
+    "title": "לענות למייל של הלקוח",
+    "content": "",
+    "isCompleted": true,
+    "priority": "medium"
+  },
+  {
+    "id": "p9",
+    "type": "task",
+    "title": "להתקשר לרואה חשבון",
+    "content": "",
+    "isCompleted": false,
+    "priority": "low",
+    "spaceId": "space-p1"
+  },
+  {
+    "id": "p7",
+    "type": "habit",
+    "title": "מדיטציה 10 דקות",
+    "content": "להשתמש באפליקציית Headspace",
+    "streak": 12,
+    "frequency": "daily",
+    "completionHistory": []
+  },
+  {
+    "id": "p8",
+    "type": "habit",
+    "title": "קריאה לפני השינה",
+    "content": "לפחות 15 דקות כל יום",
+    "streak": 4,
+    "frequency": "daily",
+    "completionHistory": []
+  },
+  {
+    "id": "p3",
+    "type": "note",
+    "title": "רשימת קניות",
+    "content": "[x] חלב\n[x] ביצים\n[ ] לחם\n[ ] אבוקדו",
+    "spaceId": "space-p1"
+  },
+  {
+    "id": "p2",
+    "type": "learning",
+    "title": "React Server Components",
+    "content": "הבנתי את ההבדל העיקרי בין קומפוננטות שרת לקליינט.",
+    "metadata": {
+      "status": "learning",
+      "source": "https://react.dev/blog",
+      "key_takeaways": [
+        "RSCs render ahead of time, on the server.",
+        "They can directly access server-side resources.",
+        "They produce zero client-side JavaScript bundle size."
+      ]
+    },
+    "spaceId": "space-p2"
+  }
+]

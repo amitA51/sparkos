@@ -1,0 +1,25 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="100%" stop-color="#7B61FF" />
+    </linearGradient>
+  </defs>
+  <!-- Background for visibility in light mode explorers -->
+  <rect width="200" height="200" fill="#0A0A0F" rx="40" />
+  
+  <!-- Outer Hexagon -->
+  <path
+    d="M100 20 L170 60 V140 L100 180 L30 140 V60 Z"
+    fill="none"
+    stroke="url(#grad1)"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Inner Spark -->
+  <path
+    d="M100 45 L115 85 L155 90 L125 115 L135 155 L100 130 L65 155 L75 115 L45 90 L85 85 Z"
+    fill="url(#grad1)"
+  />
+</svg>

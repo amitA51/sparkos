@@ -1,0 +1,192 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ============================================================================
+    // SECURITY FIX: Default deny all access
+    // ============================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // ============================================================================
+    // Helper Functions
+    // ============================================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Rate limiting: prevent more than 1 write per second per document
+    function hasRecentWrite() {
+      return !('lastWrite' in resource.data) || 
+             request.time > resource.data.lastWrite + duration.value(1, 's');
+    }
+    
+    // Validate data size (prevent DoS)
+    function isValidSize() {
+      return request.resource.size() < 1000000; // 1MB limit
+    }
+    
+    // ============================================================================
+    // User Data - Only owner can access
+    // ============================================================================
+    
+    match /users/{userId} {
+      // User document
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && isValidSize();
+      
+      // Personal Items (tasks, notes, sparks, etc.)
+      match /personalItems/{itemId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Workout Sessions
+      match /workoutSessions/{sessionId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Workout Templates
+      match /workoutTemplates/{templateId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Body Weight Entries
+      match /bodyWeight/{entryId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Spaces (projects/areas)
+      match /spaces/{spaceId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Tags
+      match /tags/{tagId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Quotes
+      match /quotes/{quoteId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Feed Items
+      match /feedItems/{itemId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Templates
+      match /templates/{templateId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Watchlist (investments)
+      match /watchlist/{itemId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Personal Exercises
+      match /personalExercises/{exerciseId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // RSS Feeds
+      match /rssFeeds/{feedId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Custom Mentors
+      match /customMentors/{mentorId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // FCM Tokens (push notifications)
+      match /fcm_tokens/{tokenId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // Data subcollection (settings, comfort zone, etc.)
+      match /data/{docId} {
+        allow read: if isOwner(userId);
+        allow write: if isOwner(userId) && isValidSize();
+      }
+      
+      // Event Log
+      match /eventLog/{eventId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+      }
+      
+      // Notebooks and Subcollections
+      match /notebooks/{notebookId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidSize();
+        allow update, delete: if isOwner(userId);
+        
+        // Sections within notebooks
+        match /sections/{sectionId} {
+          allow read: if isOwner(userId);
+          allow create: if isOwner(userId) && isValidSize();
+          allow update, delete: if isOwner(userId);
+          
+          // Pages within sections
+          match /pages/{pageId} {
+            allow read: if isOwner(userId);
+            allow create: if isOwner(userId) && isValidSize();
+            allow update, delete: if isOwner(userId);
+          }
+        }
+      }
+    }
+    
+    // ============================================================================
+    // Rate Limits - Only Cloud Functions can write
+    // ============================================================================
+    
+    match /rate_limits/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if false; // Only Cloud Functions
+    }
+    
+    // ============================================================================
+    // Audit Logs - Only Cloud Functions can write
+    // ============================================================================
+    
+    match /audit_logs/{logId} {
+      allow read: if false; // Only admins (implement custom claims if needed)
+      allow write: if false; // Only Cloud Functions
+    }
+  }
+}

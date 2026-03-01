@@ -1,0 +1,98 @@
+[
+  {
+    "id": "rss-globes-1",
+    "name": "גלובס - שוק ההון",
+    "url": "https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=585",
+    "category": "economics"
+  },
+  {
+    "id": "rss-globes-2",
+    "name": "גלובס - נדל\"ן",
+    "url": "https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=607",
+    "category": "economics"
+  },
+  {
+    "id": "rss-globes-3",
+    "name": "גלובס - פיננסים",
+    "url": "https://www.globes.co.il/webservice/rss/rssfeeder.asmx/FeederNode?iID=821",
+    "category": "economics"
+  },
+  {
+    "id": "rss-maariv-biz",
+    "name": "מעריב - עסקים",
+    "url": "https://www.maariv.co.il/rss/rssfeedsasakim",
+    "category": "economics"
+  },
+  {
+    "id": "rss-maariv-local",
+    "name": "מעריב - כלכלה בארץ",
+    "url": "https://www.maariv.co.il/rss/rssfeedskalkalabaarez",
+    "category": "economics"
+  },
+  {
+    "id": "rss-maariv-global",
+    "name": "מעריב - עסקים בעולם",
+    "url": "https://www.maariv.co.il/rss/rssfeedsasakimbaolam",
+    "category": "economics"
+  },
+  {
+    "id": "rss-maariv-invest",
+    "name": "מעריב - בית השקעות",
+    "url": "https://www.maariv.co.il/rss/rssinvestmenthouse",
+    "category": "economics"
+  },
+  {
+    "id": "rss-calcalist",
+    "name": "כלכליסט - שוק ההון",
+    "url": "https://www.calcalist.co.il/rss/calcalist,0,0,14,00.xml",
+    "category": "economics"
+  },
+  {
+    "id": "rss-maariv-tech",
+    "name": "מעריב - טכנולוגיה",
+    "url": "https://www.maariv.co.il/rss/rssfeedstechnologeya",
+    "category": "tech"
+  },
+  {
+    "id": "rss-internet-israel",
+    "name": "אינטרנט ישראל",
+    "url": "https://internet-israel.com/feed/",
+    "category": "tech"
+  },
+  {
+    "id": "rss-dark-reading",
+    "name": "Dark Reading",
+    "url": "https://www.darkreading.com/rss_simple.asp",
+    "category": "tech"
+  },
+  {
+    "id": "rss-walla-news",
+    "name": "וואלה! חדשות",
+    "url": "https://rss.walla.co.il/feed/6?type=main",
+    "category": "news"
+  },
+  {
+    "id": "rss-walla-sport",
+    "name": "וואלה! ספורט",
+    "url": "https://rss.walla.co.il/feed/2?type=main",
+    "category": "news"
+  },
+  {
+    "id": "rss-behavioral-scientist",
+    "name": "Behavioral Scientist",
+    "url": "https://behavioralscientist.org/feed/",
+    "category": "behavioral"
+  },
+  {
+    "id": "rss-behavioral-economics",
+    "name": "Behavioral Economics",
+    "url": "https://www.behavioraleconomics.com/feed/",
+    "category": "behavioral"
+  },
+  {
+    "id": "rss-psychology-today",
+    "name": "Psychology Today",
+    "url": "https://www.psychologytoday.com/intl/en/front/feed",
+    "category": "behavioral"
+  }
+]

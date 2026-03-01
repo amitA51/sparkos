@@ -1,0 +1,52 @@
+[
+  {
+    "id": "phase-1",
+    "title": "שלב 1: תכנון ומחקר",
+    "description": "הבנת הדרישות והגדרת המטרות",
+    "duration": "1 שבוע",
+    "notes": "",
+    "tasks": [
+      { "id": "task-1-1", "title": "הגדרת מטרות", "isCompleted": false, "order": 0 },
+      { "id": "task-1-2", "title": "מחקר שוק", "isCompleted": false, "order": 1 },
+      { "id": "task-1-3", "title": "ניתוח מתחרים", "isCompleted": false, "order": 2 }
+    ],
+    "order": 0,
+    "attachments": [],
+    "status": "active",
+    "dependencies": [],
+    "estimatedHours": 10
+  },
+  {
+    "id": "phase-2",
+    "title": "שלב 2: תכנון ועיצוב",
+    "description": "יצירת התוכנית והעיצוב הראשוני",
+    "duration": "2 שבועות",
+    "notes": "",
+    "tasks": [
+      { "id": "task-2-1", "title": "כתיבת תוכנית עבודה", "isCompleted": false, "order": 0 },
+      { "id": "task-2-2", "title": "עיצוב ראשוני", "isCompleted": false, "order": 1 }
+    ],
+    "order": 1,
+    "attachments": [],
+    "status": "pending",
+    "dependencies": ["phase-1"],
+    "estimatedHours": 20
+  },
+  {
+    "id": "phase-3",
+    "title": "שלב 3: יישום",
+    "description": "ביצוע והוצאה לפועל",
+    "duration": "3 שבועות",
+    "notes": "",
+    "tasks": [
+      { "id": "task-3-1", "title": "פיתוח", "isCompleted": false, "order": 0 },
+      { "id": "task-3-2", "title": "בדיקות", "isCompleted": false, "order": 1 },
+      { "id": "task-3-3", "title": "השקה", "isCompleted": false, "order": 2 }
+    ],
+    "order": 2,
+    "attachments": [],
+    "status": "pending",
+    "dependencies": ["phase-2"],
+    "estimatedHours": 40
+  }
+]
