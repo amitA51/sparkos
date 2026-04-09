@@ -641,6 +641,7 @@ export const screenSkeletonMap: Record<Screen, React.FC> = {
   login: () => <div className="h-[80vh] flex items-center justify-center"><SkeletonCircle size={64} /></div>,
   signup: () => <div className="h-[80vh] flex items-center justify-center"><SkeletonCircle size={64} /></div>,
   logos: HomeScreenSkeleton,
+  insights: LibraryScreenSkeleton,
 };
 
 // ========================================

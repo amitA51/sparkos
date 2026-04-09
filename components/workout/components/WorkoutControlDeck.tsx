@@ -44,9 +44,9 @@ const DeckButton = memo(({
     className?: string;
 }) => {
     const variants = {
-        primary: 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]',
+        primary: 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-[0_0_20px_rgba(255,255,255,0.3)]',
         secondary: 'bg-white/10 text-white border border-white/5 hover:bg-white/20',
-        accent: 'bg-[var(--cosmos-accent-primary)] text-black shadow-[0_0_20px_rgba(99,102,241,0.4)]',
+        accent: 'bg-[var(--cosmos-accent-primary)] text-[var(--text-primary)] shadow-[0_0_20px_rgba(99,102,241,0.4)]',
         danger: 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]'
     };
 
@@ -188,7 +188,7 @@ const WorkoutControlDeck = memo<WorkoutControlDeckProps>(({
                                     exit={{ opacity: 0, scale: 0.9, y: -20 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={onFinishSet}
-                                    className="w-full h-16 rounded-[24px] bg-white text-black flex items-center justify-center gap-3 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] transition-all"
+                                    className="w-full h-16 rounded-[24px] bg-[var(--bg-card)] text-[var(--text-primary)] flex items-center justify-center gap-3 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] transition-all"
                                 >
                                     <CheckIcon className="w-6 h-6 stroke-[3]" />
                                     <span className="font-extrabold text-lg tracking-wide">

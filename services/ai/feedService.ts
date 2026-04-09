@@ -111,7 +111,7 @@ export const generateAiFeedItems = async (
     ];
     const randomPerspective = perspectives[Math.floor(Math.random() * perspectives.length)];
 
-    console.log(`[AI Feed] Generating ${count} sparks on topics: ${topicsString} (perspective: ${randomPerspective})`);
+    // AI Feed: Generating sparks — count and topics logged only in dev via logger
 
     const prompt = `
     אתה עוזר שמייצר פיד ידע אישי בעברית.
@@ -187,7 +187,7 @@ export const generateAiFeedItems = async (
             return result.items || [];
         });
 
-        console.log(`[AI Feed] Successfully generated ${items.length} sparks`);
+        // AI Feed: Successfully generated sparks
         return items;
     } catch (error) {
         console.error('[AI Feed] Error generating AI feed items:', error);

@@ -19,18 +19,14 @@ import SettingsSheet from '../components/settings/SettingsSheet';
 // Lazy load section components for better performance
 const AppearanceSection = lazy(() => import('../components/settings/AppearanceSection'));
 const AISection = lazy(() => import('../components/settings/AISection'));
-// GeneralSection, DataSection, WorkoutSection - currently not used in SECTION_COMPONENTS map
 const IntegrationsSection = lazy(() => import('../components/settings/IntegrationsSection'));
 const AboutSection = lazy(() => import('../components/settings/AboutSection'));
 const FocusSection = lazy(() => import('../components/settings/FocusSection'));
 const ProfileSection = lazy(() => import('../components/settings/ProfileSection'));
-// New sections
 const NotificationsSection = lazy(() => import('../components/settings/NotificationsSection'));
 const CalendarSection = lazy(() => import('../components/settings/CalendarSection'));
 const TasksSection = lazy(() => import('../components/settings/TasksSection'));
 const SmartFeaturesSection = lazy(() => import('../components/settings/SmartFeaturesSection'));
-// AccessibilitySection - currently not used in SECTION_COMPONENTS map
-// PrivacySection removed - not needed
 const ComfortZoneSection = lazy(() => import('../components/settings/ComfortZoneSection'));
 const UiSection = lazy(() => import('../components/settings/UiSection'));
 const FeedbackSection = lazy(() => import('../components/settings/FeedbackSection'));
@@ -42,24 +38,25 @@ type Status = {
   onUndo?: () => void;
 } | null;
 
-// Map ALL categories to section components (Premium 6-group structure)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Map categories to section components (6-group structure)
 const SECTION_COMPONENTS: Partial<Record<SettingsCategory, React.ComponentType<any>>> = {
-  // 👤 אני (Me)
+  // Me
   profile: ProfileSection,
   appearance: AppearanceSection,
-  // ✨ חוויה (Experience)
+  // Experience
   interface: UiSection,
-  feedback: FeedbackSection, // Only sounds & haptics
-  // 🚀 לעשות (Do)
+  feedback: FeedbackSection,
+  // Productivity
   tasks: TasksSection,
   calendar: CalendarSection,
   focus: FocusSection,
-  // 🌱 לצמוח (Grow)
+  // Growth
   habits: ComfortZoneSection,
-  // 🧠 חכם (Smart)
+  // Smart
   ai: AISection,
   smart: SmartFeaturesSection,
-  // ⚙️ מערכת (System)
+  // System
   notifications: NotificationsSection,
   integrations: IntegrationsSection,
   about: AboutSection,
@@ -68,17 +65,16 @@ const SECTION_COMPONENTS: Partial<Record<SettingsCategory, React.ComponentType<a
 // Section loading skeleton - Quiet Luxury
 const SectionSkeleton: React.FC = () => (
   <div className="space-y-4 animate-pulse">
-    <div className="h-8 w-32 bg-white/[0.04] rounded-lg" />
-    <div className="h-40 bg-white/[0.02] rounded-2xl" />
-    <div className="h-32 bg-white/[0.02] rounded-2xl" />
+    <div className="h-8 w-32 bg-[var(--gray-100)] rounded-lg" />
+    <div className="h-40 bg-[var(--gray-50)] rounded-2xl" />
+    <div className="h-32 bg-[var(--gray-50)] rounded-2xl" />
   </div>
 );
 
 const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = ({
-  setActiveScreen,
+  setActiveScreen: _setActiveScreen,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { settings: _settings } = useSettings(); // Reserved for future settings-dependent UI
+  const { settings: _ } = useSettings();
 
   // State
   const [activeCategory, setActiveCategory] = useState<SettingsCategory | null>(null);
@@ -135,11 +131,8 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
     // Props for sections that need them
     const sectionProps: Record<string, Record<string, unknown>> = {
       profile: { setStatusMessage },
-      sync: { setStatusMessage },
-      data: { setActiveScreen, setStatusMessage },
-      behavior: { setStatusMessage },
-      interface: { setStatusMessage },
-      'comfort-zone': { setStatusMessage },
+      habits: { setStatusMessage },
+      integrations: { setStatusMessage },
     };
 
     return (
@@ -147,7 +140,11 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
         <SectionComponent {...(sectionProps[activeCategory] || {})} />
       </Suspense>
     );
-  }, [activeCategory, setActiveScreen]);
+  }, [activeCategory]);
+
+  // PERF: Stable callbacks for sheet/status
+  const handleCloseSheet = useCallback(() => setIsSheetOpen(false), []);
+  const handleDismissStatus = useCallback(() => setStatusMessage(null), []);
 
   // Get category info for sheet header
   const activeCategoryInfo = activeCategory ? getCategoryInfo(activeCategory) : null;
@@ -177,9 +174,9 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
           {activeCategory ? (
             <button
               onClick={() => setActiveCategory(null)}
-              className="p-2 hover:bg-white/[0.06] rounded-full transition-all duration-300 order-first"
+              className="p-2 hover:bg-[var(--surface-hover)] rounded-full transition-all duration-300 order-first"
             >
-              <div className="w-6 h-6 flex items-center justify-center text-white/60 hover:text-white">
+              <div className="w-6 h-6 flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                 ←
               </div>
             </button>
@@ -204,15 +201,31 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
             <SettingsCluster onSelectCategory={handleSelectCategory} />
           </motion.div>
 
-          {/* Footer */}
+          {/* Premium Footer */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-center py-6 text-xs text-[var(--text-tertiary)]"
+            className="text-center py-8 space-y-3"
           >
-            <p>Spark OS v2.0.0</p>
-            <p className="mt-1">נבנה עם ❤️ עבורך</p>
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+              style={{
+                background: 'var(--gray-50)',
+                border: '0.5px solid var(--border-subtle)',
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: 'var(--success)', boxShadow: '0 0 6px rgba(52, 199, 89, 0.4)' }}
+              />
+              <span className="text-[12px] font-semibold" style={{ color: 'var(--text-secondary)' }}>
+                Spark OS v2.0.0
+              </span>
+            </div>
+            <p className="text-[11px] font-medium" style={{ color: 'var(--text-muted)' }}>
+              Crafted with care
+            </p>
           </motion.div>
         </main>
       </div>
@@ -220,7 +233,7 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
       {/* Bottom Sheet for Category Content */}
       <SettingsSheet
         isOpen={isSheetOpen}
-        onClose={() => setIsSheetOpen(false)}
+        onClose={handleCloseSheet}
         title={activeCategoryInfo?.title || 'הגדרות'}
         icon={activeCategoryInfo && <span className="text-xl">{activeCategoryInfo.icon}</span>}
       >
@@ -243,7 +256,7 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
           key={statusMessage.id}
           type={statusMessage.type}
           message={statusMessage.text}
-          onDismiss={() => setStatusMessage(null)}
+          onDismiss={handleDismissStatus}
           onUndo={statusMessage.onUndo}
         />
       )}
@@ -251,4 +264,4 @@ const SettingsScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = 
   );
 };
 
-export default SettingsScreen;
+export default React.memo(SettingsScreen);

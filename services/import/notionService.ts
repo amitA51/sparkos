@@ -15,7 +15,7 @@ interface NotionUser {
     name?: string;
 }
 
-interface NotionDatabase {
+export interface NotionDatabase {
     object: 'database';
     id: string;
     title: Array<{ text: { content: string } }>;
@@ -62,7 +62,7 @@ async function notionRequest(
     token: string,
     method: 'GET' | 'POST' = 'GET',
     body?: object
-): Promise<any> {
+): Promise<unknown> {
     const response = await fetch(`${NOTION_API_BASE}${endpoint}`, {
         method,
         headers: {
@@ -86,10 +86,13 @@ async function notionRequest(
  */
 export async function verifyNotionToken(token: string): Promise<{ valid: boolean; userInfo?: { name: string }; error?: string }> {
     try {
-        const response = await notionRequest('/users/me', token);
+        const response = await notionRequest('/users/me', token) as Record<string, unknown>;
+        const bot = response.bot as Record<string, unknown> | undefined;
+        const owner = bot?.owner as Record<string, unknown> | undefined;
+        const ownerUser = owner?.user as Record<string, unknown> | undefined;
         return {
             valid: true,
-            userInfo: { name: response.name || response.bot?.owner?.user?.name || 'Unknown' },
+            userInfo: { name: (response.name as string) || (ownerUser?.name as string) || 'Unknown' },
         };
     } catch (error) {
         return {
@@ -105,8 +108,8 @@ export async function verifyNotionToken(token: string): Promise<{ valid: boolean
 export async function fetchNotionDatabases(token: string): Promise<NotionDatabase[]> {
     const response = await notionRequest('/search', token, 'POST', {
         filter: { property: 'object', value: 'database' },
-    });
-    return response.results as NotionDatabase[];
+    }) as { results: NotionDatabase[] };
+    return response.results;
 }
 
 /**
@@ -117,13 +120,17 @@ export async function fetchDatabaseItems(
     databaseId: string,
     startCursor?: string
 ): Promise<{ pages: NotionPage[]; hasMore: boolean; nextCursor?: string }> {
-    const body: any = { page_size: 100 };
+    const body: Record<string, unknown> = { page_size: 100 };
     if (startCursor) body.start_cursor = startCursor;
 
-    const response = await notionRequest(`/databases/${databaseId}/query`, token, 'POST', body);
+    const response = await notionRequest(`/databases/${databaseId}/query`, token, 'POST', body) as {
+        results: NotionPage[];
+        has_more: boolean;
+        next_cursor?: string;
+    };
 
     return {
-        pages: response.results as NotionPage[],
+        pages: response.results,
         hasMore: response.has_more,
         nextCursor: response.next_cursor,
     };

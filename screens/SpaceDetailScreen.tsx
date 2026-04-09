@@ -204,11 +204,11 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
             className="absolute inset-0 opacity-20"
             style={{
               background: `linear-gradient(180deg, ${space.color}40 0%, transparent 100%)`
-            } as any}
+            } as React.CSSProperties}
           />
           <motion.div
             className="absolute -top-20 -right-20 w-96 h-96 rounded-full blur-[100px]"
-            style={{ background: space.color } as any}
+            style={{ background: space.color } as React.CSSProperties}
             animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -219,7 +219,7 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={onBack}
-              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white backdrop-blur-md border border-white/5 transition-all active:scale-95"
+              className="p-2.5 rounded-xl bg-[var(--color-gray-50)] hover:bg-[var(--color-surface-hover)] text-[var(--text-primary)] backdrop-blur-md border border-[var(--color-border-subtle)] transition-all active:scale-95"
             >
               <ChevronLeftIcon className="w-5 h-5" />
             </button>
@@ -227,7 +227,7 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
             <div className="flex gap-2">
               <button
                 onClick={handleSummarize}
-                className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-yellow-400 backdrop-blur-md border border-white/5 transition-all active:scale-95"
+                className="p-2.5 rounded-xl bg-[var(--color-gray-50)] hover:bg-[var(--color-surface-hover)] text-yellow-400 backdrop-blur-md border border-[var(--color-border-subtle)] transition-all active:scale-95"
                 title="סיכום AI"
               >
                 <SparklesIcon className="w-5 h-5" />
@@ -239,11 +239,11 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
           <div className="flex items-end justify-between mb-8">
             <div className="flex items-center gap-5">
               <motion.div
-                className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl backdrop-blur-xl border border-white/10 text-4xl"
+                className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl backdrop-blur-xl border border-[var(--color-border-subtle)] text-4xl"
                 style={{
                   background: `linear-gradient(135deg, ${space.color}20 0%, ${space.color}05 100%)`,
                   boxShadow: `0 8px 32px -4px ${space.color}30`
-                } as any}
+                } as React.CSSProperties}
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 200 }}
@@ -259,11 +259,11 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
                 >
                   <span className="text-xs font-bold tracking-wider uppercase opacity-60">מרחב עבודה</span>
                   {space.category && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/80">{space.category}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-gray-100)] text-[var(--text-secondary)]">{space.category}</span>
                   )}
                 </motion.div>
                 <motion.h1
-                  className="text-4xl font-bold text-white font-heading tracking-tight"
+                  className="text-4xl font-bold text-[var(--text-primary)] font-heading tracking-tight"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
@@ -273,7 +273,7 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
                 {space.tags && (
                   <div className="flex gap-2 mt-2">
                     {space.tags.map(tag => (
-                      <span key={tag} className="text-xs text-white/50">#{tag}</span>
+                      <span key={tag} className="text-xs text-[var(--text-muted)]">#{tag}</span>
                     ))}
                   </div>
                 )}
@@ -282,8 +282,8 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
 
             {/* Progress/Stats could go here */}
             <div className="hidden sm:block text-right">
-              <span className="block text-3xl font-bold text-white">{spaceItems.length}</span>
-              <span className="text-xs text-white/40 uppercase tracking-widest">פריטים</span>
+              <span className="block text-3xl font-bold text-[var(--text-primary)]">{spaceItems.length}</span>
+              <span className="text-xs text-[var(--text-muted)] uppercase tracking-widest">פריטים</span>
             </div>
           </div>
 
@@ -341,7 +341,7 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
                     />
                   ))}
                 </div>
-                <div className="h-px bg-white/5 my-6" />
+                <div className="h-px bg-[var(--color-gray-50)] my-6" />
               </div>
             )}
 
@@ -349,9 +349,9 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
             {Object.entries(groupedItems).map(([groupName, items]) => (
               <div key={groupName} className={view === 'grid' ? 'col-span-full' : ''}>
                 {groupBy !== 'none' && (
-                  <h2 className="text-sm font-bold text-white mb-4 flex items-center gap-2 p-2 bg-white/5 rounded-lg w-max">
+                  <h2 className="text-sm font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2 p-2 bg-[var(--color-gray-50)] rounded-lg w-max">
                     {groupName}
-                    <span className="text-xs font-normal text-theme-secondary bg-black/20 px-1.5 rounded-md">{items.length}</span>
+                    <span className="text-xs font-normal text-theme-secondary bg-[var(--color-gray-100)] px-1.5 rounded-md">{items.length}</span>
                   </h2>
                 )}
 
@@ -387,10 +387,10 @@ const SpaceDetailScreen: React.FC<SpaceDetailScreenProps> = ({ space, onBack, se
 
             {spaceItems.length === 0 && (
               <div className="text-center text-[var(--text-secondary)] mt-16 flex flex-col items-center col-span-full">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-[var(--color-gray-50)] flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 opacity-50" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-1">המרחב ריק</h3>
+                <h3 className="text-lg font-medium text-[var(--text-primary)] mb-1">המרחב ריק</h3>
                 <p className="text-sm opacity-60">הוסף פריטים חדשים כדי להתחיל לעבוד</p>
               </div>
             )}

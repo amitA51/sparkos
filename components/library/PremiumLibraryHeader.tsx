@@ -48,9 +48,9 @@ const PremiumLibraryHeader: React.FC<PremiumLibraryHeaderProps> = ({
             onClick={onOpenAssistant}
             className="group w-touch-min h-touch-min p-3 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-95"
             style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '0.5px solid rgba(255, 255, 255, 0.06)',
-              color: 'rgba(255, 255, 255, 0.5)',
+              background: 'var(--gray-50)',
+              border: '0.5px solid var(--border-subtle)',
+              color: 'var(--text-secondary)',
             }}
             aria-label="Assistant"
           >
@@ -60,9 +60,9 @@ const PremiumLibraryHeader: React.FC<PremiumLibraryHeaderProps> = ({
             onClick={onOpenSettings}
             className="group w-touch-min h-touch-min p-3 rounded-2xl flex items-center justify-center transition-all duration-300 active:scale-95"
             style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '0.5px solid rgba(255, 255, 255, 0.06)',
-              color: 'rgba(255, 255, 255, 0.5)',
+              background: 'var(--gray-50)',
+              border: '0.5px solid var(--border-subtle)',
+              color: 'var(--text-secondary)',
             }}
             aria-label="הגדרות"
           >
@@ -81,7 +81,8 @@ const PremiumLibraryHeader: React.FC<PremiumLibraryHeaderProps> = ({
           ].map(({ icon: Icon, count, label }) => (
             <span
               key={label}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-semibold whitespace-nowrap bg-[var(--color-surface-hover)] border border-white/10 text-theme-secondary"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[11px] font-semibold whitespace-nowrap text-theme-secondary"
+              style={{ background: 'var(--gray-50)', border: '0.5px solid var(--border-subtle)' }}
             >
               <Icon className="w-3.5 h-3.5" />
               <span className="font-mono">{count}</span>
@@ -111,7 +112,7 @@ const PremiumLibraryHeader: React.FC<PremiumLibraryHeaderProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="hidden sm:block px-1.5 py-0.5 text-[10px] font-mono text-theme-muted bg-[var(--color-surface-hover)] rounded border border-white/8 shrink-0"
+                className="hidden sm:block px-1.5 py-0.5 text-[10px] font-mono text-theme-muted bg-[var(--surface-hover)] rounded border border-white/8 shrink-0"
               >
                 ⌘K
               </motion.kbd>
@@ -122,7 +123,7 @@ const PremiumLibraryHeader: React.FC<PremiumLibraryHeaderProps> = ({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 onClick={() => onSearchChange('')}
-                className="p-0.5 rounded-full text-theme-secondary hover:text-theme-primary hover:bg-[var(--color-surface-hover)] shrink-0"
+                className="p-0.5 rounded-full text-theme-secondary hover:text-theme-primary hover:bg-[var(--surface-hover)] shrink-0"
               >
                 <CloseIcon className="w-3.5 h-3.5" />
               </motion.button>

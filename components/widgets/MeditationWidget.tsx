@@ -72,4 +72,4 @@ export const MeditationWidget: React.FC = () => {
     );
 };
 
-export default MeditationWidget;
+export default React.memo(MeditationWidget);

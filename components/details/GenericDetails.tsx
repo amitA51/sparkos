@@ -57,15 +57,15 @@ export const GenericView: React.FC<ViewProps> = ({ item, onUpdate }) => {
           />
           <MarkdownRenderer content={decryptedContent} />
 
-          {hasReminder && (
-            <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-primary)]">
-              <CalendarIcon className="w-5 h-5 text-[var(--dynamic-accent-highlight)]" />
-              <span>
-                תזכורת: <strong className="text-[var(--text-primary)]">{formattedDate}</strong>
-                {item.dueTime ? ` בשעה ${item.dueTime}` : ''}
-              </span>
-            </div>
-          )}
+      {hasReminder && (
+        <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-default)]">
+          <CalendarIcon className="w-5 h-5 text-[var(--accent)]" />
+          <span>
+            תזכורת: <strong className="text-[var(--text-primary)]">{formattedDate}</strong>
+            {item.dueTime ? ` בשעה ${item.dueTime}` : ''}
+          </span>
+        </div>
+      )}
         </div>
       );
     }
@@ -100,8 +100,8 @@ export const GenericView: React.FC<ViewProps> = ({ item, onUpdate }) => {
       {item.content && <MarkdownRenderer content={item.content} />}
 
       {hasReminder && (
-        <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] bg-[var(--bg-card)]/50 backdrop-blur-sm p-3 rounded-xl border border-[var(--dynamic-accent-start)]/20 shadow-sm">
-          <CalendarIcon className="w-5 h-5 text-[var(--dynamic-accent-start)]" />
+        <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)] bg-[var(--bg-card)]/50 backdrop-blur-sm p-3 rounded-xl border border-[var(--accent)]/20 shadow-sm">
+          <CalendarIcon className="w-5 h-5 text-[var(--accent)]" />
           <span>
             תזכורת: <strong className="text-[var(--text-primary)]">{formattedDate}</strong>
             {item.dueTime ? ` בשעה ${item.dueTime}` : ''}
@@ -149,7 +149,7 @@ export const GenericEdit: React.FC<EditProps> = ({ editState, dispatch }) => {
 
   return (
     <div className="space-y-4">
-      <div className="border border-[var(--border-primary)] rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[var(--dynamic-accent-start)]/50 focus-within:border-[var(--dynamic-accent-start)]">
+      <div className="border border-[var(--border-default)] rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[var(--accent)]/50 focus-within:border-[var(--accent)]">
         <MarkdownToolbar onInsert={handleInsertMarkdown} />
         <textarea
           ref={contentRef}
@@ -163,7 +163,7 @@ export const GenericEdit: React.FC<EditProps> = ({ editState, dispatch }) => {
         />
       </div>
 
-      <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
+      <div className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-default)]">
         <h4 className="text-sm font-bold text-[var(--text-secondary)] mb-3 flex items-center gap-2">
           <CalendarIcon className="w-4 h-4" /> תזכורת
         </h4>

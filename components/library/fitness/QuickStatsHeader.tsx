@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useFitnessInsights } from '../../../hooks/useFitnessInsights';
+import { useFitnessInsights } from '../../../hooks/fitness/useFitnessInsights';
 import { DumbbellIcon, FlameIcon } from '../../icons';
 
 // Weekly volume target settings
@@ -31,27 +31,27 @@ export const QuickStatsHeader: React.FC = () => {
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#1C1C1E] rounded-[24px] p-4 md:p-6 shadow-sm"
+            className="bg-[var(--bg-secondary)] rounded-[24px] p-4 md:p-6 shadow-sm"
         >
-            <div className="grid grid-cols-3 gap-4 divide-x divide-[#3A3A3C] divide-x-reverse">
+            <div className="grid grid-cols-3 gap-4 divide-x divide-[var(--gray-600)] divide-x-reverse">
 
                 {/* 1. Streak */}
                 <div className="flex flex-col items-center justify-center col-span-1 pr-2">
                     <div className="text-4xl font-black text-white tracking-tight flex items-center gap-1.5">
                         {currentStreak}
-                        <FlameIcon className="w-6 h-6 text-[#FF9500]" />
+                        <FlameIcon className="w-6 h-6 text-[var(--warning)]" />
                     </div>
-                    <div className="text-[11px] font-bold text-[#8E8E93] uppercase tracking-wide mt-1">
+                    <div className="text-[11px] font-bold text-[var(--gray-500)] uppercase tracking-wide mt-1">
                         ימי רצף
                     </div>
                 </div>
 
                 {/* 2. Monthly Stats */}
-                <div className="flex flex-col items-center justify-center col-span-1 px-2 border-r border-[#3A3A3C]">
+                <div className="flex flex-col items-center justify-center col-span-1 px-2 border-r border-[var(--gray-600)]">
                     <div className="text-3xl font-black text-white tracking-tight">
                         {workoutsThisMonth}
                     </div>
-                    <div className="text-[11px] font-bold text-[#8E8E93] uppercase tracking-wide mt-1 flex items-center gap-1">
+                    <div className="text-[11px] font-bold text-[var(--gray-500)] uppercase tracking-wide mt-1 flex items-center gap-1">
                         <DumbbellIcon className="w-3 h-3" />
                         החודש
                     </div>
@@ -65,7 +65,7 @@ export const QuickStatsHeader: React.FC = () => {
                             <path
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                                 fill="none"
-                                stroke="#2C2C2E"
+                                stroke="var(--bg-tertiary)"
                                 strokeWidth="4"
                             />
                             {/* Progress Ring */}
@@ -84,15 +84,15 @@ export const QuickStatsHeader: React.FC = () => {
                             {volumePercentText}%
                         </div>
                     </div>
-                    <div className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wide text-center">
+                    <div className="text-[10px] font-bold text-[var(--gray-500)] uppercase tracking-wide text-center">
                         יעד נפח
                     </div>
                 </div>
             </div>
 
             {/* Bottom Bar: Weekly Count */}
-            <div className="mt-5 pt-4 border-t border-[#3A3A3C] flex items-center justify-between">
-                <div className="text-xs text-[#8E8E93] font-medium">
+                    <div className="mt-5 pt-4 border-t border-[var(--gray-600)] flex items-center justify-between">
+                <div className="text-xs text-[var(--gray-500)] font-medium">
                     שבוע נוכחי
                 </div>
                 <div className="flex items-center gap-2">

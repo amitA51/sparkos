@@ -86,8 +86,6 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
     const handleSelect = useCallback((personalExercise: PersonalExercise) => {
         if (!personalExercise.name?.trim()) return;
 
-        console.log('[ExerciseSelector] Selecting:', personalExercise.name);
-
         const exercise: Exercise = {
             id: makeExerciseId(),
             name: personalExercise.name,
@@ -177,7 +175,7 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             ariaLabel="בחירת תרגילים"
         >
             <motion.div
-                className="fixed bottom-0 left-0 right-0 flex flex-col rounded-t-[32px] overflow-hidden bg-[#1C1C1E] border-t border-white/10 max-h-[85vh]"
+                className="fixed bottom-0 left-0 right-0 flex flex-col rounded-t-[32px] overflow-hidden bg-[var(--bg-secondary)] border-t border-white/10 max-h-[85vh]"
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
@@ -195,15 +193,15 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
             >
                 {/* Drag Handle */}
                 <div className="flex justify-center py-3">
-                    <div className="w-10 h-1 rounded-full bg-[#48484A]" />
+                    <div className="w-10 h-1 rounded-full bg-[var(--gray-500)]" />
                 </div>
 
                 {/* Header */}
-                <div className="px-5 pb-4 border-b border-white/5 bg-[#1C1C1E] z-10">
+                <div className="px-5 pb-4 border-b border-white/5 bg-[var(--bg-secondary)] z-10">
                     <div className="flex items-center justify-between mb-4">
                         <div>
                             <h1 className="text-2xl font-bold text-white tracking-tight">בחר תרגילים</h1>
-                            <p className="text-sm text-[#8E8E93] mt-0.5">
+                            <p className="text-sm text-[var(--gray-500)] mt-0.5">
                                 {selectedExercises.size > 0
                                     ? `${selectedExercises.size} תרגילים נבחרו`
                                     : 'לחץ להוספה לאימון'
@@ -214,10 +212,10 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                             type="button"
                             onClick={onClose}
                             whileTap={{ scale: 0.9 }}
-                            className="w-8 h-8 rounded-full bg-[#2C2C2E] flex items-center justify-center hover:bg-[#3A3A3C] transition-all"
+                            className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center hover:bg-[var(--gray-600)] transition-all"
                             aria-label="סגור"
                         >
-                            <CloseIcon className="w-4 h-4 text-[#8E8E93]" />
+                            <CloseIcon className="w-4 h-4 text-[var(--gray-500)]" />
                         </motion.button>
                     </div>
 
@@ -228,7 +226,7 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                             onClick={handleTabExercises}
                             className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-all ${activeTab === 'exercises'
                                 ? 'bg-white text-black'
-                                : 'bg-[#2C2C2E] text-[#8E8E93]'
+                                : 'bg-[var(--bg-tertiary)] text-[var(--gray-500)]'
                                 }`}
                         >
                             תרגילים
@@ -238,7 +236,7 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
                             onClick={handleTabTemplates}
                             className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2 ${activeTab === 'templates'
                                 ? 'bg-white text-black'
-                                : 'bg-[#2C2C2E] text-[#8E8E93]'
+                                : 'bg-[var(--bg-tertiary)] text-[var(--gray-500)]'
                                 }`}
                         >
                             תבניות

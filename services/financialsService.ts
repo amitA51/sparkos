@@ -212,8 +212,6 @@ function getAvailableApiKey(): { key: string; index: number } | null {
   for (let i = 0; i < ALPHA_VANTAGE_API_KEYS.length; i++) {
     const index = (state.keyIndex + i) % ALPHA_VANTAGE_API_KEYS.length;
     const key = ALPHA_VANTAGE_API_KEYS[index];
-
-    // const key = ALPHA_VANTAGE_API_KEYS[index];
     if (!key) continue;
 
     // Initialize usage if not exists
@@ -232,7 +230,7 @@ function getAvailableApiKey(): { key: string; index: number } | null {
       if (index !== state.keyIndex) {
         state.keyIndex = index;
         saveApiKeyState(state);
-        console.log(`🔄 Switched to API key #${index + 1}`);
+        // Switched to API key #{index + 1}
       }
       return { key, index };
     }
@@ -272,7 +270,7 @@ function markKeyAsExhausted(key: string): void {
   // Move to next key
   state.keyIndex = (state.keyIndex + 1) % ALPHA_VANTAGE_API_KEYS.length;
   saveApiKeyState(state);
-  console.log(`⚠️ API key exhausted, switching to key #${state.keyIndex + 1}`);
+  // API key exhausted, switching to next key
 }
 
 /**
@@ -313,7 +311,7 @@ export function addApiKey(newKey: string): boolean {
   state.keyUsage[newKey] = { minuteRequests: [], dayRequests: [] };
   saveApiKeyState(state);
 
-  console.log(`✅ Added new API key. Total keys: ${ALPHA_VANTAGE_API_KEYS.length}`);
+  // Added new API key
   return true;
 }
 
@@ -1420,7 +1418,6 @@ export async function fetchEarningsCalendar(): Promise<EarningsEvent[]> {
     // The API returns CSV, need to parse it
     if (typeof data === 'string' && data.includes('symbol')) {
       const lines = data.split('\n').filter(l => l.trim());
-      // const headers = lines[0]?.split(',') || [];
 
       const events: EarningsEvent[] = lines.slice(1, 51).map(line => {
         const values = line.split(',');
@@ -1484,7 +1481,7 @@ export function addPriceAlert(
   const alerts = getPriceAlerts();
 
   const newAlert: PriceAlert = {
-    id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `alert_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     symbol: symbol.toUpperCase(),
     targetPrice,
     condition,

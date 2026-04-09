@@ -271,5 +271,3 @@ export const useIdleTimer = (options: UseIdleTimerOptions = {}): UseIdleTimerRet
     isPaused,
   };
 };
-
-// export default useIdleTimer; // Removed default export

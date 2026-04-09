@@ -54,7 +54,7 @@ export interface DebouncedCallbackOptions {
   maxWait?: number;
 }
 
-export interface DebouncedFunction<T extends (...args: any[]) => any> {
+export interface DebouncedFunction<T extends (...args: unknown[]) => any> {
   (...args: Parameters<T>): void;
   /** Cancel pending invocation */
   cancel: () => void;
@@ -75,7 +75,7 @@ export interface DebouncedFunction<T extends (...args: any[]) => any> {
  *   { delay: 1000, maxWait: 5000 }
  * );
  */
-export function useDebouncedCallback<T extends (...args: any[]) => any>(
+export function useDebouncedCallback<T extends (...args: unknown[]) => any>(
   callback: T,
   options: DebouncedCallbackOptions
 ): DebouncedFunction<T> {
@@ -223,7 +223,7 @@ export function useThrottle<T>(value: T, interval: number): T {
  *   100
  * );
  */
-export function useThrottledCallback<T extends (...args: any[]) => any>(
+export function useThrottledCallback<T extends (...args: unknown[]) => any>(
   callback: T,
   interval: number
 ): (...args: Parameters<T>) => void {

@@ -221,7 +221,7 @@ const SwipeComplete = memo<SwipeCompleteProps>(({
             `}
         >
             {/* Background Track */}
-            <div className="absolute inset-0 bg-[#1C1C1E] border border-white/5 rounded-[24px]" />
+            <div className="absolute inset-0 bg-[var(--bg-secondary)] border border-white/5 rounded-[24px]" />
 
             {/* Progress Fill */}
             <motion.div
@@ -359,7 +359,7 @@ const SwipeComplete = memo<SwipeCompleteProps>(({
                         className="
                             absolute right-3 top-1/2 -translate-y-1/2 z-30 
                             px-4 py-2.5 rounded-xl
-                            bg-[#2C2C2E] hover:bg-[#3A3A3C] 
+                            bg-[var(--bg-tertiary)] hover:bg-[var(--gray-600)] 
                             border border-white/10
                             text-xs font-bold text-white 
                             shadow-lg transition-all

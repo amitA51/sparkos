@@ -6,7 +6,7 @@ import { XIcon, CheckIcon } from '../icons';
 interface AddSpaceModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAdd: (space: Omit<Space, 'id'>) => Promise<void>;
+    onAdd: (space: Omit<Space, 'id'>) => Promise<Space | void>;
 }
 
 // Premium icon options
@@ -132,20 +132,20 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                         animate="visible"
                         exit="exit"
                         style={{
-                            background: 'linear-gradient(135deg, rgba(12,12,18,0.98) 0%, rgba(8,8,14,0.98) 100%)',
-                            border: '1px solid rgba(255,255,255,0.06)',
-                            boxShadow: '0 25px 80px rgba(0,0,0,0.6)',
+                            background: 'var(--bg-card)',
+                            border: '1px solid var(--border-subtle)',
+                            boxShadow: 'var(--shadow-xl)',
                         }}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-5 border-b border-white/[0.04]">
-                            <h2 className="text-xl font-bold text-white/90 font-heading">
+                        <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                            <h2 className="text-xl font-bold font-heading" style={{ color: 'var(--text-primary)' }}>
                                 מרחב חדש
                             </h2>
                             <motion.button
                                 onClick={onClose}
-                                className="p-2 rounded-xl transition-colors text-white/40 hover:text-white"
-                                style={{ background: 'rgba(255,255,255,0.03)' }}
+                                className="p-2 rounded-xl transition-colors"
+                                style={{ background: 'var(--gray-50)', color: 'var(--text-secondary)' }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
@@ -167,7 +167,8 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                                     onKeyDown={handleKeyDown}
                                     placeholder="הזן שם..."
                                     autoFocus
-                                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-theme-muted focus:outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl placeholder:text-theme-muted focus:outline-none transition-all"
+                                    style={{ background: 'var(--gray-50)', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)' }}
                                 />
                             </div>
 
@@ -189,7 +190,7 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                                                 background:
                                                     selectedIcon === icon
                                                         ? `${selectedColor}30`
-                                                        : 'rgba(255,255,255,0.05)',
+                                                        : 'var(--gray-50)',
                                             }}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
@@ -258,7 +259,7 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                             </div>
 
                             {/* Preview */}
-                            <div className="p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                            <div className="p-4 rounded-2xl" style={{ background: 'var(--gray-50)', border: '1px solid var(--border-subtle)' }}>
                                 <p className="text-xs text-theme-muted mb-2">תצוגה מקדימה</p>
                                 <div className="flex items-center gap-3">
                                     <div
@@ -268,7 +269,7 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                                         {selectedIcon}
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-white">
+                                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
                                             {name || 'שם המרחב'}
                                         </p>
                                         <p className="text-xs text-theme-muted">0 פריטים</p>
@@ -278,12 +279,12 @@ const AddSpaceModal: React.FC<AddSpaceModalProps> = ({ isOpen, onClose, onAdd })
                         </div>
 
                         {/* Footer */}
-                        <div className="p-5 border-t border-white/[0.04] flex gap-3">
+                        <div className="p-5 flex gap-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
                             <motion.button
                                 onClick={onClose}
                                 className="flex-1 py-3 rounded-xl font-medium text-theme-secondary transition-colors"
-                                style={{ background: 'rgba(255,255,255,0.05)' }}
-                                whileHover={{ background: 'rgba(255,255,255,0.1)' }}
+                                style={{ background: 'var(--gray-50)' }}
+                                whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 ביטול

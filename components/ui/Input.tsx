@@ -15,7 +15,7 @@ export const Input: React.FC<InputProps> = ({
     id,
     ...props
 }) => {
-    const inputId = id || props.name || Math.random().toString(36).substr(2, 9);
+    const inputId = id || props.name || Math.random().toString(36).substring(2, 11);
 
     return (
         <div className={`flex flex-col gap-2 ${className}`}>

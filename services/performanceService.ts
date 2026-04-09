@@ -9,7 +9,7 @@ export interface PerformanceMetric {
   timestamp: number;
 }
 
-export interface PerformanceIssue {
+interface PerformanceIssue {
   severity: 'low' | 'medium' | 'high';
   message: string;
   metric: string;
@@ -17,13 +17,13 @@ export interface PerformanceIssue {
   threshold: number;
 }
 
-export interface OptimizationSuggestion {
+interface OptimizationSuggestion {
   title: string;
   description: string;
   impact: 'low' | 'medium' | 'high';
 }
 
-export interface PerformanceReport {
+interface PerformanceReport {
   timestamp: string;
   metrics: PerformanceMetric[];
   issues: PerformanceIssue[];
@@ -53,12 +53,6 @@ class PerformanceService {
       timestamp: Date.now(),
     };
     this.metrics.push(metric);
-
-    // In a real app, you might send this to an analytics endpoint
-    // For now, we'll just log significant events to console in dev mode
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[Performance] ${name}: ${value.toFixed(2)}${unit}`);
-    }
   }
 
   /**

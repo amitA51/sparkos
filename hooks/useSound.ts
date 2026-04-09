@@ -44,8 +44,7 @@ const PRESETS: Record<SoundPreset, { volumeMultiplier: number; pitchMultiplier: 
 };
 
 export const useSound = (preset: SoundPreset = 'modern') => {
-  // const { settings } = useSettings();
-  const enableSounds = false; // Feature disabled
+  const enableSounds = false;
 
   // Track active oscillators for cleanup
   const activeNodesRef = useRef<Set<OscillatorNode>>(new Set());

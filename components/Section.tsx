@@ -111,7 +111,7 @@ const Section: React.FC<SectionProps> = React.memo(
           className={`space-y-3 transition-all duration-500 ease-spring-soft overflow-hidden ${isExpanded ? 'opacity-100 max-h-[2000px]' : 'opacity-0 max-h-0'}`}
         >
           {count === 0 && emptyMessage ? (
-            <div className="text-center py-8 rounded-xl bg-cosmos-depth/40 backdrop-blur-sm border border-white/8 border-dashed">
+            <div className="text-center py-8 rounded-xl border-dashed bg-bg-secondary">
               <p className="text-sm text-theme-muted italic">
                 {emptyMessage}
               </p>

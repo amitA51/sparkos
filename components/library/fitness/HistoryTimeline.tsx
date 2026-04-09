@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { useFitnessInsights } from '../../../hooks/useFitnessInsights';
+import { useFitnessInsights } from '../../../hooks/fitness/useFitnessInsights';
 import { format, startOfWeek, isThisWeek, differenceInWeeks } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { WorkoutSession } from '../../../types';
@@ -25,7 +25,6 @@ export const HistoryTimeline = React.memo(() => {
             setDeletingId(sessionId);
             try {
                 await deleteWorkoutSession(sessionId);
-                // window.location.reload();
             } catch (error) {
                 console.error('Failed to delete workout session:', error);
                 setDeletingId(null);

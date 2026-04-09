@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useHaptics } from '../hooks/useHaptics';
@@ -56,5 +57,6 @@ const SearchRecentItem: React.FC<SearchRecentItemProps> = ({
     );
 };
 
-export default SearchRecentItem;
+// PERF: Memoized - stable onSelect/onRemove callbacks prevent re-render when sibling items change
+export default React.memo(SearchRecentItem);
 

@@ -242,15 +242,16 @@ export const WorkoutEdit: React.FC<EditProps> = ({ editState, dispatch }) => {
     dispatch({ type: 'SET_FIELD', payload: { field: 'exercises', value: newExercises } });
   };
 
-  const handleUpdateSet = (
+  const handleUpdateSet = <K extends keyof WorkoutSet>(
     exIndex: number,
     setIndex: number,
-    field: keyof WorkoutSet,
-    value: any
+    field: K,
+    value: WorkoutSet[K]
   ) => {
     const newExercises = [...(editState.exercises || [])];
-    if (newExercises[exIndex]?.sets[setIndex]) {
-      (newExercises[exIndex].sets[setIndex] as any)[field] = value;
+    const targetSet = newExercises[exIndex]?.sets[setIndex];
+    if (targetSet) {
+      targetSet[field] = value;
     }
     dispatch({ type: 'SET_FIELD', payload: { field: 'exercises', value: newExercises } });
   };

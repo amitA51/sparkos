@@ -1,4 +1,6 @@
+// CLEANED - CSS vars fixed
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import type { PersonalItem } from '../types';
 import { FlameIcon, CheckCircleIcon, TrashIcon, ShieldCheckIcon, RefreshIcon, EditIcon } from './icons';
 import { PinIcon } from './icons/contentIcons';
@@ -280,8 +282,8 @@ const HabitItem: React.FC<HabitItemProps> = ({
       <UltraCard
         onClick={e => onSelect(item, e)}
         onContextMenu={e => onContextMenu(e, item)}
-        className={`group relative transition-all duration-300 ease-[var(--ease-spring-soft)] cursor-pointer active:scale-[0.98] animate-item-enter-fi border border-white/8 hover:border-white/15 ${bgClass}`}
-        style={{ animationDelay: `${index * 50}ms`, willChange: 'transform' }}
+        className={`group relative transition-all duration-300 ease-[var(--ease-spring-soft)] cursor-pointer active:scale-[0.98] animate-item-enter-fi ${bgClass}`}
+        style={{ border: '1px solid var(--border-subtle)', animationDelay: `${index * 50}ms`, willChange: 'transform' }}
         variant="glass"
         glowColor={isBadHabit ? 'magenta' : item.streak && item.streak > 0 ? 'cyan' : 'neutral'}
         noPadding
@@ -397,7 +399,7 @@ const HabitItem: React.FC<HabitItemProps> = ({
 
                 {/* Weekly Completion Visualization (last 7 days) */}
                 {!isBadHabit && item.completionHistory && item.completionHistory.length > 0 && (
-                  <div className="flex items-center gap-1 mt-2">
+                  <div className="flex items-center gap-1.5 mt-2.5">
                     {Array.from({ length: 7 }).map((_, i) => {
                       const day = getToday(); // ✅ PERF: Cached
                       day.setDate(day.getDate() - (6 - i));
@@ -406,12 +408,18 @@ const HabitItem: React.FC<HabitItemProps> = ({
                         h => h.date.split('T')[0] === dayStr
                       );
                       return (
-                        <div
+                        <motion.div
                           key={i}
-                          className={`w-3 h-3 rounded-sm transition-all ${completed
-                            ? 'bg-[var(--dynamic-accent-start)] shadow-[0_0_4px_var(--dynamic-accent-glow)]'
-                            : 'bg-white/10'
-                            }`}
+                          initial={false}
+                          animate={completed ? {
+                            scale: [0.8, 1.2, 1],
+                            transition: { duration: 0.3 }
+                          } : { scale: 1 }}
+                          className="w-3 h-3 rounded-[4px] transition-all"
+                          style={{
+                            background: completed ? 'var(--dynamic-accent-start)' : 'var(--gray-150)',
+                            boxShadow: completed ? '0 0 6px var(--dynamic-accent-glow)' : 'none',
+                          }}
                           title={day.toLocaleDateString('he-IL', { weekday: 'short' })}
                         />
                       );
@@ -421,54 +429,80 @@ const HabitItem: React.FC<HabitItemProps> = ({
               </div>
             </div>
             {!hasSubHabits && !isBadHabit && (
-              <button
+              <motion.button
                 onClick={e => {
                   e.stopPropagation();
                   handleComplete();
                 }}
                 disabled={isCompletedToday}
-                className={`relative w-14 h-14 flex items-center justify-center rounded-full transition-all transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 ${isCompletedToday ? 'bg-[var(--dynamic-accent-start)] text-white' : 'bg-[var(--bg-secondary)] hover:bg-white/10 text-[var(--text-primary)]'}`}
+                whileTap={!isCompletedToday ? { scale: 0.8 } : undefined}
+                animate={justCompleted ? {
+                  scale: [1, 1.3, 1],
+                  transition: { duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }
+                } : { scale: 1 }}
+                className={`relative w-14 h-14 flex items-center justify-center rounded-full transition-all disabled:cursor-not-allowed ${isCompletedToday ? 'text-white' : 'text-[var(--text-primary)]'}`}
+                style={{
+                  background: isCompletedToday
+                    ? 'linear-gradient(135deg, var(--dynamic-accent-start), var(--dynamic-accent-end))'
+                    : 'var(--gray-100)',
+                  boxShadow: isCompletedToday
+                    ? '0 4px 16px var(--dynamic-accent-glow)'
+                    : 'none',
+                }}
                 aria-label={isCompletedToday ? 'הושלם להיום' : 'סמן כהושלם'}
               >
-                {isCompletedToday && (
-                  <div className="absolute inset-0 rounded-full bg-[var(--dynamic-accent-start)] animate-ping opacity-70"></div>
+                {isCompletedToday && !justCompleted && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{ background: 'var(--dynamic-accent-start)' }}
+                    animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
+                  />
                 )}
-                <CheckCircleIcon className="w-8 h-8" />
-              </button>
+                <CheckCircleIcon className="w-8 h-8 relative z-10" />
+              </motion.button>
             )}
 
             {isBadHabit &&
               (isConfirmingReset ? (
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-red-400 text-center">בטוח?</span>
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col gap-1"
+                >
+                  <span className="text-[10px] text-red-400 text-center font-semibold">בטוח?</span>
                   <div className="flex gap-1">
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
                       onClick={e => {
                         e.stopPropagation();
                         handleRelapse();
                       }}
-                      className="bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white text-xs px-2.5 py-1.5 rounded-lg hover:bg-red-600 font-medium"
                     >
                       כן
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
                       onClick={e => {
                         e.stopPropagation();
                         setIsConfirmingReset(false);
                       }}
-                      className="bg-secondary text-white text-xs px-2 py-1 rounded hover:bg-muted"
+                      className="text-xs px-2.5 py-1.5 rounded-lg font-medium"
+                      style={{ background: 'var(--gray-100)', color: 'var(--text-secondary)' }}
                     >
                       לא
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               ) : (
                 <button
                   onClick={e => {
                     e.stopPropagation();
                     setIsConfirmingReset(true);
                   }}
-                  className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all transform hover:scale-110 active:scale-95 bg-white/5 hover:bg-red-500/20 text-muted hover:text-red-400"
+                  className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all transform hover:scale-110 active:scale-95 hover:bg-red-500/20 text-muted hover:text-red-400"
+                  style={{ background: 'var(--gray-100)' }}
                   title="אפס ספירה (מעידה)"
                 >
                   <RefreshIcon className="w-5 h-5" />
@@ -477,7 +511,7 @@ const HabitItem: React.FC<HabitItemProps> = ({
           </div>
 
           {hasSubHabits && (
-            <div className="mt-3 pt-3 border-t border-white/10 space-y-2">
+            <div className="mt-3 pt-3 space-y-2" style={{ borderTop: '1px solid var(--border-subtle)' }}>
               {item.subHabits?.map(sh => {
                 const isSubCompleted = isDateToday(item.lastCompletedSubHabits?.[sh.id]);
                 return (
@@ -487,13 +521,15 @@ const HabitItem: React.FC<HabitItemProps> = ({
                       e.stopPropagation();
                       handleToggleSubHabit(sh.id);
                     }}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer"
+                    className="flex items-center gap-3 p-2 rounded-lg cursor-pointer"
+                    style={{ ['--hover' as string]: 'var(--surface-hover)' }}
                   >
                     <input
                       type="checkbox"
                       readOnly
                       checked={isSubCompleted}
-                      className="h-5 w-5 rounded bg-black/30 border-muted text-[var(--dynamic-accent-start)] focus:ring-[var(--dynamic-accent-start)] cursor-pointer"
+                      className="h-5 w-5 rounded text-[var(--dynamic-accent-start)] focus:ring-[var(--dynamic-accent-start)] cursor-pointer"
+                    style={{ background: 'var(--gray-100)', borderColor: 'var(--gray-200)' }}
                     />
                     <span
                       className={`flex-1 ${isSubCompleted ? 'line-through text-muted' : 'text-secondary'}`}

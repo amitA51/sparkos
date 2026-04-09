@@ -31,6 +31,7 @@ type CategoryGroup = {
 };
 
 // מיפוי קטגוריות לאייקונים SVG וצבעים - עיצוב פרימיום
+// הערה: צבעי קטגוריות הם קבועים (לא משתנים לפי תמה), לכן hex values מתאימים כאן
 const categoryConfig: Record<string, {
   icon: React.ReactNode;
   color: string;

@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCheckIcon, WarningIcon, InfoIcon, XIcon } from './icons';
@@ -27,31 +28,31 @@ interface StatusMessageProps {
 const typeConfig = {
   success: {
     icon: CheckCheckIcon,
-    bg: 'rgba(34, 197, 94, 0.15)',
-    border: 'rgba(34, 197, 94, 0.3)',
-    text: '#22c55e',
-    glow: '0 0 20px rgba(34, 197, 94, 0.3)',
+    bg: 'var(--bg-card)',
+    border: 'rgba(52, 199, 89, 0.20)',
+    text: 'var(--success)',
+    glow: '0 4px 14px rgba(52, 199, 89, 0.15), var(--shadow-sm)',
   },
   error: {
     icon: WarningIcon,
-    bg: 'rgba(239, 68, 68, 0.15)',
-    border: 'rgba(239, 68, 68, 0.3)',
-    text: '#ef4444',
-    glow: '0 0 20px rgba(239, 68, 68, 0.3)',
+    bg: 'var(--bg-card)',
+    border: 'rgba(255, 59, 48, 0.20)',
+    text: 'var(--error)',
+    glow: '0 4px 14px rgba(255, 59, 48, 0.15), var(--shadow-sm)',
   },
   warning: {
     icon: WarningIcon,
-    bg: 'rgba(245, 158, 11, 0.15)',
-    border: 'rgba(245, 158, 11, 0.3)',
-    text: '#f59e0b',
-    glow: '0 0 20px rgba(245, 158, 11, 0.3)',
+    bg: 'var(--bg-card)',
+    border: 'rgba(255, 149, 0, 0.20)',
+    text: 'var(--warning)',
+    glow: '0 4px 14px rgba(255, 149, 0, 0.15), var(--shadow-sm)',
   },
   info: {
     icon: InfoIcon,
-    bg: 'rgba(59, 130, 246, 0.15)',
-    border: 'rgba(59, 130, 246, 0.3)',
-    text: '#3b82f6',
-    glow: '0 0 20px rgba(59, 130, 246, 0.3)',
+    bg: 'var(--bg-card)',
+    border: 'rgba(0, 122, 255, 0.20)',
+    text: 'var(--info)',
+    glow: '0 4px 14px rgba(0, 122, 255, 0.15), var(--shadow-sm)',
   },
 };
 
@@ -106,18 +107,18 @@ const getStyleConfig = (style: StatusMessageStyle, config: typeof typeConfig.suc
     case 'minimal':
       return {
         containerClass: 'py-2 px-3 rounded-lg',
-        bg: 'rgba(0, 0, 0, 0.6)',
+        bg: 'var(--surface-glass)',
         border: 'transparent',
-        shadow: 'none',
+        shadow: 'var(--shadow-sm)',
         iconSize: 'w-4 h-4',
         textClass: 'text-xs',
       };
     case 'premium':
       return {
         containerClass: 'py-4 px-5 rounded-3xl',
-        bg: `linear-gradient(135deg, ${config.bg}, rgba(0, 0, 0, 0.4))`,
+        bg: 'var(--bg-card)',
         border: config.border,
-        shadow: `${config.glow}, 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)`,
+        shadow: `${config.glow}, 0 8px 32px rgba(0, 0, 0, 0.08)`,
         iconSize: 'w-6 h-6',
         textClass: 'text-sm font-semibold',
       };
@@ -245,7 +246,8 @@ const StatusMessage: React.FC<StatusMessageProps> = ({
 
           {/* Message */}
           <motion.span
-            className={`flex-1 text-white tracking-wide ${styleConfig.textClass}`}
+            className={`flex-1 tracking-wide ${styleConfig.textClass}`}
+            style={{ color: 'var(--text-primary)' }}
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
@@ -280,10 +282,13 @@ const StatusMessage: React.FC<StatusMessageProps> = ({
                 onClick={handleDismiss}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                className="p-1 rounded-full transition-colors"
+                style={{ ['--tw-bg-opacity' as string]: 1 }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 aria-label="סגור"
               >
-                <XIcon className="w-4 h-4 text-white/60" />
+                <XIcon className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
               </motion.button>
             )}
           </div>

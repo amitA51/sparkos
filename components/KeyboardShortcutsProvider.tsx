@@ -123,6 +123,30 @@ export const KeyboardShortcutsProvider: React.FC<KeyboardShortcutsProviderProps>
           category: 'navigation',
           handler: () => navigate('dashboard'),
         },
+        goto_calendar: {
+          key: 'g+c',
+          description: 'Go to Calendar',
+          category: 'navigation',
+          handler: () => navigate('calendar'),
+        },
+        goto_search: {
+          key: 'g+s',
+          description: 'Go to Search',
+          category: 'navigation',
+          handler: () => navigate('search'),
+        },
+        goto_settings: {
+          key: 'g+,',
+          description: 'Go to Settings',
+          category: 'navigation',
+          handler: () => navigate('settings'),
+        },
+        goto_insights: {
+          key: 'g+i',
+          description: 'Go to Insights',
+          category: 'navigation',
+          handler: () => navigate('insights'),
+        },
       });
     }
 

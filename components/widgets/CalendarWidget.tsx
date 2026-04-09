@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BaseWidget from './BaseWidget';
 import { GoogleCalendarIcon, CalendarIcon, PlusIcon } from '../icons';
-import { useGoogleCalendar } from '../../hooks/useGoogleCalendar';
+import { useGoogleCalendar } from '../../hooks/google/useGoogleCalendar';
 import { GoogleCalendarEvent } from '../../types';
 import CalendarEventModal from '../CalendarEventModal';
 
@@ -139,4 +139,4 @@ const CalendarWidget: React.FC<CalendarWidgetProps> = ({ onClick }) => {
   );
 };
 
-export default CalendarWidget;
+export default React.memo(CalendarWidget);

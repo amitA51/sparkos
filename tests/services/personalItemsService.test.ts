@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock dependencies
-vi.mock('../../services/data/dbCore', () => ({
+vi.mock('../../services/db/indexedDBCore', () => ({
     dbGetAll: vi.fn(),
     dbGet: vi.fn(),
     dbPut: vi.fn(),
@@ -44,13 +44,13 @@ vi.mock('../../services/mockData', () => ({
 }));
 
 describe('Personal Items Service', () => {
-    let personalItemsService: typeof import('../../services/data/personalItemsService');
-    let dbCore: typeof import('../../services/data/dbCore');
+    let personalItemsService: typeof import('../../services/db/personalItemsDb');
+    let dbCore: typeof import('../../services/db/indexedDBCore');
 
     beforeEach(async () => {
         vi.clearAllMocks();
-        personalItemsService = await import('../../services/data/personalItemsService');
-        dbCore = await import('../../services/data/dbCore');
+        personalItemsService = await import('../../services/db/personalItemsDb');
+        dbCore = await import('../../services/db/indexedDBCore');
     });
 
     describe('getPersonalItems', () => {

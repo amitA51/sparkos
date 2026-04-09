@@ -27,7 +27,7 @@ export const usePerformanceMode = (): PerformanceMode => {
       const cpuCores = navigator.hardwareConcurrency || 4;
       
       // Check device memory (if available)
-      const deviceMemory = (navigator as any).deviceMemory || 8;
+      const deviceMemory = navigator.deviceMemory ?? 8;
       
       // Check for reduced motion preference
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

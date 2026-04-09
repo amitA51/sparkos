@@ -182,7 +182,7 @@ export const requestFcmToken = async (uid: string): Promise<string | null> => {
     // Wait for the main PWA service worker to be ready
     // The main SW now includes Firebase Messaging initialization
     const swRegistration = await navigator.serviceWorker.ready;
-    console.log('Using main PWA service worker for FCM');
+    // Using main PWA service worker for FCM
 
     // Get the FCM token with VAPID key (required for web push)
     const token = await getToken(messaging, {
@@ -191,7 +191,7 @@ export const requestFcmToken = async (uid: string): Promise<string | null> => {
     });
 
     if (token) {
-      console.log('FCM Token obtained:', token.substring(0, 20) + '...');
+      // FCM Token obtained
       await saveTokenToDatabase(uid, token);
       return token;
     } else {
@@ -220,7 +220,7 @@ const saveTokenToDatabase = async (uid: string, token: string): Promise<void> =>
       platform: 'web',
       userAgent: navigator.userAgent,
     });
-    console.log('FCM token saved to Firestore');
+    // FCM token saved to Firestore
   } catch (err) {
     console.error('Error saving FCM token to Firestore:', err);
   }

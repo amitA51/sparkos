@@ -2,7 +2,7 @@
 export const playDing = () => {
     if (typeof window === 'undefined') return;
     try {
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
         const osc = ctx.createOscillator();
@@ -29,7 +29,7 @@ export const playDing = () => {
 export const playHeartbeat = () => {
     if (typeof window === 'undefined') return;
     try {
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
         const now = ctx.currentTime;
@@ -64,7 +64,7 @@ export const playHeartbeat = () => {
 export const playSuccess = () => {
     if (typeof window === 'undefined') return;
     try {
-        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
 

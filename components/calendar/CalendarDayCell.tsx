@@ -51,11 +51,13 @@ export const CalendarItem: React.FC<{ item: PersonalItem; onSelect: (e: React.Mo
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={onSelect}
-                className={`w-full text-right text-[11px] p-1.5 rounded-lg transition-shadow flex items-center gap-1.5 cursor-pointer border border-transparent hover:border-${color}/20 shadow-sm`}
+                className="w-full text-right text-[11px] p-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
                 style={{
                     backgroundColor: `${color}15`,
-                    color: color
+                    color: color,
+                    border: `0.5px solid ${color}25`,
                 }}
             >
                 <div className="w-1 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
@@ -77,6 +79,7 @@ export const GoogleEventItem: React.FC<{ event: GoogleCalendarEvent }> = ({ even
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             href={event.htmlLink}
             target="_blank"
             rel="noopener noreferrer"
@@ -136,30 +139,44 @@ const CalendarDayCell: React.FC<CalendarDayCellProps> = ({
             }}
             onDragLeave={onDragLeave}
             onDrop={e => onDrop(e, date)}
-            className={`relative bg-[var(--bg-card)]/80 hover:bg-[var(--bg-card)] transition-colors p-2 h-32 md:h-40 flex flex-col group
-        ${isDragOver ? 'ring-2 ring-inset ring-[var(--dynamic-accent-start)] bg-[var(--dynamic-accent-start)]/5' : ''}
-        ${isWeekend ? 'bg-[var(--bg-secondary)]/30' : ''}
+            className={`relative p-2 h-32 md:h-40 flex flex-col group transition-all duration-200
+        ${isDragOver ? 'ring-2 ring-inset ring-[var(--dynamic-accent-start)]' : ''}
       `}
+            style={{
+                background: isDragOver
+                    ? 'color-mix(in srgb, var(--dynamic-accent-start) 5%, var(--bg-card))'
+                    : isToday
+                        ? 'color-mix(in srgb, var(--dynamic-accent-start) 4%, var(--bg-card))'
+                        : isWeekend
+                            ? 'color-mix(in srgb, var(--bg-secondary) 30%, var(--bg-card))'
+                            : 'var(--bg-card)',
+            }}
         >
             <div className="flex justify-between items-start mb-1">
-                <span
-                    className={`text-sm font-medium transition-all duration-300
+                <motion.span
+                    whileTap={{ scale: 0.9 }}
+                    className={`text-sm font-semibold w-7 h-7 flex items-center justify-center rounded-full transition-all duration-300
             ${isToday
-                            ? 'bg-gradient-to-br from-[var(--dynamic-accent-start)] to-[var(--dynamic-accent-end)] text-white w-7 h-7 rounded-full flex items-center justify-center shadow-lg transform scale-110'
-                            : 'text-[var(--text-secondary)] w-7 h-7 flex items-center justify-center'
+                            ? 'text-white shadow-lg'
+                            : 'text-[var(--text-secondary)]'
                         }`}
+                    style={isToday ? {
+                        background: 'linear-gradient(135deg, var(--dynamic-accent-start), var(--dynamic-accent-end))',
+                        boxShadow: '0 2px 8px var(--dynamic-accent-glow)',
+                    } : undefined}
                 >
                     {day}
-                </span>
+                </motion.span>
 
                 {/* Quick Add Button (Visible on Hover) */}
-                <button
+                <motion.button
                     onClick={() => onQuickAdd('note', dateKey)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-[var(--bg-tertiary)] rounded-full text-[var(--text-secondary)]"
+                    whileTap={{ scale: 0.85 }}
+                    className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-1 rounded-full text-secondary"
                     title={LABELS.ADD_NOTE}
                 >
                     <AddIcon className="w-3.5 h-3.5" />
-                </button>
+                </motion.button>
             </div>
 
             {/* Habit Stripes */}

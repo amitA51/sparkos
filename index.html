@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
@@ -35,7 +35,11 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#0A0A0F" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+  <!-- Android Chrome status bar -->
+  <meta name="color-scheme" content="dark light">
+  <!-- Disable phone number auto-detection (Android Chrome) -->
+  <meta name="format-detection" content="telephone=no">
   <!-- Apple Splash Screens -->
   <link rel="apple-touch-startup-image" href="/images/splash-iphone.png">
 
@@ -82,7 +86,7 @@
     דלג לתוכן הראשי
   </a>
   <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 
 </html>

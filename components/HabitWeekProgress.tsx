@@ -59,7 +59,13 @@ const HabitWeekProgress: React.FC<HabitWeekProgressProps> = ({ className = '' })
         };
     }, [personalItems, weeklyGoal]);
 
-    if (personalItems.filter(item => item.type === 'habit').length === 0) {
+    // PERF: Reuse the habits list from useMemo above instead of re-filtering
+    const hasHabits = useMemo(
+        () => personalItems.some(item => item.type === 'habit'),
+        [personalItems]
+    );
+
+    if (!hasHabits) {
         return null;
     }
 

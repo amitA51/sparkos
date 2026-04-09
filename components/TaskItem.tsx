@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import type { PersonalItem, SwipeAction } from '../types';
 import { TrashIcon, CheckCircleIcon, CalendarIcon, EditIcon } from './icons';
@@ -41,17 +42,22 @@ const CustomCheckbox: React.FC<{ checked: boolean; onToggle: () => void; title: 
       onClick={handleToggle}
       className={`relative h-7 w-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ease-[var(--ease-spring-soft)]
                 ${checked
-          ? 'bg-gradient-to-br from-accent-cyan to-accent-violet shadow-[0_0_16px_rgba(0,240,255,0.5)] scale-105'
-          : 'bg-white/8 border-2 border-white/25 hover:border-accent-cyan/60 hover:bg-white/12'
+          ? 'scale-105'
+          : ''
         }
                 ${isAnimating ? 'animate-[checkbox-glow-pulse_0.5s_ease-out]' : ''}
             `}
       aria-label={`סמן את ${title} כ${checked ? 'לא הושלם' : 'הושלם'}`}
       aria-checked={checked}
       role="checkbox"
-      style={{ willChange: isAnimating ? 'transform, box-shadow' : 'auto' }}
+      style={{
+        willChange: isAnimating ? 'transform, box-shadow' : 'auto',
+        background: checked ? 'var(--dynamic-accent-start, #007AFF)' : 'var(--gray-100)',
+        border: checked ? 'none' : '2px solid var(--gray-300)',
+        boxShadow: checked ? '0 2px 8px var(--dynamic-accent-glow, rgba(0,122,255,0.3))' : 'none',
+      }}
     >
-      {checked && <CheckCircleIcon className="w-4 h-4 text-cosmos-black" />}
+      {checked && <CheckCircleIcon className="w-4 h-4 text-white" />}
     </button>
   );
 };
@@ -195,8 +201,24 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }
   }, []);
 
-  const totalCount = item.subTasks?.length || 0;
-  const completedCount = item.subTasks?.filter(st => st.isCompleted).length || 0;
+  // PERF: Memoize subtask counts to avoid .filter() on every render
+  const { totalCount, completedCount } = useMemo(() => ({
+    totalCount: item.subTasks?.length || 0,
+    completedCount: item.subTasks?.filter(st => st.isCompleted).length || 0,
+  }), [item.subTasks]);
+
+  // PERF: Extract IIFE task age calculation into useMemo
+  const taskAgeBadge = useMemo(() => {
+    if (!settings.taskSettings?.showTaskAge || !item.createdAt || item.isCompleted) return null;
+    const daysSinceCreation = Math.floor((Date.now() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+    if (daysSinceCreation <= 0) return null;
+    const colorClass = daysSinceCreation > 7 ? 'bg-red-500/20 text-red-400' : daysSinceCreation > 3 ? 'bg-amber-500/20 text-amber-400' : 'bg-white/10 text-theme-secondary';
+    return (
+      <span className={`px-1.5 py-0.5 rounded text-[10px] ${colorClass}`}>
+        {daysSinceCreation} ימים
+      </span>
+    );
+  }, [settings.taskSettings?.showTaskAge, item.createdAt, item.isCompleted]);
 
   const relativeDue = useMemo(() => {
     if (!item.dueDate) return null;
@@ -298,10 +320,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
           className={`
           relative p-4 flex items-start gap-4 
           transition-all duration-300 ease-[var(--ease-spring-soft)]
-          hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:-translate-y-1
+          hover:-translate-y-1
           active:scale-[0.98] cursor-pointer
           ${item.isCompleted ? 'opacity-50 grayscale-[0.6]' : ''}
-          rounded-2xl border border-white/8 hover:border-white/15
+          rounded-2xl
         `}
           glowColor="neutral"
           noPadding
@@ -338,7 +360,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
             <div className="flex items-center gap-3 text-xs text-theme-muted">
               {item.dueDate && (
-                <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-md">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-bg-tertiary">
                   <CalendarIcon className="w-3 h-3 opacity-70" />
                   {relativeDue}
                   {item.dueTime && <span className="opacity-50">| {item.dueTime}</span>}
@@ -346,21 +368,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
               )}
 
               {/* Task Age - when showTaskAge is enabled */}
-              {settings.taskSettings?.showTaskAge && item.createdAt && !item.isCompleted && (() => {
-                const daysSinceCreation = Math.floor((Date.now() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24));
-                if (daysSinceCreation > 0) {
-                  return (
-                    <span className={`px-1.5 py-0.5 rounded text-[10px] ${daysSinceCreation > 7 ? 'bg-red-500/20 text-red-400' : daysSinceCreation > 3 ? 'bg-amber-500/20 text-amber-400' : 'bg-white/10 text-theme-secondary'}`}>
-                      {daysSinceCreation} ימים
-                    </span>
-                  );
-                }
-                return null;
-              })()}
+              {taskAgeBadge}
 
               {totalCount > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <div className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
+                  <div className="w-12 h-1 rounded-full overflow-hidden bg-gray-150">
                     <div
                       className="h-full bg-accent-cyan transition-all"
                       style={{
@@ -383,17 +395,18 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </div>
 
           {/* Hover Actions */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover/item:opacity-100 transition-opacity bg-cosmos-depth/90 backdrop-blur-sm rounded-xl p-1 border border-white/10 shadow-xl translate-x-4 group-hover/item:translate-x-0 ease-spring-soft" style={{ transitionDuration: 'var(--transition-speed)' }}>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-sm rounded-xl p-1 shadow-xl translate-x-4 group-hover/item:translate-x-0 ease-spring-soft hover-actions-container" style={{ transitionDuration: 'var(--transition-speed)' }}>
             <button
               onClick={handleDeferToTomorrow}
-              className="p-2 text-theme-secondary hover:text-accent-violet hover:bg-white/5 rounded-lg transition-colors"
+              className="p-2 text-theme-secondary hover:text-accent-violet rounded-lg transition-colors"
+              style={{ ['--hover-bg' as string]: 'var(--surface-hover)' }}
               title="דחה למחר"
             >
               <CalendarIcon className="h-4 w-4" />
             </button>
             <button
               onClick={handleDelete}
-              className="p-2 text-theme-secondary hover:text-red-400 hover:bg-white/5 rounded-lg transition-colors"
+              className="p-2 text-theme-secondary hover:text-red-400 rounded-lg transition-colors"
               title="מחק"
             >
               <TrashIcon className="h-4 w-4" />

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Exercise } from '../../types';
 import * as dataService from '../../services/dataService';
 import { CloseIcon } from '../icons';
-// import './ActiveWorkout.css'; // Removed in favor of Tailwind
 
 interface QuickExerciseFormProps {
   onAdd: (exercise: Exercise) => void;

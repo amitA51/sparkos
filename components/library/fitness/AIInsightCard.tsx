@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useFitnessInsights } from '../../../hooks/useFitnessInsights';
+import { useFitnessInsights } from '../../../hooks/fitness/useFitnessInsights';
 import { SparklesIcon, RefreshIcon } from '../../icons';
 import { triggerHaptic } from '../../../src/utils/haptics';
 

@@ -96,13 +96,13 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: '100%', opacity: 0 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="w-full max-w-lg bg-[#1C1C1E] rounded-t-[32px] sm:rounded-[32px] max-h-[90dvh] overflow-hidden shadow-2xl border-t border-white/10 relative"
+                className="w-full max-w-lg bg-[var(--bg-secondary)] rounded-t-[32px] sm:rounded-[32px] max-h-[90dvh] overflow-hidden shadow-2xl border-t border-white/10 relative"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="p-6 pb-4 border-b border-[#3A3A3C]">
+                <div className="p-6 pb-4 border-b border-[var(--gray-600)]">
                     {/* Drag Handle (Mobile) */}
-                    <div className="w-10 h-1 bg-[#3A3A3C] rounded-full mx-auto mb-6 sm:hidden" />
+                    <div className="w-10 h-1 bg-[var(--gray-600)] rounded-full mx-auto mb-6 sm:hidden" />
 
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-black text-white tracking-tight">התחל אימון</h2>
@@ -112,33 +112,33 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); onOpenHistory(); }}
                                     onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); onOpenHistory(); }}
-                                    className="w-9 h-9 rounded-full bg-[#2C2C2E] flex items-center justify-center hover:bg-[#3A3A3C] transition-colors cursor-pointer"
+                                    className="w-9 h-9 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center hover:bg-[var(--gray-600)] transition-colors cursor-pointer"
                                     aria-label="היסטוריה"
                                 >
-                                    <ClockIcon className="w-5 h-5 text-[#8E8E93]" />
+                                    <ClockIcon className="w-5 h-5 text-[var(--gray-500)]" />
                                 </button>
                             )}
                             <button
                                 type="button"
                                 onClick={(e) => { e.stopPropagation(); onClose(); }}
                                 onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }}
-                                className="w-9 h-9 rounded-full bg-[#2C2C2E] flex items-center justify-center hover:bg-[#3A3A3C] transition-colors cursor-pointer"
-                                aria-label="סגור"
+                                    className="w-9 h-9 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center hover:bg-[var(--gray-600)] transition-colors cursor-pointer"
+                                    aria-label="סגור"
                             >
-                                <CloseIcon className="w-5 h-5 text-[#8E8E93]" />
+                                <CloseIcon className="w-5 h-5 text-[var(--gray-500)]" />
                             </button>
                         </div>
                     </div>
 
                     {/* Tabs - Apple Segmented Control */}
-                    <div className="bg-[#2C2C2E] p-1 rounded-xl flex">
+                    <div className="bg-[var(--bg-tertiary)] p-1 rounded-xl flex">
                         <button
                             type="button"
                             onClick={() => { triggerHaptic('selection'); setActiveTab('templates'); }}
                             onPointerDown={(e) => { e.preventDefault(); triggerHaptic('selection'); setActiveTab('templates'); }}
                             className={`flex-1 py-1.5 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${activeTab === 'templates'
-                                ? 'bg-[#636366] text-white shadow-sm'
-                                : 'text-[#8E8E93] hover:text-white'
+                                ? 'bg-[var(--gray-500)] text-white shadow-sm'
+                                : 'text-[var(--gray-500)] hover:text-white'
                                 }`}
                         >
                             תבניות
@@ -148,8 +148,8 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                             onClick={() => { triggerHaptic('selection'); setActiveTab('quick'); }}
                             onPointerDown={(e) => { e.preventDefault(); triggerHaptic('selection'); setActiveTab('quick'); }}
                             className={`flex-1 py-1.5 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${activeTab === 'quick'
-                                ? 'bg-[#636366] text-white shadow-sm'
-                                : 'text-[#8E8E93] hover:text-white'
+                                ? 'bg-[var(--gray-500)] text-white shadow-sm'
+                                : 'text-[var(--gray-500)] hover:text-white'
                                 }`}
                         >
                             התחלה מהירה
@@ -172,7 +172,7 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                                     animate={{ opacity: 1, y: 0 }}
                                     onClick={() => { triggerHaptic('medium'); onRepeatLastWorkout(lastSession); }}
                                     onPointerDown={(e) => { e.preventDefault(); triggerHaptic('medium'); onRepeatLastWorkout(lastSession); }}
-                                    className="w-full p-4 rounded-xl bg-[#2C2C2E] active:bg-[#3A3A3C] transition-colors text-start flex items-center gap-4 group"
+                                    className="w-full p-4 rounded-xl bg-[var(--bg-tertiary)] active:bg-[var(--gray-600)] transition-colors text-start flex items-center gap-4 group"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-[var(--dynamic-accent-start)]/10 flex items-center justify-center text-xl">
                                         🔄
@@ -181,7 +181,7 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                                         <h3 className="font-bold text-white group-hover:text-[var(--dynamic-accent-start)] transition-colors">
                                             חזור על אימון אחרון
                                         </h3>
-                                        <p className="text-xs text-[#8E8E93] mt-1">
+                                        <p className="text-xs text-[var(--gray-500)] mt-1">
                                             {lastSession.exercises.length} תרגילים • {formatRelativeTime(lastSession.startTime)}
                                         </p>
                                     </div>
@@ -227,20 +227,20 @@ const WorkoutStartModal: React.FC<WorkoutStartModalProps> = ({
                             {/* Most Used Exercises */}
                             {mostUsedExercises.length > 0 && (
                                 <div className="space-y-3 pt-4">
-                                    <h3 className="text-xs font-bold text-[#8E8E93] uppercase tracking-wide px-1 flex items-center gap-2">
-                                        <FlameIcon className="w-4 h-4 text-[#FF9500]" />
+                                    <h3 className="text-xs font-bold text-[var(--gray-500)] uppercase tracking-wide px-1 flex items-center gap-2">
+                                        <FlameIcon className="w-4 h-4 text-[var(--warning)]" />
                                         הכי בשימוש
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3">
                                         {mostUsedExercises.map((exercise, index) => (
                                             <div
                                                 key={exercise.id}
-                                                className="p-3 rounded-xl bg-[#2C2C2E] border border-transparent"
+                                                className="p-3 rounded-xl bg-[var(--bg-tertiary)] border border-transparent"
                                             >
                                                 <span className="text-sm font-bold text-white line-clamp-1">
                                                     {exercise.name}
                                                 </span>
-                                                <span className="text-[10px] text-[#8E8E93] block mt-0.5">
+                                                <span className="text-[10px] text-[var(--gray-500)] block mt-0.5">
                                                     {exercise.useCount || 0} פעמים
                                                 </span>
                                             </div>

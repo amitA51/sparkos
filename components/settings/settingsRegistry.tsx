@@ -25,13 +25,9 @@ export interface SettingItem {
 export type SettingsCategory =
     | 'profile'
     | 'appearance'
-    | 'behavior'
     | 'interface'
     | 'focus'
-    | 'workout'
     | 'ai'
-    | 'sync'
-    | 'data'
     | 'about'
     | 'notifications'
     | 'calendar'

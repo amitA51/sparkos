@@ -31,12 +31,12 @@ export const AmbientMeshBackground: React.FC<AmbientMeshProps> = ({
     const enableAnimations = forceEnableAnimations || ANIMATION_CONFIG.enableBackgroundAnimations;
 
     return (
-        <div className="fixed inset-0 -z-50 overflow-hidden bg-[#050505]">
+        <div className="fixed inset-0 -z-50 overflow-hidden bg-[var(--bg-primary,#050505)]">
             {/* Base gradient for depth */}
             <div
                 className="absolute inset-0"
                 style={{
-                    background: 'radial-gradient(ellipse at 50% 0%, rgba(15, 15, 25, 1) 0%, #050505 70%)',
+                    background: 'radial-gradient(ellipse at 50% 0%, rgba(15, 15, 25, 1) 0%, var(--bg-primary,#050505) 70%)',
                 }}
             />
 

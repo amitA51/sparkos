@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import type { UniversalSearchResult, GoogleCalendarEvent, PersonalItem } from '../types';
@@ -155,4 +156,5 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({ result, query, onSe
   );
 };
 
-export default SearchResultItem;
+// PERF: Memoized list item - prevents re-render when sibling results change
+export default React.memo(SearchResultItem);

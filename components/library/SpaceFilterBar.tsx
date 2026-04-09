@@ -42,7 +42,7 @@ export const SpaceFilterBar: React.FC<SpaceFilterBarProps> = ({
             <div className="flex gap-2 bg-white/5 p-1 rounded-xl border border-white/10 overflow-x-auto no-scrollbar">
                 <select
                     value={sortBy}
-                    onChange={(e) => onSortChange(e.target.value as any)}
+                    onChange={(e) => onSortChange(e.target.value as typeof sortBy)}
                     className="bg-transparent text-xs text-white/80 border-none focus:ring-0 cursor-pointer [&>option]:bg-[#1a1d24]"
                 >
                     <option value="order">סדר מותאם</option>

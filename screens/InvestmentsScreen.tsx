@@ -116,15 +116,15 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ icon, title, subtitle, ac
       <div
         className="p-2.5 rounded-xl backdrop-blur-xl"
         style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%)',
-          border: '1px solid rgba(255,255,255,0.08)'
+          background: 'var(--gray-50)',
+          border: '1px solid var(--border-subtle)'
         }}
       >
         {icon}
       </div>
       <div>
-        <h2 className="text-sm font-bold text-white tracking-tight">{title}</h2>
-        {subtitle && <p className="text-[10px] text-white/40 font-medium">{subtitle}</p>}
+        <h2 className="text-sm font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>{title}</h2>
+        {subtitle && <p className="text-[10px] font-medium" style={{ color: 'var(--text-muted)' }}>{subtitle}</p>}
       </div>
     </div>
     {action}
@@ -216,7 +216,7 @@ const InvestmentsScreen: React.FC<InvestmentsScreenProps> = ({ setActiveScreen }
   const [topMovers, setTopMovers] = useState<financialsService.TopMoversData | null>(null);
   const [news, setNews] = useState<financialsService.NewsItem[]>([]);
 
-  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isInitialMount = useRef(true);
 
   // Persist filter & sort
@@ -386,6 +386,22 @@ const InvestmentsScreen: React.FC<InvestmentsScreenProps> = ({ setActiveScreen }
     setSelectedAsset(asset);
   }, []);
 
+  // PERF: Memoize set of added tickers - avoids O(n) .some() per chip per render
+  const addedTickers = useMemo(() => new Set(watchlist.map(a => a.ticker)), [watchlist]);
+
+  // PERF: Stable per-ticker add callbacks - prevents PremiumQuickAddChip re-renders in .map()
+  const quickAddCallbacks = useMemo(() => {
+    const map = new Map<string, () => void>();
+    for (const s of FAMOUS_STOCKS) {
+      map.set(s.ticker, () => handleAdd(s.ticker));
+    }
+    return map;
+  }, [handleAdd]);
+
+  // PERF: Stable callbacks for modals/status
+  const handleCloseAssetModal = useCallback(() => setSelectedAsset(null), []);
+  const handleDismissStatus = useCallback(() => setStatusMessage(null), []);
+
   // Top movers for ticker tape
   const marqueeItems = useMemo(() => {
     if (!topMovers) return [];
@@ -425,9 +441,9 @@ const InvestmentsScreen: React.FC<InvestmentsScreenProps> = ({ setActiveScreen }
               key={s.ticker}
               ticker={s.ticker}
               emoji={s.emoji}
-              isAdded={watchlist.some(a => a.ticker === s.ticker)}
+              isAdded={addedTickers.has(s.ticker)}
               isLoading={isAdding === s.ticker}
-              onAdd={() => handleAdd(s.ticker)}
+              onAdd={quickAddCallbacks.get(s.ticker)!}
             />
           ))}
         </div>
@@ -542,7 +558,7 @@ const InvestmentsScreen: React.FC<InvestmentsScreenProps> = ({ setActiveScreen }
       {selectedAsset && (
         <AssetDetailModal
           asset={selectedAsset}
-          onClose={() => setSelectedAsset(null)}
+          onClose={handleCloseAssetModal}
         />
       )}
 
@@ -551,11 +567,11 @@ const InvestmentsScreen: React.FC<InvestmentsScreenProps> = ({ setActiveScreen }
           key={statusMessage.id}
           type={statusMessage.type}
           message={statusMessage.text}
-          onDismiss={() => setStatusMessage(null)}
+          onDismiss={handleDismissStatus}
         />
       )}
     </div>
   );
 };
 
-export default InvestmentsScreen;
+export default React.memo(InvestmentsScreen);

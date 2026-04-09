@@ -89,11 +89,11 @@ export async function fetchMACD(
         const histogram: TechnicalIndicator[] = [];
 
         dates.forEach(date => {
-            const entry = (macdData as Record<string, any>)[date];
+            const entry = (macdData as Record<string, Record<string, string>>)[date];
             if (entry) {
-                macd.push({ date, value: parseFloat(entry.MACD) });
-                signal.push({ date, value: parseFloat(entry.MACD_Signal) });
-                histogram.push({ date, value: parseFloat(entry.MACD_Hist) });
+                macd.push({ date, value: parseFloat(entry.MACD || '0') });
+                signal.push({ date, value: parseFloat(entry.MACD_Signal || '0') });
+                histogram.push({ date, value: parseFloat(entry.MACD_Hist || '0') });
             }
         });
 

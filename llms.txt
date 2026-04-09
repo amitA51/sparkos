@@ -4,11 +4,11 @@
 
 ## Core Files
 
-- [App.tsx](./App.tsx): Root component with providers
+- [src/App.tsx](./src/App.tsx): Root component with providers
 - [components/app/AppCore.tsx](./components/app/AppCore.tsx): Main app orchestrator  
 - [components/app/AppRouter.tsx](./components/app/AppRouter.tsx): Screen routing with lazy loading
 - [types.ts](./types.ts): TypeScript type definitions
-- [constants.ts](./constants.ts): App constants and configuration
+- [constants/index.ts](./constants/index.ts): App constants and configuration
 
 ## Screens (13 lazy-loaded)
 

@@ -111,13 +111,8 @@ const PremiumProjectCard: React.FC<PremiumProjectCardProps> = ({
         <div
           className="absolute inset-0 rounded-2xl"
           style={{
-            background: `
-              linear-gradient(135deg, 
-                rgba(255,255,255,0.03) 0%, 
-                rgba(255,255,255,0.01) 100%
-              )
-            `,
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
             backdropFilter: 'blur(20px)',
           }}
         />
@@ -250,7 +245,7 @@ const PremiumProjectCard: React.FC<PremiumProjectCardProps> = ({
                   cy={ringSize / 2}
                   r={radius}
                   fill="none"
-                  stroke="rgba(255,255,255,0.05)"
+                  stroke="var(--gray-150)"
                   strokeWidth={strokeWidth}
                 />
 
@@ -309,8 +304,8 @@ const PremiumProjectCard: React.FC<PremiumProjectCardProps> = ({
             <div
               className="p-2 rounded-full"
               style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--gray-50)',
+                border: '1px solid var(--border-subtle)',
               }}
             >
               <ChevronRightIcon className="w-4 h-4 text-theme-secondary rotate-180" />

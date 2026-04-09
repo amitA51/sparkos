@@ -15,7 +15,7 @@ import {
   validate,
   getErrorMessages,
   getFieldError,
-} from '../../lib/validation';
+} from '../../utils/zodValidation';
 
 // ============================================================================
 // Base Schema Tests

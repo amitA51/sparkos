@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import BaseWidget from './BaseWidget';
 import { DumbbellIcon, CheckCircleIcon, CircleIcon, FlameIcon } from '../icons';
 import { PersonalItem } from '../../types';
@@ -29,10 +29,11 @@ const HabitsTrackerWidget: React.FC<HabitsTrackerWidgetProps> = ({
       });
   }, [personalItems]);
 
-  const isCompletedToday = (habit: PersonalItem) => {
-    const today = todayKey();
+  // PERF: Cache today key once outside render loop instead of calling todayKey() per habit
+  const today = useMemo(() => todayKey(), []);
+  const isCompletedToday = useCallback((habit: PersonalItem) => {
     return habit.completionHistory?.some(h => h.date === today);
-  };
+  }, [today]);
 
   const getStreak = (habit: PersonalItem) => {
     return habit.streak || 0;
@@ -107,4 +108,4 @@ const HabitsTrackerWidget: React.FC<HabitsTrackerWidgetProps> = ({
   );
 };
 
-export default HabitsTrackerWidget;
+export default React.memo(HabitsTrackerWidget);

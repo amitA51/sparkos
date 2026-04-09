@@ -6,8 +6,6 @@
 
 import { useEffect, useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
-// TODO: BubbleMenu needs refactoring for TipTap v3 - use extension-based approach
-// import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import TaskList from '@tiptap/extension-task-list';

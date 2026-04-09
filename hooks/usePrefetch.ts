@@ -18,6 +18,7 @@ const screenLoaders: Record<Screen, () => Promise<unknown>> = {
   login: () => import('../screens/LoginScreen'),
   signup: () => import('../screens/SignupScreen'),
   logos: () => import('../screens/HomeScreen'),
+  insights: () => import('../screens/InsightsScreen'),
 };
 
 const prefetchedScreens = new Set<Screen>();
@@ -39,8 +40,8 @@ export function usePrefetch({
   delay = 2000,
   enabled = true,
 }: UsePrefetchOptions): UsePrefetchReturn {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const prefetchScreen = useCallback(async (screen: Screen): Promise<void> => {
     if (prefetchedScreens.has(screen)) {
@@ -127,7 +128,7 @@ export function useNavPrefetch(): {
   onLeave: () => void;
 } {
   const { prefetchOnHover } = usePrefetch({ screens: [] });
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onHover = useCallback((screen: Screen) => {
     if (hoverTimeoutRef.current) {

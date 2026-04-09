@@ -72,8 +72,15 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     dispatch({ type: 'CLOSE_MODAL', payload: { key } });
   }, []);
 
+  // PERF: Memoize context value to prevent all consumers from re-rendering
+  // when parent components re-render. openModal/closeModal are stable refs.
+  const value = React.useMemo<ModalContextType>(
+    () => ({ modals, openModal, closeModal }),
+    [modals, openModal, closeModal]
+  );
+
   return (
-    <ModalContext.Provider value={{ modals, openModal, closeModal }}>
+    <ModalContext.Provider value={value}>
       {children}
     </ModalContext.Provider>
   );

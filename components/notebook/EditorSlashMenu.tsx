@@ -200,7 +200,7 @@ const EditorSlashMenu: React.FC<EditorSlashMenuProps> = ({ editor, onUploadImage
                         left: position.left,
                         zIndex: 60
                     }}
-                    className={`w-64 overflow-hidden bg-[#1C1C1E]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl flex flex-col 
+                    className={`w-64 overflow-hidden bg-[var(--bg-secondary,#1C1C1E)]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl flex flex-col 
                         ${position.flip ? 'origin-bottom' : 'origin-top'}
                     `}
                 >

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import type { FeedItem } from '../types';
 import {
   ReadIcon,
@@ -43,7 +43,7 @@ interface ContextMenuProps {
 // Animation Variants
 // ============================================================================
 
-const menuVariants = {
+const menuVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.92,
@@ -75,7 +75,7 @@ const menuVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, x: -8 },
   visible: {
     opacity: 1,
@@ -120,7 +120,7 @@ const MenuItemButton: React.FC<MenuItemButtonProps> = React.memo(
 
     return (
       <motion.button
-        variants={itemVariants as any}
+        variants={itemVariants}
         onClick={handleClick}
         disabled={item.disabled}
         aria-disabled={item.disabled}
@@ -464,7 +464,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       <motion.div
         key="menu"
         ref={menuRef}
-        variants={menuVariants as any}
+        variants={menuVariants}
         initial="hidden"
         animate="visible"
         exit="exit"

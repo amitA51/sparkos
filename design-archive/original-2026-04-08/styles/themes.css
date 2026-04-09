@@ -1,0 +1,98 @@
+/**
+ * ===========================================================================
+ * SPARKOS DESIGN SYSTEM - THEME DEFINITIONS
+ * Simple dual-theme: light (default in :root) + dark ([data-theme="dark"])
+ *
+ * All dark overrides are defined in design-tokens.css under [data-theme="dark"].
+ * This file provides backward-compatible selectors and form control overrides.
+ * ===========================================================================
+ */
+
+/* =================================================================
+   DARK THEME -- Form Control color-scheme
+   ================================================================= */
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  color-scheme: dark;
+}
+
+/* =================================================================
+   DARK THEME -- Autofill Override
+   ================================================================= */
+
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+[data-theme="dark"] input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: white !important;
+}
+
+/* =================================================================
+   DARK THEME -- Scrollbar
+   ================================================================= */
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* =================================================================
+   BACKWARD COMPAT -- Legacy theme selectors redirect to dark
+   Old code that used data-theme="obsidian" etc. will still work.
+   ================================================================= */
+
+[data-theme="obsidian"],
+[data-theme="neon"],
+[data-theme="ocean"],
+[data-theme="solar"] {
+  /* These all behave as dark mode now */
+  --bg-primary: var(--bg-primary);
+  color-scheme: dark;
+}
+
+/* =================================================================
+   LIGHT THEME -- Explicit selector for code that sets data-theme="light"
+   ================================================================= */
+
+[data-theme="light"] {
+  --bg-app: #F2F2F7;
+  --bg-primary: #F2F2F7;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E5E5EA;
+  --bg-card: #FFFFFF;
+  --text-primary: #000000;
+  --text-secondary: rgba(60, 60, 67, 0.6);
+  --text-muted: rgba(60, 60, 67, 0.3);
+  --border-primary: rgba(0, 0, 0, 0.06);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+  --color-surface-hover: rgba(0, 0, 0, 0.04);
+  --surface-glass: rgba(255, 255, 255, 0.92);
+  --glass-blur: 40px;
+  --glass-saturate: 180%;
+  --glass-border: rgba(0, 0, 0, 0.04);
+  --glass-background: rgba(255, 255, 255, 0.88);
+  --bg-nav: rgba(249, 249, 249, 0.94);
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --dynamic-accent-start: #007AFF;
+  --dynamic-accent-end: #5856D6;
+  --dynamic-accent-rgb: 0, 122, 255;
+  --accent-gradient: linear-gradient(135deg, #007AFF, #5856D6);
+  --btn-primary-bg: #007AFF;
+  --btn-primary-text: #FFFFFF;
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-error: #FF3B30;
+  --color-info: #007AFF;
+  --color-cosmos-black: #F2F2F7;
+  --color-cosmos-void: #F2F2F7;
+  --color-cosmos-depth: #FFFFFF;
+  --color-cosmos-surface: #FFFFFF;
+  color-scheme: light;
+}

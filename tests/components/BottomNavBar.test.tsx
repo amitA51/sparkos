@@ -68,8 +68,6 @@ vi.mock('../../components/icons', () => ({
 
 // Import after mocks
 import BottomNavBar from '../../components/BottomNavBar';
-// Screen type used for prop type documentation for reference in navigation tests
-// import type { Screen } from '../../types';
 
 describe('BottomNavBar', () => {
     const mockSetActiveScreen = vi.fn();

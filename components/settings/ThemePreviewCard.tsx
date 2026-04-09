@@ -17,11 +17,11 @@ export const ThemePreviewCard: React.FC<{
                 className={`
           relative w-full aspect-[4/3] rounded-2xl transition-all duration-300 overflow-hidden
           ${isSelected
-                        ? 'ring-2 shadow-[0_0_35px_var(--glow-color)]'
-                        : 'ring-1 ring-white/10 hover:ring-white/25'
+                        ? 'ring-2 shadow-lg'
+                        : 'ring-1'
                     }
           group-hover:scale-[1.03] group-active:scale-[0.98]
-          group-hover:shadow-[0_10px_40px_rgba(0,0,0,0.5)]
+          group-hover:shadow-xl
         `}
                 style={{
                     backgroundColor: '#0A0A0F',
@@ -93,7 +93,7 @@ export const ThemePreviewCard: React.FC<{
             <span
                 className={`
           text-sm mt-2 font-semibold block transition-colors
-          ${isSelected ? '' : 'text-[var(--text-secondary)] group-hover:text-white'}
+          ${isSelected ? '' : 'text-[var(--text-secondary)]'}
         `}
                 style={{ color: isSelected ? gradientStart : undefined }}
             >

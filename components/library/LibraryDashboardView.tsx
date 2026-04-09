@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 /**
  * LibraryDashboardView - Extracted from LibraryScreen.tsx
  * 
@@ -154,7 +155,7 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
                                 <InboxIcon className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-300" />
                             </motion.div>
                             <div className="text-right">
-                                <h2 className="text-lg sm:text-xl font-bold text-white font-heading">
+                                <h2 className="text-lg sm:text-xl font-bold font-heading" style={{ color: 'var(--text-primary)' }}>
                                     תיבת דואר נכנס
                                 </h2>
                                 <p className="text-xs sm:text-sm text-theme-secondary">
@@ -205,7 +206,7 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
             >
                 <h2
                     className="text-[13px] font-semibold tracking-wide mb-4 px-1"
-                    style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+                    style={{ color: 'var(--text-muted)' }}
                 >
                     מרחבים
                 </h2>
@@ -243,13 +244,11 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
                         onClick={onOpenAddSpaceModal}
                         className="group relative rounded-radius-card p-padding-card flex flex-col items-center justify-center gap-gap-base min-h-[100px] transition-all"
                         style={{
-                            background: 'rgba(255,255,255,0.02)',
-                            border: '1px solid rgba(255,255,255,0.06)',
+                            background: 'var(--gray-50)',
+                            border: '1px solid var(--border-subtle)',
                         }}
                         whileHover={{
                             scale: 1.02,
-                            borderColor: 'rgba(var(--dynamic-accent-rgb), 0.3)',
-                            background: 'rgba(255,255,255,0.04)',
                         }}
                         whileTap={{ scale: 0.98 }}
                     >
@@ -278,7 +277,7 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
                 >
                     <h2
                         className="text-[13px] font-semibold tracking-wide mb-4 px-1"
-                        style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+                        style={{ color: 'var(--text-muted)' }}
                     >
                         מפות דרכים
                     </h2>
@@ -313,7 +312,7 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
                                                     {progress.progress}%
                                                 </span>
                                             </div>
-                                            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--gray-150)' }}>
                                                 <motion.div
                                                     className="h-full rounded-full"
                                                     style={{
@@ -351,7 +350,7 @@ const LibraryDashboardView: React.FC<LibraryDashboardViewProps> = ({
                 >
                     <h2
                         className="text-[13px] font-semibold tracking-wide mb-4 px-1"
-                        style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+                        style={{ color: 'var(--text-muted)' }}
                     >
                         כל הפריטים לפי קטגוריה
                     </h2>

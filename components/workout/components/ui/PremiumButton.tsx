@@ -90,7 +90,7 @@ export const PremiumButton = memo<PremiumButtonProps>(({ onPress, variant, child
                 ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
                 ${isIncrement
                     ? 'bg-[var(--cosmos-accent-primary)] text-black shadow-lg shadow-[var(--cosmos-accent-primary)]/25'
-                    : 'bg-[#2C2C2E] text-white border border-white/5'
+                    : 'bg-[var(--bg-elevated)] text-white border border-white/5'
                 }
             `}
             style={{

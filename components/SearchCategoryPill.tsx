@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useHaptics } from '../hooks/useHaptics';
@@ -34,7 +35,7 @@ const SearchCategoryPill: React.FC<SearchCategoryPillProps> = ({
         snap-center shrink-0 border
         ${isActive
                     ? 'text-white border-transparent bg-gradient-to-r from-[var(--color-accent-cyan)] to-[var(--color-accent-violet)] shadow-[var(--search-pill-active-shadow)]'
-                    : 'bg-[var(--search-pill-bg)] border-[var(--search-pill-border)] text-[var(--text-secondary)] hover:bg-[var(--search-result-hover-bg)] hover:border-[var(--color-gray-200)] hover:text-white'
+                    : 'bg-[var(--search-pill-bg)] border-[var(--search-pill-border)] text-[var(--text-secondary)] hover:bg-[var(--search-result-hover-bg)] hover:border-[var(--gray-200)] hover:text-white'
                 }
       `}
         >
@@ -56,4 +57,5 @@ const SearchCategoryPill: React.FC<SearchCategoryPillProps> = ({
     );
 };
 
-export default SearchCategoryPill;
+// PERF: Memoized - receives stable onClick from Map, prevents re-render when sibling pills change
+export default React.memo(SearchCategoryPill);

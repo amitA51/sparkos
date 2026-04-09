@@ -62,31 +62,23 @@
 
 ```
 sparkos/
-├── 📄 App.tsx                    # Root component
-├── 📄 index.tsx                  # Entry point
 ├── 📄 index.html                 # HTML template
-├── 📄 types.ts                   # Global TypeScript types (1013 lines)
-├── 📄 constants.ts               # App constants & localStorage keys
-├── 📄 global.d.ts                # Global type declarations
+├── 📄 types.ts                   # Global TypeScript types
 ├── 📄 vite.config.ts             # Vite configuration
 ├── 📄 tailwind.config.js         # TailwindCSS configuration
-├── 📄 sw.js                      # Service Worker
-├── 📄 manifest.json              # PWA manifest
-│
-├── 📁 components/                # UI Components (295 files)
-├── 📁 screens/                   # Screen/Page components (15 files)
-├── 📁 services/                  # Business logic & API calls (70 files)
-├── 📁 hooks/                     # Custom React hooks (43 files)
-├── 📁 src/                       # Additional source (contexts, styles)
-├── 📁 utils/                     # Utility functions (11 files)
-├── 📁 state/                     # State management (2 files)
+├── 📁 src/                       # Entry files, contexts, styles, ambient types
+├── 📁 public/                    # Static assets, icons, manifest, service workers
+├── 📁 components/                # UI components
+├── 📁 screens/                   # Screen/page components
+├── 📁 services/                  # Business logic and API calls
+├── 📁 hooks/                     # Custom React hooks
+├── 📁 utils/                     # Utility functions
+├── 📁 state/                     # State management
 ├── 📁 config/                    # Configuration files
-├── 📁 data/                      # Static data (quotes, etc.)
-├── 📁 lib/                       # External library configs
+├── 📁 data/                      # Static data
 ├── 📁 tests/                     # Test files
 ├── 📁 docs/                      # Documentation
-├── 📁 public/                    # Static assets
-└── 📁 scripts/                   # Build/utility scripts
+└── 📁 scripts/                   # Build and utility scripts
 ```
 
 ---
@@ -97,8 +89,8 @@ sparkos/
 
 | File | Purpose |
 |------|---------|
-| [index.tsx](file:///c:/Users/עילאי/Desktop/sparkos/index.tsx) | Application entry point, renders App with React.StrictMode |
-| [App.tsx](file:///c:/Users/עילאי/Desktop/sparkos/App.tsx) | Root component with all providers hierarchy |
+| [src/main.tsx](file:///c:/Users/עילאי/Desktop/sparkos/src/main.tsx) | Application entry point, renders App with React.StrictMode |
+| [src/App.tsx](file:///c:/Users/עילאי/Desktop/sparkos/src/App.tsx) | Root component with all providers hierarchy |
 | [index.html](file:///c:/Users/עילאי/Desktop/sparkos/index.html) | HTML template with PWA meta tags |
 
 ### Provider Hierarchy (App.tsx)
@@ -122,7 +114,7 @@ QueryClientProvider (TanStack Query)
 | [vite.config.ts](file:///c:/Users/עילאי/Desktop/sparkos/vite.config.ts) | Vite build configuration, PWA settings, chunking strategy |
 | [tailwind.config.js](file:///c:/Users/עילאי/Desktop/sparkos/tailwind.config.js) | TailwindCSS theme, colors, animations |
 | [tsconfig.json](file:///c:/Users/עילאי/Desktop/sparkos/tsconfig.json) | TypeScript compiler options |
-| [manifest.json](file:///c:/Users/עילאי/Desktop/sparkos/manifest.json) | PWA manifest (icons, theme, shortcuts) |
+| [public/manifest.json](file:///c:/Users/עילאי/Desktop/sparkos/public/manifest.json) | Static PWA manifest served from `public/` |
 | [firebase.json](file:///c:/Users/עילאי/Desktop/sparkos/firebase.json) | Firebase hosting configuration |
 
 ---
@@ -555,7 +547,7 @@ type PersonalItemType = 'task' | 'habit' | 'antigoal' | 'workout' | 'note' |
 | File | Purpose |
 |------|---------|
 | [src/index.css](file:///c:/Users/עילאי/Desktop/sparkos/src/index.css) | Global styles (15KB) |
-| [src/design-tokens.css](file:///c:/Users/עילאי/Desktop/sparkos/src/design-tokens.css) | CSS variables & tokens (62KB) |
+| [src/styles/design-tokens.css](file:///c:/Users/עילאי/Desktop/sparkos/src/styles/design-tokens.css) | CSS variables & tokens |
 | [src/fonts.css](file:///c:/Users/עילאי/Desktop/sparkos/src/fonts.css) | Font definitions |
 | [src/animation-density.css](file:///c:/Users/עילאי/Desktop/sparkos/src/animation-density.css) | Animation settings |
 | [styles/](file:///c:/Users/עילאי/Desktop/sparkos/styles/) | Additional stylesheets |
@@ -676,9 +668,9 @@ npm run deploy     # Build + Firebase deploy
 4. **הגדרות/Settings** → חפש ב-`components/settings/`, `settingsService.ts`
 5. **AI Features** → חפש ב-`services/ai/`, `geminiService.ts`
 6. **UI Components** → חפש ב-`components/ui/`
-7. **Styling** → חפש ב-`src/design-tokens.css`, `tailwind.config.js`
+7. **Styling** → חפש ב-`src/styles/design-tokens.css`, `tailwind.config.js`
 8. **Types** → הכל ב-`types.ts`
-9. **Constants** → הכל ב-`constants.ts`
+9. **Constants** → הכל ב-`constants/index.ts`
 
 ---
 
@@ -1145,9 +1137,9 @@ npm run test:coverage     # With coverage report
 
 | Topic | Primary Files | Secondary Files |
 |-------|---------------|-----------------|
-| **UI/Design** | `src/design-tokens.css`, `tailwind.config.js` | Component CSS files |
+| **UI/Design** | `src/styles/design-tokens.css`, `tailwind.config.js` | Component CSS files |
 | **New Screen** | `screens/`, `AppRouter.tsx` | `BottomNavBar.tsx` |
-| **New Item Type** | `types.ts`, `constants.ts`, `ItemCreationForm.tsx` | DataContext, DB service |
+| **New Item Type** | `types.ts`, `constants/index.ts`, `ItemCreationForm.tsx` | DataContext, DB service |
 | **AI Feature** | `geminiService.ts`, `services/ai/` | Relevant component |
 | **Settings** | `settingsService.ts`, `components/settings/` | `settingsRegistry.tsx` |
 | **Workout** | `components/workout/`, `workoutDb.ts` | `WorkoutSession` type |

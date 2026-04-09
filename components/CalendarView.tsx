@@ -34,7 +34,10 @@ const CalendarHeader: React.FC<{
   viewMode: CalendarViewMode;
   setViewMode: (mode: CalendarViewMode) => void;
 }> = ({ currentDate, setCurrentDate, viewMode, setViewMode }) => {
+  const [navDirection, setNavDirection] = useState(0);
+
   const changeDate = (delta: number) => {
+    setNavDirection(delta);
     const newDate = new Date(currentDate);
     if (viewMode === 'month') newDate.setMonth(currentDate.getMonth() + delta);
     else newDate.setDate(currentDate.getDate() + delta * 7);
@@ -44,52 +47,79 @@ const CalendarHeader: React.FC<{
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
       {/* Date Navigation */}
-      <div className="flex items-center gap-4 bg-[var(--bg-secondary)]/40 p-1.5 rounded-full backdrop-blur-md border border-[var(--border-primary)]/30">
-        <button
+      <div
+        className="flex items-center gap-3 p-1.5 rounded-2xl backdrop-blur-md cal-nav-container"
+      >
+        <motion.button
           onClick={() => setCurrentDate(new Date())}
-          className="text-xs font-bold bg-[var(--dynamic-accent-start)] text-white px-4 py-2 rounded-full shadow-lg shadow-[var(--dynamic-accent-start)]/20 hover:brightness-110 transition-all"
+          whileTap={{ scale: 0.93 }}
+          className="text-xs font-bold text-white px-4 py-2 rounded-xl transition-all"
+          style={{
+            background: 'linear-gradient(135deg, var(--dynamic-accent-start), var(--dynamic-accent-end))',
+            boxShadow: '0 2px 8px var(--dynamic-accent-glow)',
+          }}
         >
           היום
-        </button>
+        </motion.button>
         <div className="flex items-center gap-1">
-          <button
+          <motion.button
             onClick={() => changeDate(-1)}
-            className="p-2 rounded-full hover:bg-[var(--bg-tertiary)]/50 text-[var(--text-secondary)] transition-colors"
+            whileTap={{ scale: 0.88 }}
+            className="p-2 rounded-xl transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
           >
             <ChevronLeftIcon className="w-5 h-5 transform rotate-180" />
-          </button>
-          <span className="text-lg font-bold text-[var(--text-primary)] min-w-[140px] text-center capitalize">
-            {currentDate.toLocaleString('he-IL', { month: 'long', year: 'numeric' })}
-          </span>
-          <button
+          </motion.button>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={`${currentDate.getMonth()}-${currentDate.getFullYear()}`}
+              initial={{ opacity: 0, x: navDirection * 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: navDirection * -20 }}
+              transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-lg font-bold min-w-[140px] text-center capitalize"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              {currentDate.toLocaleString('he-IL', { month: 'long', year: 'numeric' })}
+            </motion.span>
+          </AnimatePresence>
+          <motion.button
             onClick={() => changeDate(1)}
-            className="p-2 rounded-full hover:bg-[var(--bg-tertiary)]/50 text-[var(--text-secondary)] transition-colors"
+            whileTap={{ scale: 0.88 }}
+            className="p-2 rounded-xl transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
           >
             <ChevronLeftIcon className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
       {/* View Switcher */}
-      <div className="flex p-1 bg-[var(--bg-secondary)]/40 rounded-full border border-[var(--border-primary)]/30 backdrop-blur-sm">
-        <button
-          onClick={() => setViewMode('month')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${viewMode === 'month'
-            ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-            : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-        >
-          חודש
-        </button>
-        <button
-          onClick={() => setViewMode('week')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${viewMode === 'week'
-            ? 'bg-[var(--bg-card)] text-[var(--text-primary)] shadow-sm'
-            : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-            }`}
-        >
-          שבוע
-        </button>
+      <div
+        className="flex p-1 rounded-2xl backdrop-blur-sm relative cal-nav-container"
+      >
+        {['month', 'week'].map((mode) => {
+          const isActive = viewMode === mode;
+          return (
+            <motion.button
+              key={mode}
+              onClick={() => setViewMode(mode as CalendarViewMode)}
+              whileTap={{ scale: 0.95 }}
+              className="relative px-5 py-2 rounded-xl text-sm font-semibold transition-colors duration-200 z-10"
+              style={{ color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)' }}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="calViewIndicator"
+                  className="absolute inset-0 rounded-xl"
+                  style={{ background: 'var(--bg-card)', boxShadow: 'var(--shadow-sm)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{mode === 'month' ? 'חודש' : 'שבוע'}</span>
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );
@@ -209,13 +239,14 @@ const CalendarView: React.FC<CalendarViewProps> = ({
     const firstDayOfMonth = new Date(year, month, 1).getDay();
 
     return (
-      <div className="rounded-3xl overflow-hidden border border-[var(--border-primary)]/50 bg-[var(--bg-card)]/30 backdrop-blur-xl shadow-2xl">
+      <div className="rounded-3xl overflow-hidden backdrop-blur-xl" style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', boxShadow: 'var(--shadow-xl)' }}>
         {/* Days Header */}
-        <div className="grid grid-cols-7 border-b border-[var(--border-primary)]/30 bg-[var(--bg-secondary)]/50">
-          {['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'].map(d => (
+        <div className="grid grid-cols-7" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+          {['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'].map((d, i) => (
             <div
               key={d}
-              className="text-center font-bold text-xs text-[var(--text-secondary)] py-3"
+              className="text-center font-bold text-xs py-3 cal-day-header"
+              style={{ color: (i === 5 || i === 6) ? 'var(--dynamic-accent-start)' : 'var(--text-secondary)' }}
             >
               {d}
             </div>
@@ -223,9 +254,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-7 bg-[var(--border-primary)]/10 gap-[1px]">
+        <div className="grid grid-cols-7 gap-[1px]" style={{ background: 'var(--border-subtle)' }}>
           {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} className="bg-[var(--bg-card)]/50 h-32 md:h-40" />
+            <div key={`empty-${i}`} className="h-32 md:h-40 cal-empty-cell" />
           ))}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
@@ -279,27 +310,35 @@ const CalendarView: React.FC<CalendarViewProps> = ({
           const isToday = getDateKey(new Date()) === dateKey;
 
           return (
-            <div
+            <motion.div
               key={dateKey}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: Math.min(weekDays.indexOf(day) * 0.04, 0.24), duration: 0.3 }}
               onDragOver={e => {
                 e.preventDefault();
                 setDragOverDate(dateKey);
               }}
               onDragLeave={() => setDragOverDate(null)}
               onDrop={e => handleDrop(e, day)}
-              className={`snap-center flex-shrink-0 w-[85vw] sm:w-[300px] h-[65vh] rounded-3xl border border-[var(--border-primary)]/50 p-4 flex flex-col relative transition-all duration-300
-                ${isToday
-                  ? 'bg-gradient-to-b from-[var(--dynamic-accent-start)]/10 to-[var(--bg-card)] border-[var(--dynamic-accent-start)]/30 shadow-lg shadow-[var(--dynamic-accent-start)]/5'
-                  : 'bg-[var(--bg-card)]/60 backdrop-blur-md'
-                }
+              className={`snap-center flex-shrink-0 w-[85vw] sm:w-[300px] h-[65vh] rounded-3xl p-4 flex flex-col relative transition-all duration-300 backdrop-blur-md
                 ${dragOverDate === dateKey ? 'scale-[1.02] ring-2 ring-[var(--dynamic-accent-start)]' : ''}
               `}
+              style={{
+                background: isToday
+                  ? 'color-mix(in srgb, var(--dynamic-accent-start) 6%, var(--bg-card))'
+                  : 'var(--bg-card)',
+                border: isToday
+                  ? '1px solid color-mix(in srgb, var(--dynamic-accent-start) 30%, transparent)'
+                  : '1px solid var(--border-subtle)',
+                boxShadow: isToday ? '0 8px 32px var(--dynamic-accent-glow)' : 'var(--shadow-md)',
+              }}
             >
-              <div className="text-center mb-4 pb-4 border-b border-[var(--border-primary)]/20">
-                <p className={`text-xs font-medium uppercase tracking-wider mb-1 ${isToday ? 'text-[var(--dynamic-accent-start)]' : 'text-[var(--text-secondary)]'}`}>
+              <div className="text-center mb-4 pb-4" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                <p className="text-xs font-medium uppercase tracking-wider mb-1" style={{ color: isToday ? 'var(--dynamic-accent-start)' : 'var(--text-secondary)' }}>
                   {['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'יום שבת'][day.getDay()]}
                 </p>
-                <div className={`text-4xl font-bold ${isToday ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>
+                <div className="text-4xl font-bold" style={{ color: isToday ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
                   {day.getDate()}
                 </div>
               </div>
@@ -339,14 +378,15 @@ const CalendarView: React.FC<CalendarViewProps> = ({
                 })}
               </div>
 
-              <button
+              <motion.button
                 onClick={() => onQuickAdd('note', dateKey)}
-                className="w-full mt-4 py-2.5 rounded-xl bg-[var(--bg-secondary)]/50 hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all flex items-center justify-center gap-2 text-sm font-medium group"
+                whileTap={{ scale: 0.95 }}
+                className="w-full mt-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-medium group cal-quick-add"
               >
                 <AddIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span>הוסף פתק</span>
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           );
         })}
       </div>
@@ -364,11 +404,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={viewMode}
-          initial={{ opacity: 0, y: 10 }}
+          key={`${viewMode}-${currentDate.getMonth()}-${currentDate.getFullYear()}`}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
         >
           {viewMode === 'month' ? renderMonthView() : renderWeekView()}
         </motion.div>
@@ -376,7 +416,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
 
       {/* Habit Legend */}
       {habits.length > 0 && (
-        <div className="mt-6 p-4 rounded-2xl bg-[var(--bg-card)]/40 border border-[var(--border-primary)]/30 backdrop-blur-md">
+        <div className="mt-6 p-4 rounded-2xl backdrop-blur-md" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-sm)' }}>
           <HabitCalendarLegend
             habits={habits}
             habitColorMap={habitColorMap}

@@ -66,13 +66,13 @@ export const ExerciseCard = memo<ExerciseCardProps>(({ exercise, stats, isSelect
         transition-all duration-200
         min-h-[72px] flex items-center gap-4
         ${isSelected
-                    ? 'bg-[#1C1C1E] ring-1 ring-[#a3e635]'
-                    : 'bg-[#2C2C2E]'
+                    ? 'bg-[var(--bg-secondary)] ring-1 ring-[#a3e635]'
+                    : 'bg-[var(--bg-tertiary)]'
                 }
       `}
         >
             {/* Favorite button */}
-            <button
+            <            button
                 type="button"
                 onClick={handleFavoriteClick}
                 className={`
@@ -80,7 +80,7 @@ export const ExerciseCard = memo<ExerciseCardProps>(({ exercise, stats, isSelect
           transition-all active:scale-90
           ${exercise.isFavorite
                         ? 'bg-amber-500/20 text-amber-400'
-                        : 'bg-[#3A3A3C] text-[#636366] hover:text-amber-400'
+                        : 'bg-[var(--gray-600)] text-[var(--gray-500)] hover:text-amber-400'
                     }
         `}
             >
@@ -98,7 +98,7 @@ export const ExerciseCard = memo<ExerciseCardProps>(({ exercise, stats, isSelect
           w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
           ${isSelected
                         ? 'bg-[#a3e635] text-black'
-                        : 'bg-[#3A3A3C] text-[#8E8E93]'
+                        : 'bg-[var(--gray-600)] text-[var(--gray-500)]'
                     }
         `}>
                     {getMuscleIcon(exercise.muscleGroup)}
@@ -113,7 +113,7 @@ export const ExerciseCard = memo<ExerciseCardProps>(({ exercise, stats, isSelect
                         {exercise.name}
                     </h3>
 
-                    <div className="flex items-center gap-2 text-[13px] text-[#8E8E93]">
+                    <div className="flex items-center gap-2 text-[13px] text-[var(--gray-500)]">
                         {exercise.muscleGroup && (
                             <span>{exercise.muscleGroup}</span>
                         )}

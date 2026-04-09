@@ -176,7 +176,7 @@ const BodyWeightTracker: React.FC<BodyWeightTrackerProps> = ({ onClose, onSave }
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-3xl bg-[#0f0f13] border border-white/10 p-6 space-y-6"
+        className="w-full max-w-md rounded-3xl bg-[var(--bg-secondary)] border border-white/10 p-6 space-y-6"
       >
         {/* Header */}
         <div className="text-center">

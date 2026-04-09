@@ -60,40 +60,23 @@ class Particle {
   }
 }
 
-// Static Gradient for dark/minimal themes
+// iOS Light Mode background - clean system background
 const StaticDepthBackground: React.FC = () => (
   <div
     className="fixed inset-0 -z-50"
-    style={{
-      background: 'linear-gradient(180deg, #08080c 0%, #050505 30%, #030305 70%, #050505 100%)',
-    }}
-  >
-    {/* Subtle top ambient */}
-    <div
-      className="absolute top-0 left-0 w-full h-[40%]"
-      style={{
-        background: 'radial-gradient(ellipse at 50% 0%, rgba(30, 30, 50, 0.3) 0%, transparent 70%)',
-      }}
-    />
-    {/* Noise texture */}
-    <div
-      className="absolute inset-0 opacity-[0.015]"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      }}
-    />
-  </div>
+    style={{ background: 'var(--bg-primary)' }}
+  />
 );
 
-// Studio background – soft light gradient + noise, works for light & dark
+// Studio background - soft light gradient + noise, works for light & dark
 const StudioBackground: React.FC = () => (
   <div
     className="fixed inset-0 -z-50"
     style={{
       background:
-        'radial-gradient(circle at 20% 0%, rgba(191, 219, 254, 0.8) 0%, transparent 45%),' +
-        'radial-gradient(circle at 80% 0%, rgba(221, 214, 254, 0.7) 0%, transparent 50%),' +
-        'linear-gradient(180deg, #f9fafb 0%, #e5e7eb 100%)',
+        'radial-gradient(circle at 20% 0%, rgba(0, 122, 255, 0.08) 0%, transparent 45%),' +
+        'radial-gradient(circle at 80% 0%, rgba(88, 86, 214, 0.07) 0%, transparent 50%),' +
+        'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)',
     }}
   >
     <div
@@ -151,7 +134,7 @@ const ParticleDustBackground: React.FC = () => {
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: ReturnType<typeof setTimeout>;
     const onResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(handleResize, 100);
@@ -176,7 +159,7 @@ const ParticleDustBackground: React.FC = () => {
   );
 };
 
-// OLED Pure Black
+// OLED Pure Black (legacy - kept for compatibility)
 const OledBackground: React.FC = () => <div className="fixed inset-0 -z-50 bg-black" />;
 
 /**
@@ -254,4 +237,6 @@ const DynamicBackground: React.FC = () => {
   }
 };
 
-export default DynamicBackground;
+// PERF: Memoize to prevent re-renders on screen changes.
+// Background only changes when theme settings change (captured via useSettingsContext inside).
+export default React.memo(DynamicBackground);

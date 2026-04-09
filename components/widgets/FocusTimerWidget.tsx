@@ -150,7 +150,7 @@ const FocusTimerWidget: React.FC<FocusTimerWidgetProps> = ({ title = 'טיימר
                             cy="100"
                             r={radius}
                             fill="none"
-                            stroke="rgba(255,255,255,0.08)"
+                            stroke="var(--border-subtle)"
                             strokeWidth={strokeWidth}
                         />
 
@@ -337,4 +337,4 @@ const FocusTimerWidget: React.FC<FocusTimerWidgetProps> = ({ title = 'טיימר
     );
 };
 
-export default FocusTimerWidget;
+export default React.memo(FocusTimerWidget);

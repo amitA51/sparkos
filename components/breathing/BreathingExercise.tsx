@@ -34,8 +34,8 @@ export const BreathingExercise: React.FC<BreathingExerciseProps> = ({
     const [cycleCount, setCycleCount] = useState(0);
     const [totalDuration, setTotalDuration] = useState(0);
 
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const startTimeRef = useRef<number>(0);
 
     const { triggerHaptic } = useHaptics();

@@ -199,12 +199,12 @@ const MagazineQuoteWidget: React.FC<MagazineQuoteWidgetProps> = ({ title }) => {
     backgroundImage?: string;
   }) => {
     // 🎯 OPTIMISTIC: Show new quote immediately with temp data
-    const tempQuote = {
+    const tempQuote: Quote = {
       id: `temp-${Date.now()}`,
       ...quoteData,
-      isLiked: false,
+      isCustom: true,
     };
-    setCurrentQuote(tempQuote as any);
+    setCurrentQuote(tempQuote);
 
     try {
       const newQuote = await dataService.addCustomQuote(quoteData);
@@ -392,4 +392,4 @@ const MagazineQuoteWidget: React.FC<MagazineQuoteWidgetProps> = ({ title }) => {
   );
 };
 
-export default MagazineQuoteWidget;
+export default React.memo(MagazineQuoteWidget);

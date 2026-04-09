@@ -243,10 +243,19 @@ export function NotebookProvider({ children }: NotebookProviderProps) {
         };
     }, [userId, navigation.activeNotebookId, navigation.activeSectionId, isMockMode]);
 
-    // --- Computed active entities ---
-    const activeNotebook = notebooks.find((n) => n.id === navigation.activeNotebookId) || null;
-    const activeSection = sections.find((s) => s.id === navigation.activeSectionId) || null;
-    const activePage = pages.find((p) => p.id === navigation.activePageId) || null;
+    // --- Computed active entities (memoized to avoid O(n) .find() on every render) ---
+    const activeNotebook = useMemo(
+        () => notebooks.find((n) => n.id === navigation.activeNotebookId) || null,
+        [notebooks, navigation.activeNotebookId]
+    );
+    const activeSection = useMemo(
+        () => sections.find((s) => s.id === navigation.activeSectionId) || null,
+        [sections, navigation.activeSectionId]
+    );
+    const activePage = useMemo(
+        () => pages.find((p) => p.id === navigation.activePageId) || null,
+        [pages, navigation.activePageId]
+    );
 
     // --- Notebook actions ---
     const createNotebook = useCallback(
@@ -256,7 +265,7 @@ export function NotebookProvider({ children }: NotebookProviderProps) {
                 if (isMockMode) {
                     // Mock mode - save to localStorage
                     const newNotebook: Notebook = {
-                        id: `mock-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                        id: `mock-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                         userId: 'mock-user',
                         title: data.title || 'מחברת חדשה',
                         icon: data.icon || '📚',
@@ -361,7 +370,7 @@ export function NotebookProvider({ children }: NotebookProviderProps) {
             try {
                 if (isMockMode) {
                     const newSection: NotebookSection = {
-                        id: `mock-section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                        id: `mock-section-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                         notebookId,
                         title: data.title || 'סעיף חדש',
                         icon: data.icon,
@@ -491,7 +500,7 @@ export function NotebookProvider({ children }: NotebookProviderProps) {
                 if (isMockMode) {
                     // Mock mode - save to localStorage
                     const newPage: NotebookPage = {
-                        id: `mock-page-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                        id: `mock-page-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
                         sectionId,
                         notebookId: navigation.activeNotebookId,
                         title: data.title || 'דף חדש',

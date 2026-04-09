@@ -25,7 +25,7 @@ const PomodoroMiniWidget: React.FC<PomodoroMiniWidgetProps> = ({ onSessionComple
     const [isRunning, setIsRunning] = useState(false);
     const [sessionsCompleted, setSessionsCompleted] = useState(0);
 
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const startTimeRef = useRef<number>(0);
     const pausedTimeRef = useRef<number>(0);
 
@@ -173,7 +173,7 @@ const PomodoroMiniWidget: React.FC<PomodoroMiniWidgetProps> = ({ onSessionComple
                             cy="50"
                             r="40"
                             fill="none"
-                            stroke="rgba(255,255,255,0.1)"
+                            stroke="var(--border-subtle)"
                             strokeWidth="8"
                         />
                         {/* Progress circle */}
@@ -280,4 +280,4 @@ const PomodoroMiniWidget: React.FC<PomodoroMiniWidgetProps> = ({ onSessionComple
     );
 };
 
-export default PomodoroMiniWidget;
+export default React.memo(PomodoroMiniWidget);

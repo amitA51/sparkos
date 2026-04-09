@@ -64,7 +64,7 @@ const RPEPicker = memo<RPEPickerProps>(({ isOpen, currentValue, targetRPE, onSel
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-3xl border-t border-white/10 pb-safe"
+                className="fixed bottom-0 left-0 right-0 bg-[var(--bg-secondary)] rounded-t-3xl border-t border-white/10 pb-safe"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Handle */}
@@ -155,7 +155,7 @@ const RPEPicker = memo<RPEPickerProps>(({ isOpen, currentValue, targetRPE, onSel
                     <motion.button
                         whileTap={{ scale: 0.97 }}
                         onClick={handleConfirm}
-                        className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-black"
+                        className="flex-1 py-3.5 rounded-2xl font-bold text-sm text-[var(--text-primary)]"
                         style={{
                             backgroundColor: selectedData?.color || 'var(--cosmos-accent-primary)',
                             boxShadow: selectedData ? `0 0 20px ${selectedData.color}40` : 'none',

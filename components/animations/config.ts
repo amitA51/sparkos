@@ -17,7 +17,7 @@ const detectLowEndDevice = (): boolean => {
   const cpuCores = navigator.hardwareConcurrency || 4;
   
   // Check device memory (if available)
-  const deviceMemory = (navigator as any).deviceMemory || 8;
+  const deviceMemory = navigator.deviceMemory ?? 8;
   
   // Check for reduced motion preference
   const prefersReducedMotion = typeof window !== 'undefined' 

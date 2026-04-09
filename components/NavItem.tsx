@@ -32,8 +32,8 @@ const NavItem: React.FC<NavItemProps> = ({ label, icon, isActive, onClick, onCon
       onContextMenu={onContextMenu}
       className="relative z-10 flex flex-col items-center justify-center h-full w-full transition-all duration-base ease-spring-soft group focus:outline-none rounded-lg"
       style={{
-        ['--focus-outline-color' as any]: 'var(--dynamic-accent-start)'
-      }}
+        '--focus-outline-color': 'var(--dynamic-accent-start)'
+      } as React.CSSProperties}
       aria-label={label}
       aria-current={isActive ? 'page' : undefined}
     >
@@ -78,4 +78,5 @@ const NavItem: React.FC<NavItemProps> = ({ label, icon, isActive, onClick, onCon
   );
 };
 
-export default NavItem;
+// PERF: Memoized - receives stable onClick callback, prevents re-render when sibling nav items change
+export default React.memo(NavItem);

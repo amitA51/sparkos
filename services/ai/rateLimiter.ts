@@ -55,7 +55,7 @@ class CircuitBreaker {
             if (Date.now() - this.lastFailureTime >= this.recoveryTimeMs) {
                 this.state = 'HALF_OPEN';
                 this.successCount = 0;
-                console.log('[CircuitBreaker] Transitioning to HALF_OPEN');
+                // CircuitBreaker: Transitioning to HALF_OPEN
                 return true;
             }
             return false;
@@ -74,7 +74,7 @@ class CircuitBreaker {
             if (this.successCount >= this.halfOpenSuccessThreshold) {
                 this.state = 'CLOSED';
                 this.failureCount = 0;
-                console.log('[CircuitBreaker] Circuit CLOSED - API recovered');
+                // CircuitBreaker: Circuit CLOSED - API recovered
             }
         } else if (this.state === 'CLOSED') {
             // Reset failure count on success
@@ -116,7 +116,7 @@ class CircuitBreaker {
         this.state = 'CLOSED';
         this.failureCount = 0;
         this.successCount = 0;
-        console.log('[CircuitBreaker] Circuit manually reset');
+        // CircuitBreaker: Circuit manually reset
     }
 }
 

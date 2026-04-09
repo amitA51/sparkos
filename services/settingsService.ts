@@ -254,6 +254,13 @@ const defaultSettings: AppSettings = {
   homeScreenLayout: [
     { id: 'tasks', isVisible: true },
     { id: 'habits', isVisible: true },
+    { id: 'weather', isVisible: true },
+    { id: 'upcoming_events', isVisible: true },
+    { id: 'streak_dashboard', isVisible: true },
+    { id: 'mini_timer', isVisible: true },
+    { id: 'weekly_goals', isVisible: true },
+    { id: 'quick_notes', isVisible: true },
+    { id: 'daily_quote', isVisible: true },
     { id: 'quote_comfort_row', isVisible: true },
     { id: 'focus_timer', isVisible: true },
     { id: 'meditation', isVisible: true },
@@ -733,7 +740,7 @@ export const saveSettings = (settings: AppSettings): void => {
       hideQuickTemplates: _hqt,
 
       ...settingsToSave
-    } = settings as any;
+    } = settings as unknown as Record<string, unknown>;
 
     localStorage.setItem(LS.SETTINGS, JSON.stringify(settingsToSave));
   } catch (error) {

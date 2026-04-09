@@ -28,12 +28,12 @@ export const AuroraFlowBackground: React.FC<AuroraFlowProps> = ({
     const enableAnimations = forceEnableAnimations || ANIMATION_CONFIG.enableBackgroundAnimations;
 
     return (
-        <div className="fixed inset-0 -z-50 overflow-hidden bg-[#050505]">
+        <div className="fixed inset-0 -z-50 overflow-hidden bg-[var(--bg-primary,#050505)]">
             {/* Base void */}
             <div
                 className="absolute inset-0"
                 style={{
-                    background: 'radial-gradient(ellipse at 50% 30%, #0f0f18 0%, #050505 70%)',
+                    background: 'radial-gradient(ellipse at 50% 30%, #0f0f18 0%, var(--bg-primary,#050505) 70%)',
                 }}
             />
 

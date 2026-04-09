@@ -11,7 +11,7 @@ import {
   getFirstFocusable,
   getLastFocusable,
   COMMON_SHORTCUTS,
-} from '../../lib/keyboard';
+} from '../../utils/keyboard';
 
 // ============================================================================
 // parseShortcut Tests

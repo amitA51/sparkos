@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ViewProps, EditProps, inputStyles } from './common';
+import type { PersonalItem } from '../../types';
 import { TrashIcon, AddIcon, DragHandleIcon } from '../icons';
 import TimeBlocker from '../TimeBlocker';
 
@@ -84,7 +85,7 @@ export const TaskView: React.FC<ViewProps> = ({ item, onUpdate }) => {
             type="text"
             value={newSubTask}
             onChange={e => setNewSubTask(e.target.value)}
-            onKeyPress={e => e.key === 'Enter' && handleAddSubTask()}
+            onKeyDown={e => e.key === 'Enter' && handleAddSubTask()}
             placeholder="הוסף תת-משימה..."
             className="flex-1 text-sm bg-transparent border-b border-[var(--border-primary)] focus:border-[var(--dynamic-accent-start)] focus:outline-none py-1"
           />
@@ -156,7 +157,7 @@ export const TaskEdit: React.FC<EditProps> = ({ editState, dispatch }) => (
           onChange={e =>
             dispatch({
               type: 'SET_FIELD',
-              payload: { field: 'priority', value: e.target.value as any },
+              payload: { field: 'priority', value: e.target.value as PersonalItem['priority'] },
             })
           }
           className={inputStyles}

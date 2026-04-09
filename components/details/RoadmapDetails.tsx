@@ -18,7 +18,7 @@ import {
 import DailyProgressCircle from '../DailyProgressCircle';
 import LoadingSpinner from '../LoadingSpinner';
 import FileUploader from '../FileUploader';
-import '../../styles/roadmap-premium.css';
+import '../../styles/roadmap.css';
 import { useDebounce } from '../../hooks/useDebounce';
 import { getSampleRoadmapData } from '../../services/defaultDataLoader';
 
@@ -570,17 +570,17 @@ const StageCard: React.FC<StageCardProps> = ({
     if (hasCompleted && stage.status !== 'completed') currentStatus = 'completed';
     else if (prog > 0 && stage.status === 'pending') currentStatus = 'active';
 
-    const statusMap: Record<Status, { label: string; color: string }> = {
-      completed: { label: 'הושלם ✓', color: '#10B981' },
-      active: { label: 'פעיל', color: '#3B82F6' },
-      pending: { label: 'ממתין', color: '#6B7280' },
+    const statusMap: Record<Status, { label: string; colorVar: string }> = {
+      completed: { label: 'הושלם ✓', colorVar: 'var(--success)' },
+      active: { label: 'פעיל', colorVar: 'var(--accent)' },
+      pending: { label: 'ממתין', colorVar: 'var(--text-muted)' },
     };
 
     return {
       progress: prog,
       isCompleted: hasCompleted,
       status: statusMap[currentStatus].label,
-      statusColor: statusMap[currentStatus].color,
+      statusColor: statusMap[currentStatus].colorVar,
       completedTasks: completed,
       totalTasks: total,
     };
@@ -630,8 +630,10 @@ const StageCard: React.FC<StageCardProps> = ({
         <div className="flex justify-between items-start gap-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--dynamic-accent-start)]/15 border-2 flex-shrink-0 transition-all"
-              style={{ borderColor: `${statusColor} 40` }}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--dynamic-accent-start)]/15 border-2 flex-shrink-0 transition-all ${
+                stage.status === 'completed' ? 'status-border-completed' :
+                stage.status === 'active' ? 'status-border-active' : ''
+              }`}
             >
               <span className="text-lg font-bold text-primary">{stage.order + 1}</span>
             </div>
@@ -641,11 +643,11 @@ const StageCard: React.FC<StageCardProps> = ({
                   {stage.title}
                 </h3>
                 <span
-                  className="text-xs font-semibold px-2.5 py-1 rounded-full shrink-0"
-                  style={{
-                    backgroundColor: `${statusColor} 20`,
-                    color: statusColor,
-                  }}
+                  className={`text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ${
+                    stage.status === 'completed' ? 'status-badge-completed' :
+                    stage.status === 'active' ? 'status-badge-active' :
+                    'status-badge-pending'
+                  }`}
                 >
                   {status}
                 </span>

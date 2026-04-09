@@ -132,9 +132,9 @@ const NumpadButton = memo<{
 
     const baseClasses = "relative w-20 h-20 rounded-full flex items-center justify-center overflow-hidden transition-all duration-200";
     const variantClasses = {
-        number: "bg-[#333333] text-white text-3xl font-medium hover:bg-[#404040] active:bg-[#2A2A2A]",
-        action: "bg-[#505050] text-white text-xl font-medium hover:bg-[#606060]",
-        delete: "bg-[#333333] text-[#FF9F0A] text-2xl hover:bg-[#404040]",
+        number: "bg-[var(--gray-800)] text-white text-3xl font-medium hover:bg-[var(--gray-700)] active:bg-[var(--gray-900)]",
+        action: "bg-[var(--gray-700)] text-white text-xl font-medium hover:bg-[var(--gray-600)]",
+        delete: "bg-[var(--gray-800)] text-[var(--cosmos-accent-orange)] text-2xl hover:bg-[var(--gray-700)]",
         submit: "bg-[var(--cosmos-accent-primary)] text-black text-xl font-bold hover:brightness-110"
     };
 
@@ -192,7 +192,7 @@ const PresetButton = memo<{
             relative px-4 py-2 rounded-xl text-sm font-bold transition-all
             ${isSelected
                 ? 'bg-[var(--cosmos-accent-primary)] text-black shadow-lg'
-                : 'bg-[#2C2C2E] text-white/90 hover:bg-[#3A3A3C]'
+                : 'bg-[var(--bg-tertiary)] text-white/90 hover:bg-[var(--gray-600)]'
             }
         `}
     >
@@ -386,7 +386,7 @@ const NumpadOverlay = memo<NumpadOverlayProps>(({
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 350 }}
-                className="w-full bg-gradient-to-b from-[#1C1C1E] to-[#0D0D0D] rounded-t-[32px] pb-safe-bottom overflow-hidden shadow-2xl border-t border-white/10 fixed bottom-0 left-0 right-0"
+                className="w-full bg-gradient-to-b from-[var(--bg-secondary)] to-[var(--bg-primary)] rounded-t-[32px] pb-safe-bottom overflow-hidden shadow-2xl border-t border-white/10 fixed bottom-0 left-0 right-0"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Drag Handle */}
@@ -437,7 +437,7 @@ const NumpadOverlay = memo<NumpadOverlayProps>(({
 
                 {/* Mode Toggle */}
                 <div className="flex justify-center mb-4 px-6">
-                    <div className="flex bg-[#2C2C2E] rounded-xl p-1">
+                    <div className="flex bg-[var(--bg-tertiary)] rounded-xl p-1">
                         <motion.button
                             onClick={() => setMode('numpad')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${mode === 'numpad'

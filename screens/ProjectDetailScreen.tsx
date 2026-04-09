@@ -23,7 +23,6 @@ interface ProjectDetailScreenProps {
 }
 
 const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBack }) => {
-  // const { contextMenu, handleContextMenu, closeContextMenu } = useContextMenu<PersonalItem>();
   const { openModal } = useModal();
   const { personalItems, updatePersonalItem, removePersonalItem, refreshAll } = useData();
   const [view, setView] = useState<'list' | 'board'>('list');
@@ -137,7 +136,7 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
         <div className="flex items-start gap-4 flex-1 overflow-hidden">
           <button
             onClick={onBack}
-            className="p-2 rounded-full text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-white transition-colors shrink-0 -ml-2 mt-2"
+            className="p-2 rounded-full text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors shrink-0 -ml-2 mt-2"
           >
             <ChevronLeftIcon className="w-6 h-6" />
           </button>
@@ -181,13 +180,13 @@ const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ project, onBa
         <div className="flex items-center gap-1 p-1 bg-[var(--bg-secondary)] rounded-full max-w-xs mx-auto">
           <button
             onClick={() => setView('list')}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-full text-sm ${view === 'list' ? 'bg-white/10 text-white' : 'text-[var(--text-secondary)]'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-full text-sm ${view === 'list' ? 'bg-[var(--gray-100)] text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}
           >
             <ListIcon className="w-5 h-5" /> רשימה
           </button>
           <button
             onClick={() => setView('board')}
-            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-full text-sm ${view === 'board' ? 'bg-white/10 text-white' : 'text-[var(--text-secondary)]'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-1.5 rounded-full text-sm ${view === 'board' ? 'bg-[var(--gray-100)] text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}
           >
             <LayoutDashboardIcon className="w-5 h-5" /> לוח
           </button>

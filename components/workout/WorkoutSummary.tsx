@@ -734,13 +734,9 @@ const WorkoutSummary: React.FC<WorkoutSummaryProps> = ({ isOpen, session, onClos
                     transition={{ delay: 0.6 }}
                 >
                     <button
-                        onClick={() => {
-                            console.log('[WorkoutSummary] סיום button clicked');
-                            onClose();
-                        }}
+                        onClick={() => onClose()}
                         onPointerDown={(e) => {
                             e.preventDefault();
-                            console.log('[WorkoutSummary] סיום button pointer down');
                             onClose();
                         }}
                         className="btn-primary w-full shadow-apple-action text-xl mb-3"

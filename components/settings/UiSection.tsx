@@ -14,7 +14,7 @@ import {
     SettingsRow,
     SegmentedControl,
 } from './SettingsComponents';
-import type { UiSettings } from '../../types';
+import type { UiSettings, PersonalItemType, AddableType } from '../../types';
 
 // Swipe action options
 const SWIPE_ACTIONS = [
@@ -172,7 +172,7 @@ const UiSection: React.FC = () => {
                     >
                         <SegmentedControl
                             value={uiSettings.defaultQuickAddType}
-                            onChange={v => handleUpdate({ defaultQuickAddType: v as any })}
+                            onChange={v => handleUpdate({ defaultQuickAddType: v as PersonalItemType })}
                             options={[
                                 { label: 'משימה', value: 'task' },
                                 { label: 'פתק', value: 'note' },
@@ -224,7 +224,7 @@ const UiSection: React.FC = () => {
                         { id: 'workout', label: 'אימון', emoji: '💪' },
                         { id: 'goal', label: 'פרויקט', emoji: '🎯' },
                     ].map(item => {
-                        const isActive = (settings.addScreenLayout || []).includes(item.id as any);
+                        const isActive = (settings.addScreenLayout || []).includes(item.id as AddableType);
                         return (
                             <button
                                 key={item.id}
@@ -233,7 +233,7 @@ const UiSection: React.FC = () => {
                                     if (isActive) {
                                         newLayout = newLayout.filter(t => t !== item.id);
                                     } else {
-                                        newLayout.push(item.id as any);
+                                        newLayout.push(item.id as AddableType);
                                     }
                                     handleSettingChange('addScreenLayout', newLayout);
                                 }}

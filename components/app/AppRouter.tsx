@@ -5,12 +5,14 @@ import BottomNavBar from '../BottomNavBar';
 import SessionTimer from '../SessionTimer';
 import DynamicBackground from '../DynamicBackground';
 import StatusMessage, { StatusMessageType } from '../StatusMessage';
-import CommandPalette from '../CommandPalette';
 import AppLoading from '../AppLoading';
 
-import ActiveWorkoutOverlay from '../workout/ActiveWorkoutOverlay';
 import { RefreshIcon } from '../icons';
 import { screenSkeletonMap } from '../SkeletonLoader';
+
+// PERF: Lazy-load heavy conditional components that are not always visible
+const ActiveWorkoutOverlay = lazy(() => import('../workout/ActiveWorkoutOverlay'));
+const CommandPaletteLazy = lazy(() => import('../CommandPalette'));
 import { useScreenData } from '../../hooks/useScreenData';
 import type { Screen, PersonalItem, BackgroundEffectType } from '../../types';
 import * as dataService from '../../services/dataService';
@@ -24,6 +26,7 @@ import AssistantErrorBoundary from '../boundaries/AssistantErrorBoundary';
 import HomeErrorBoundary from '../boundaries/HomeErrorBoundary';
 import LibraryErrorBoundary from '../boundaries/LibraryErrorBoundary';
 import AddScreenErrorBoundary from '../boundaries/AddScreenErrorBoundary';
+import GenericErrorBoundary from '../boundaries/GenericErrorBoundary';
 
 // Lazy loaded screens
 const FeedScreen = lazy(() => import('../../screens/FeedScreen'));
@@ -40,6 +43,7 @@ const ViewsScreen = lazy(() => import('../../screens/ViewsScreen'));
 const LoginScreen = lazy(() => import('../../screens/LoginScreen'));
 const SignupScreen = lazy(() => import('../../screens/SignupScreen'));
 const FitnessHubView = lazy(() => import('../../components/library/fitness/FitnessHubView').then(module => ({ default: module.FitnessHubView })));
+const InsightsScreen = lazy(() => import('../../screens/InsightsScreen'));
 
 interface AppRouterProps {
   activeScreen: Screen;
@@ -133,11 +137,23 @@ const AppRouter: React.FC<AppRouterProps> = ({
             </LibraryErrorBoundary>
           );
         case 'investments':
-          return <InvestmentsScreen setActiveScreen={setActiveScreen} />;
+          return (
+            <GenericErrorBoundary title="שגיאה בהשקעות" subtitle="מסך ההשקעות נתקל בבעיה." accentColor="#10B981">
+              <InvestmentsScreen setActiveScreen={setActiveScreen} />
+            </GenericErrorBoundary>
+          );
         case 'search':
-          return <SearchScreen setActiveScreen={setActiveScreen} />;
+          return (
+            <GenericErrorBoundary title="שגיאה בחיפוש" subtitle="החיפוש נתקל בבעיה. נסה שוב." accentColor="#6366F1">
+              <SearchScreen setActiveScreen={setActiveScreen} />
+            </GenericErrorBoundary>
+          );
         case 'fitness':
-          return <FitnessHubView />;
+          return (
+            <GenericErrorBoundary title="שגיאה בכושר" subtitle="מסך הכושר נתקל בבעיה." accentColor="#a3e635">
+              <FitnessHubView />
+            </GenericErrorBoundary>
+          );
         case 'settings':
           return (
             <SettingsErrorBoundary>
@@ -169,7 +185,11 @@ const AppRouter: React.FC<AppRouterProps> = ({
             </PasswordErrorBoundary>
           );
         case 'views':
-          return <ViewsScreen setActiveScreen={setActiveScreen} />;
+          return (
+            <GenericErrorBoundary title="שגיאה בתצוגות" subtitle="מסך התצוגות נתקל בבעיה." accentColor="#8B5CF6">
+              <ViewsScreen setActiveScreen={setActiveScreen} />
+            </GenericErrorBoundary>
+          );
         case 'login':
           return (
             <LoginScreen
@@ -183,6 +203,12 @@ const AppRouter: React.FC<AppRouterProps> = ({
               onNavigateToLogin={() => setActiveScreen('login')}
               onSkip={handleGuestAccess}
             />
+          );
+        case 'insights':
+          return (
+            <GenericErrorBoundary title="שגיאה בתובנות" subtitle="מסך התובנות נתקל בבעיה." accentColor="#8B5CF6">
+              <InsightsScreen setActiveScreen={setActiveScreen} />
+            </GenericErrorBoundary>
           );
         case 'logos':
           // SparkLogoConcepts removed - redirect to home
@@ -202,7 +228,8 @@ const AppRouter: React.FC<AppRouterProps> = ({
     [handleGuestAccess, setActiveScreen]
   );
 
-  const handleEndSession = async (loggedDuration?: number, isCancel: boolean = false) => {
+  // PERF: Wrap in useCallback to prevent SessionTimer from re-rendering on every parent render
+  const handleEndSession = useCallback(async (loggedDuration?: number, isCancel: boolean = false) => {
     const sessionToRestore = activeSession;
     if (loggedDuration && sessionToRestore) {
       const updatedItem = await dataService.logFocusSession(
@@ -218,7 +245,7 @@ const AppRouter: React.FC<AppRouterProps> = ({
         startSession(sessionToRestore.item);
       });
     }
-  };
+  }, [activeSession, updatePersonalItem, cancelSession, showStatus, startSession]);
 
   // Special case: Active session takes over the screen
   if (activeSession) {
@@ -268,11 +295,18 @@ const AppRouter: React.FC<AppRouterProps> = ({
         />
       )}
 
-      <CommandPalette
-        isOpen={isCommandPaletteOpen}
-        onClose={() => setIsCommandPaletteOpen(false)}
-      />
-      <ActiveWorkoutOverlay />
+      {/* PERF: Lazy-load CommandPalette -- only fetched when opened */}
+      {isCommandPaletteOpen && (
+        <Suspense fallback={null}>
+          <CommandPaletteLazy
+            isOpen={isCommandPaletteOpen}
+            onClose={() => setIsCommandPaletteOpen(false)}
+          />
+        </Suspense>
+      )}
+      <Suspense fallback={null}>
+        <ActiveWorkoutOverlay />
+      </Suspense>
     </div>
   );
 };

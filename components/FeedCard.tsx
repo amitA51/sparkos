@@ -141,14 +141,16 @@ const FeedCard: React.FC<FeedCardProps> = ({
           variant="glass"
           glowColor={item.isImportant ? 'gold' : 'neutral'}
           className={`
-             p-0 border-white/[0.06] rounded-[28px]
+             p-0 rounded-[28px]
              ${item.is_read ? 'opacity-60' : ''}
-             bg-[rgba(18,18,24,0.65)] backdrop-blur-2xl
-             shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.03)]
-             hover:shadow-[0_16px_56px_-12px_rgba(0,0,0,0.6)]
-             hover:bg-[rgba(26,26,34,0.7)]
+             backdrop-blur-2xl
              transition-all duration-500 ease-out
           `}
+          style={{
+            background: 'var(--bg-card)',
+            border: '0.5px solid var(--border-subtle)', // CLEANED
+            boxShadow: 'var(--shadow-lg)',
+          }}
           noPadding
         >
           {showImage && (

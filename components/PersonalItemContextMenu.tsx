@@ -197,7 +197,7 @@ const PersonalItemContextMenu: React.FC<PersonalItemContextMenuProps> = ({
     if (style === 'light' || style === 'medium' || style === 'heavy') {
       triggerHaptic(style);
     } else {
-      triggerEffect(style as any);
+      triggerEffect(style);
     }
   }, [triggerHaptic, triggerEffect]);
 

@@ -9,7 +9,7 @@ import { hasGoogleApiAccess } from './authService';
 import { syncService } from './syncService';
 import * as googleCalendarService from './googleCalendarService';
 import * as googleTasksService from './googleTasksService';
-import { dbPut, dbGetAll } from './data/dbCore';
+import { dbPut, dbGetAll } from './db/indexedDBCore';
 import { addPersonalItem, updatePersonalItem, getPersonalItems } from './db/personalItemsDb';
 import type { PersonalItem, GoogleCalendarEvent } from '../types';
 
@@ -74,7 +74,7 @@ const syncCalendarEvents = async (): Promise<{ success: boolean; eventCount: num
             await dbPut(GOOGLE_CALENDAR_STORE, { ...event, _id: event.id });
         }
 
-        console.log(`[GoogleSync] Synced ${events.length} calendar events`);
+        // Synced calendar events
         return { success: true, eventCount: events.length };
     } catch (error) {
         console.error('[GoogleSync] Calendar sync failed:', error);
@@ -100,7 +100,7 @@ const getOrCreateSparkTaskList = async (): Promise<string | null> => {
 
         // Create new list
         const newList = await googleTasksService.createTaskList(SPARK_TASKS_LIST_NAME);
-        console.log('[GoogleSync] Created Spark Tasks list:', newList.id);
+        // Created Spark Tasks list
         return newList.id;
     } catch (error) {
         console.error('[GoogleSync] Failed to get/create task list:', error);
@@ -207,7 +207,7 @@ const syncTasks = async (): Promise<{ success: boolean; pulled: number; pushed: 
             }
         }
 
-        console.log(`[GoogleSync] Tasks sync: pulled ${pulledCount}, pushed ${pushedCount}`);
+        // Tasks sync complete
         return { success: true, pulled: pulledCount, pushed: pushedCount };
     } catch (error) {
         console.error('[GoogleSync] Tasks sync failed:', error);
@@ -273,7 +273,7 @@ export const pushTaskDeletionToGoogle = async (googleTaskId: string): Promise<vo
  */
 export const performFullSync = async (): Promise<SyncResult> => {
     if (isSyncing) {
-        console.log('[GoogleSync] Sync already in progress, skipping...');
+        // Sync already in progress, skipping
         return lastSyncResult || {
             success: false,
             driveSync: { success: false, error: 'Sync in progress' },
@@ -285,7 +285,7 @@ export const performFullSync = async (): Promise<SyncResult> => {
 
     // Check if user has Google API access
     if (!hasGoogleApiAccess()) {
-        console.log('[GoogleSync] No Google API access, skipping sync');
+        // No Google API access, skipping sync
         return {
             success: false,
             driveSync: { success: false, error: 'No API access' },
@@ -298,7 +298,7 @@ export const performFullSync = async (): Promise<SyncResult> => {
     isSyncing = true;
     notifyListeners();
 
-    console.log('[GoogleSync] Starting full sync...');
+    // Starting full sync
 
     try {
         // 1. Sync Google Drive (backup)
@@ -329,7 +329,7 @@ export const performFullSync = async (): Promise<SyncResult> => {
         // Store last sync time
         localStorage.setItem('spark_last_google_sync', result.timestamp);
 
-        console.log('[GoogleSync] Full sync completed:', result);
+        // Full sync completed
         return result;
     } finally {
         isSyncing = false;
@@ -381,7 +381,7 @@ export const initGoogleSync = (): (() => void) | undefined => {
 
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
         if (user && hasGoogleApiAccess()) {
-            console.log('[GoogleSync] User authenticated with Google API access, syncing...');
+            // User authenticated with Google API access, syncing
             // Small delay to ensure auth state is settled
             setTimeout(() => performFullSync(), 1000);
         }

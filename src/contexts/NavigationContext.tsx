@@ -78,7 +78,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
                 try {
                     sessionStorage.setItem('preselect_add_defaults', JSON.stringify(defaults));
                 } catch {
-                    console.warn('Failed to store navigation defaults');
+                    // Storage write failed - non-critical
                 }
             }
             navigate(screen);
@@ -97,7 +97,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
                     sessionStorage.setItem('preselect_add_defaults', JSON.stringify(defaults));
                 }
             } catch {
-                console.warn('Failed to store add defaults');
+                // Storage write failed - non-critical
             }
             navigate('add');
         },

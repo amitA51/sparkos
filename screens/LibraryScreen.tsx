@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { PersonalItem, Screen, Space, AddableType } from '../types';
 import PersonalItemDetailModal from '../components/PersonalItemDetailModal';
 import PersonalItemContextMenu from '../components/PersonalItemContextMenu';
-import ProjectDetailScreen from './ProjectDetailScreen';
 import {
   InboxIcon,
   ChevronLeftIcon,
@@ -14,7 +13,10 @@ import SkeletonLoader from '../components/SkeletonLoader';
 import { duplicatePersonalItem, reAddPersonalItem } from '../services/dataService';
 import { useContextMenu } from '../hooks/useContextMenu';
 import StatusMessage, { StatusMessageType } from '../components/StatusMessage';
-import SpaceDetailScreen from './SpaceDetailScreen';
+
+// PERF: Lazy-load sub-screens -- only fetched when user navigates into them
+const ProjectDetailScreen = lazy(() => import('./ProjectDetailScreen'));
+const SpaceDetailScreen = lazy(() => import('./SpaceDetailScreen'));
 import PersonalItemCard from '../components/PersonalItemCard';
 import { useDebounce } from '../hooks/useDebounce';
 import { useItemReordering } from '../hooks/useItemReordering';
@@ -100,11 +102,11 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
     setStatusMessage({ type, text, id: Date.now(), onUndo });
   }, []);
 
-  const handleQuickAdd = (type: AddableType, defaults: Partial<PersonalItem> = {}) => {
+  const handleQuickAdd = useCallback((type: AddableType, defaults: Partial<PersonalItem> = {}) => {
     sessionStorage.setItem('preselect_add', type);
     sessionStorage.setItem('preselect_add_defaults', JSON.stringify(defaults));
     setActiveScreen('add');
-  };
+  }, [setActiveScreen]);
 
   // Check for space redirect on mount/activeView change
   React.useEffect(() => {
@@ -118,9 +120,22 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
     }
   }, [spaces]);
 
-  const handleCalendarQuickAdd = (date: string) => {
+  const handleCalendarQuickAdd = useCallback((_type: AddableType, date: string) => {
     setQuickNoteDate(date);
-  };
+  }, []);
+
+  // PERF: Stable callbacks for modal/status handlers - prevents child re-renders
+  const handleCloseAddSpaceModal = useCallback(() => setIsAddSpaceModalOpen(false), []);
+  const handleOpenAddSpaceModal = useCallback(() => setIsAddSpaceModalOpen(true), []);
+  // PERF: Wrap addSpace to match onAdd's void return type
+  const handleAddSpace = useCallback(async (spaceData: Omit<Space, 'id'>) => {
+    await addSpace(spaceData);
+  }, [addSpace]);
+  const handleCloseQuickNote = useCallback(() => setQuickNoteDate(null), []);
+  const handleDismissStatus = useCallback(() => setStatusMessage(null), []);
+  const handleBackToDashboard = useCallback(() => setActiveView({ type: 'dashboard' }), []);
+  // PERF: no-op stable reference for onLongPress (used 3 times in JSX)
+  const noopHandler = useCallback(() => { }, []);
 
   const handleUpdateItem = useCallback(
     async (id: string, updates: Partial<PersonalItem>) => {
@@ -399,6 +414,13 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
     return result;
   }, [personalSpaces]);
 
+  // PERF: Stable callbacks for header actions
+  const handleOpenSettings = useCallback(() => setActiveScreen('settings'), [setActiveScreen]);
+  const handleOpenAssistant = useCallback(() => setActiveScreen('assistant'), [setActiveScreen]);
+  const handleOpenSplitView = useCallback(() => openModal('splitViewConfiguration'), [openModal]);
+  const handleViewChange = useCallback((view: HubView) => setActiveView({ type: view }), []);
+  const handleGoToInbox = useCallback(() => setActiveView({ type: 'inbox' }), []);
+
   const renderMainHub = () => {
     const hasTimelineItems = personalItems.some(i => i.dueDate);
     const shouldShowProjectsEmpty = !isLoading && projectItems.length === 0;
@@ -410,9 +432,9 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
           stats={libraryStats}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          onOpenSettings={() => setActiveScreen('settings')}
-          onOpenAssistant={() => setActiveScreen('assistant')}
-          onOpenSplitView={() => openModal('splitViewConfiguration')}
+          onOpenSettings={handleOpenSettings}
+          onOpenAssistant={handleOpenAssistant}
+          onOpenSplitView={handleOpenSplitView}
         />
 
         <AnimatePresence mode="wait">
@@ -445,7 +467,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                     onUpdate={handleUpdateItem}
                     onDelete={handleDeleteItem}
                     onContextMenu={handleContextMenu}
-                    onLongPress={() => { }}
+                    onLongPress={noopHandler}
                     isInSelectionMode={false}
                     isSelected={false}
                   />
@@ -463,7 +485,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
               <div className="px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 max-w-5xl mx-auto">
                 <PremiumViewSwitcher
                   currentView={activeView.type as HubView}
-                  onViewChange={view => setActiveView({ type: view })}
+                  onViewChange={handleViewChange}
                   tabOrder={settings.libraryTabOrder}
                   onTabOrderChange={(newOrder) => updateSettings({ libraryTabOrder: newOrder })}
                 />
@@ -489,7 +511,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                           transition={{ delay: 0.1 }}
                         >
                           <motion.button
-                            onClick={() => setActiveView({ type: 'inbox' })}
+                            onClick={handleGoToInbox}
                             className="spark-card spark-card-interactive w-full p-4 sm:p-5 flex justify-between items-center group cursor-pointer"
                             whileTap={{ scale: 0.98 }}
                           >
@@ -498,7 +520,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                                 <InboxIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
                               </div>
                               <div className="text-right">
-                                <h2 className="text-base sm:text-lg font-bold text-white">
+                                <h2 className="text-base sm:text-lg font-bold text-[var(--text-primary)]">
                                   תיבת דואר נכנס
                                 </h2>
                                 <p className="text-xs text-theme-muted">
@@ -527,11 +549,11 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                       >
                         <div className="spark-card p-4 sm:p-5">
                           <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-[13px] font-semibold tracking-wide" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                            <h2 className="text-[13px] font-semibold tracking-wide" style={{ color: 'var(--text-muted)' }}>
                               מרחבים
                             </h2>
                             <button
-                              onClick={() => setIsAddSpaceModalOpen(true)}
+                              onClick={handleOpenAddSpaceModal}
                               className="spark-btn spark-btn-ghost spark-btn-sm flex items-center gap-1.5 text-xs"
                             >
                               <PlusIcon className="w-3.5 h-3.5" />
@@ -567,7 +589,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                           transition={{ delay: 0.2 }}
                         >
                           <div className="spark-card p-4 sm:p-5">
-                            <h2 className="text-[13px] font-semibold tracking-wide mb-4" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                            <h2 className="text-[13px] font-semibold tracking-wide mb-4" style={{ color: 'var(--text-muted)' }}>
                               מפות דרכים
                             </h2>
                             <div className="grid grid-cols-1 gap-3">
@@ -588,7 +610,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                                       onUpdate={handleUpdateItem}
                                       onDelete={handleDeleteItem}
                                       onContextMenu={handleContextMenu}
-                                      onLongPress={() => { }}
+                                      onLongPress={noopHandler}
                                       isInSelectionMode={false}
                                       isSelected={false}
                                     />
@@ -600,7 +622,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                                             {progress.progress}%
                                           </span>
                                         </div>
-                                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                        <div className="h-1.5 bg-[var(--gray-100)] rounded-full overflow-hidden">
                                           <motion.div
                                             className="h-full rounded-full"
                                             style={{
@@ -636,7 +658,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                           transition={{ delay: 0.3 }}
                         >
                           <div className="spark-card p-4 sm:p-5">
-                            <h2 className="text-[13px] font-semibold tracking-wide mb-4" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                            <h2 className="text-[13px] font-semibold tracking-wide mb-4" style={{ color: 'var(--text-muted)' }}>
                               כל הפריטים לפי קטגוריה
                             </h2>
                             <CategoryAccordion
@@ -665,7 +687,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                         <header className="mb-6 flex items-center justify-between gap-3">
                           <div>
                             <h2 className="text-[13px] font-semibold tracking-wide mb-1 px-1"
-                              style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                              style={{ color: 'var(--text-muted)' }}>
                               ציר זמן
                             </h2>
                             <p className="text-xs text-theme-secondary px-1">
@@ -673,10 +695,10 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                             </p>
                           </div>
                           <div className="hidden sm:flex items-center gap-2 text-xs text-theme-secondary">
-                            <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <div className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--gray-50)] backdrop-blur-sm">
                               ⌘K לפתיחת פקודות
                             </div>
-                            <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <div className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--gray-50)] backdrop-blur-sm">
                               ⌘F לחיפוש
                             </div>
                           </div>
@@ -684,14 +706,16 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
 
                         {hasTimelineItems ? (
                           <div className="rounded-3xl border border-white/8 bg-gradient-to-b from-white/5 via-white/0 to-white/5 backdrop-blur-xl p-2 sm:p-4">
-                            <TimelineView
-                              items={personalItems}
-                              onSelectItem={handleSelectItem}
-                              onUpdate={handleUpdateItem}
-                              onDelete={handleDeleteItem}
-                              onContextMenu={handleContextMenu}
-                              onLongPress={() => { }}
-                            />
+                            <Suspense fallback={<SkeletonLoader count={3} />}>
+                              <TimelineView
+                                items={personalItems}
+                                onSelectItem={handleSelectItem}
+                                onUpdate={handleUpdateItem}
+                                onDelete={handleDeleteItem}
+                                onContextMenu={handleContextMenu}
+                                onLongPress={noopHandler}
+                              />
+                            </Suspense>
                           </div>
                         ) : (
                           <PremiumLibraryEmptyState
@@ -713,7 +737,9 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                       className="px-4 sm:px-6 lg:px-8"
                     >
                       <div className="max-w-6xl mx-auto">
-                        <FitnessHubView />
+                        <Suspense fallback={<SkeletonLoader count={3} />}>
+                          <FitnessHubView />
+                        </Suspense>
                       </div>
                     </motion.div>
                   )}
@@ -748,7 +774,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                         <header className="flex items-center justify-between gap-3">
                           <div>
                             <h2 className="text-[13px] font-semibold tracking-wide mb-1 px-1"
-                              style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                              style={{ color: 'var(--text-muted)' }}>
                               לוח שנה
                             </h2>
                             <p className="text-xs text-theme-secondary px-1">
@@ -756,7 +782,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                             </p>
                           </div>
                           <div className="hidden sm:flex items-center gap-2 text-xs text-theme-secondary">
-                            <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <div className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--gray-50)] backdrop-blur-sm">
                               הקלקה כפולה ליצירת משימה
                             </div>
                           </div>
@@ -768,12 +794,14 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                             boxShadow: '0 24px 80px rgba(15,23,42,0.65)',
                           }}
                         >
-                          <CalendarView
-                            items={personalItems}
-                            onUpdate={handleUpdateItem}
-                            onSelectItem={(item, e) => handleSelectItem(item, e)}
-                            onQuickAdd={(_, date) => handleCalendarQuickAdd(date)}
-                          />
+                          <Suspense fallback={<SkeletonLoader count={3} />}>
+                            <CalendarView
+                              items={personalItems}
+                              onUpdate={handleUpdateItem}
+                              onSelectItem={handleSelectItem}
+                              onQuickAdd={handleCalendarQuickAdd}
+                            />
+                          </Suspense>
                         </div>
                       </div>
                     </motion.div>
@@ -791,7 +819,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                         <header className="flex items-center justify-between gap-3">
                           <div>
                             <h2 className="text-[13px] font-semibold tracking-wide mb-1 px-1"
-                              style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                              style={{ color: 'var(--text-muted)' }}>
                               קבצים ומסמכים
                             </h2>
                             <p className="text-xs text-theme-secondary px-1">
@@ -799,7 +827,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                             </p>
                           </div>
                           <div className="hidden sm:flex items-center gap-2 text-xs text-theme-secondary">
-                            <div className="px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                            <div className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--gray-50)] backdrop-blur-sm">
                               גרור קובץ לכאן כדי להעלות
                             </div>
                           </div>
@@ -813,7 +841,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                         >
                           <FileGallery
                             items={personalItems}
-                            onSelect={item => handleSelectItem(item)}
+                            onSelect={handleSelectItem}
                           />
                         </div>
                       </div>
@@ -827,7 +855,9 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                     >
-                      <InvestmentsScreen setActiveScreen={setActiveScreen} />
+                      <Suspense fallback={<SkeletonLoader count={3} />}>
+                        <InvestmentsScreen setActiveScreen={setActiveScreen} />
+                      </Suspense>
                     </motion.div>
                   )}
 
@@ -838,7 +868,9 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                     >
-                      <PasswordManager />
+                      <Suspense fallback={<SkeletonLoader count={3} />}>
+                        <PasswordManager />
+                      </Suspense>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -854,22 +886,26 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
 
   if (activeView.type === 'project') {
     return (
-      <ProjectDetailScreen
-        project={activeView.item}
-        onBack={() => setActiveView({ type: 'dashboard' })}
-        onSelectItem={handleSelectItem}
-      />
+      <Suspense fallback={<SkeletonLoader count={3} />}>
+        <ProjectDetailScreen
+          project={activeView.item}
+          onBack={handleBackToDashboard}
+          onSelectItem={handleSelectItem}
+        />
+      </Suspense>
     );
   }
 
   if (activeView.type === 'space') {
     return (
-      <SpaceDetailScreen
-        space={activeView.item}
-        onBack={() => setActiveView({ type: 'dashboard' })}
-        onSelectItem={handleSelectItem}
-        setActiveScreen={setActiveScreen}
-      />
+      <Suspense fallback={<SkeletonLoader count={3} />}>
+        <SpaceDetailScreen
+          space={activeView.item}
+          onBack={handleBackToDashboard}
+          onSelectItem={handleSelectItem}
+          setActiveScreen={setActiveScreen}
+        />
+      </Suspense>
     );
   }
 
@@ -886,8 +922,8 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
         >
           <div className="flex items-center gap-4">
             <motion.button
-              onClick={() => setActiveView({ type: 'dashboard' })}
-              className="p-2.5 rounded-xl text-theme-secondary hover:text-white transition-colors"
+              onClick={handleBackToDashboard}
+              className="p-2.5 rounded-xl text-theme-secondary hover:text-[var(--text-primary)] transition-colors"
               style={{
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid rgba(255,255,255,0.1)',
@@ -899,7 +935,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
               <ChevronLeftIcon className="w-6 h-6" />
             </motion.button>
             <div>
-              <h1 className="text-3xl font-bold text-white font-heading">תיבת דואר נכנס</h1>
+              <h1 className="text-3xl font-bold text-[var(--text-primary)] font-heading">תיבת דואר נכנס</h1>
               <p className="text-sm text-theme-secondary">{inboxItems.length} פריטים ממתינים</p>
             </div>
           </div>
@@ -920,7 +956,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
                 onUpdate={handleUpdateItem}
                 onDelete={handleDeleteItem}
                 onContextMenu={handleContextMenu}
-                onLongPress={() => { }}
+                onLongPress={noopHandler}
                 isInSelectionMode={false}
                 isSelected={false}
                 onDragStart={(e, item) => inboxReordering.handleDragStart(e, item)}
@@ -970,16 +1006,14 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
       )}
 
       {quickNoteDate && (
-        <QuickNoteModal date={quickNoteDate} onClose={() => setQuickNoteDate(null)} />
+        <QuickNoteModal date={quickNoteDate} onClose={handleCloseQuickNote} />
       )}
 
       {/* Add Space Modal */}
       <AddSpaceModal
         isOpen={isAddSpaceModalOpen}
-        onClose={() => setIsAddSpaceModalOpen(false)}
-        onAdd={async (spaceData) => {
-          await addSpace(spaceData);
-        }}
+        onClose={handleCloseAddSpaceModal}
+        onAdd={handleAddSpace}
       />
 
       {statusMessage && (
@@ -987,7 +1021,7 @@ const LibraryScreen: React.FC<{ setActiveScreen: (screen: Screen) => void }> = (
           key={statusMessage.id}
           type={statusMessage.type}
           message={statusMessage.text}
-          onDismiss={() => setStatusMessage(null)}
+          onDismiss={handleDismissStatus}
           onUndo={statusMessage.onUndo}
         />
       )}

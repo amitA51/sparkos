@@ -56,14 +56,6 @@ const TOUR_STEPS: TourStep[] = [
         position: 'top',
         targetScreen: 'today', // Return to home or stay on current
     },
-    // Optional: Settings step could be added if we had a visible settings button
-    // {
-    //     targetId: 'nav-settings',
-    //     title: 'הגדרות',
-    //     description: 'התאם את המערכת לצרכים שלך.',
-    //     position: 'top',
-    //     targetScreen: 'settings'
-    // }
 ];
 
 interface OnboardingTourProps {
@@ -131,8 +123,6 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
         const el = document.getElementById(step.targetId);
         if (el) {
             setTargetRect(el.getBoundingClientRect());
-            // Scroll into view if needed (mostly for mobile/vertical layouts)
-            // el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
             console.warn(`Tour target ${step.targetId} not found.`);
             // Fallback to center if target not found
@@ -195,7 +185,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({
                     WebkitMaskImage: targetRect
                         ? `radial-gradient(circle at ${targetRect.left + targetRect.width / 2}px ${targetRect.top + targetRect.height / 2}px, transparent ${Math.max(targetRect.width, targetRect.height) / 1.2}px, black ${Math.max(targetRect.width, targetRect.height) / 1.2 + 20}px)`
                         : 'none'
-                } as any}
+                } as React.CSSProperties}
             />
 
             {/* Tooltip Card */}

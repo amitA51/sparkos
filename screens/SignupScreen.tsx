@@ -42,7 +42,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ onNavigateToLogin, onSkip }
         setIsLoading(true);
         const user = await checkGoogleRedirectResult();
         if (user) {
-          console.log('Google redirect sign-in successful');
+          // Google redirect sign-in successful
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'שגיאה בהתחברות עם Google';
@@ -194,10 +194,10 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ onNavigateToLogin, onSkip }
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex items-start gap-2 overflow-hidden"
+                    className="alert-error rounded-xl p-3 flex items-start gap-2 overflow-hidden"
                   >
-                    <AlertIcon className="w-5 h-5 text-red-500 shrink-0" />
-                    <p className="text-sm text-red-200">{error}</p>
+                    <AlertIcon className="w-5 h-5 alert-error-icon shrink-0" />
+                    <p className="text-sm alert-error-text">{error}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

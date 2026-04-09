@@ -30,7 +30,7 @@ const TriggerTracker: React.FC<TriggerTrackerProps> = ({ triggers = [], onChange
         if (!newTrigger.trim()) return;
 
         const trigger: HabitTrigger = {
-            id: `trigger-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `trigger-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
             category: selectedCategory,
             description: newTrigger.trim(),
             intensity,

@@ -49,4 +49,4 @@ const CalendarStatsWidget: React.FC = () => {
     );
 };
 
-export default CalendarStatsWidget;
+export default React.memo(CalendarStatsWidget);

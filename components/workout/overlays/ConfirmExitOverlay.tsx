@@ -53,18 +53,14 @@ const ConfirmExitOverlay = memo<ConfirmExitOverlayProps>(({
     saveError = null,
 }) => {
     const handleConfirm = useCallback(() => {
-        console.log('[ConfirmExitOverlay] handleConfirm called, isSaving:', isSaving);
         if (isSaving) {
-            console.log('[ConfirmExitOverlay] Already saving, ignoring click');
             return; // Prevent double-click
         }
-        console.log('[ConfirmExitOverlay] Calling triggerHaptic and onConfirm');
         triggerHaptic();
         onConfirm();
     }, [onConfirm, isSaving]);
 
     const handleCancel = useCallback(() => {
-        console.log('[ConfirmExitOverlay] handleCancel called');
         triggerHaptic();
         onCancel();
     }, [onCancel]);

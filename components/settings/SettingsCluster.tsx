@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { CATEGORIES, GROUPS, SettingsCategory, SettingsGroup, CategoryInfo } from './settingsRegistry';
 import { ChevronLeftIcon } from '../icons';
 import { AuroraBackground } from '../ui/AuroraBackground';
@@ -15,7 +15,7 @@ const SettingsCluster: React.FC<SettingsClusterProps> = ({ onSelectCategory }) =
 
     // Group categories by their cluster ID
     const groupedCategories = useMemo(() => {
-        const groups: Record<SettingsGroup, CategoryInfo[]> = {} as any;
+        const groups = {} as Record<SettingsGroup, CategoryInfo[]>;
         CATEGORIES.forEach(cat => {
             if (!groups[cat.group]) groups[cat.group] = [];
             groups[cat.group].push(cat);
@@ -35,7 +35,7 @@ const SettingsCluster: React.FC<SettingsClusterProps> = ({ onSelectCategory }) =
         }
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, scale: 0.95, y: 30 },
         show: {
             opacity: 1,
@@ -45,7 +45,7 @@ const SettingsCluster: React.FC<SettingsClusterProps> = ({ onSelectCategory }) =
                 type: 'spring',
                 stiffness: 400,
                 damping: 30
-            } as any
+            }
         }
     };
 

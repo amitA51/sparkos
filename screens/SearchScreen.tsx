@@ -1,17 +1,20 @@
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+// CLEANED - CSS vars fixed
+
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import type { Screen, PersonalItem, UniversalSearchResult, SearchFilters } from '../types';
+import type { Screen, PersonalItem, UniversalSearchResult, SearchFilters, FeedItem } from '../types';
 import { universalAiSearch, isAiAvailable } from '../services/ai';
 import { useDebounce } from '../hooks/useDebounce';
 import { SearchIcon, SparklesIcon, SettingsIcon, FilterIcon, ClockIcon, TrashIcon } from '../components/icons';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import SearchResultItem from '../components/SearchResultItem';
 import SearchFilterPanel from '../components/SearchFilterPanel';
-import LoadingSpinner from '../components/LoadingSpinner';
 import SearchCategoryPill from '../components/SearchCategoryPill';
 import SearchRecentItem from '../components/SearchRecentItem';
 import PremiumEmptySearch from '../components/PremiumEmptySearch';
+import PersonalItemDetailModal from '../components/PersonalItemDetailModal';
+import FeedItemDetailSheet from '../components/feed/FeedItemDetailSheet';
 import { useData } from '../src/contexts/DataContext';
 import { useCalendar } from '../src/contexts/CalendarContext';
 import { useSettings } from '../src/contexts/SettingsContext';
@@ -23,7 +26,7 @@ interface SearchScreenProps {
 }
 
 export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
-  const { personalItems, feedItems } = useData();
+  const { personalItems, feedItems, updatePersonalItem, removePersonalItem, updateFeedItem } = useData();
   const { calendarEvents } = useCalendar();
   const { settings } = useSettings();
   const { triggerHaptic } = useHaptics();
@@ -48,6 +51,55 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
   const [isFocused, setIsFocused] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Selected item state for detail modals
+  const [selectedPersonalItem, setSelectedPersonalItem] = useState<PersonalItem | null>(null);
+  const [selectedFeedItem, setSelectedFeedItem] = useState<FeedItem | null>(null);
+
+  const handleSelectSearchResult = useCallback((result: UniversalSearchResult) => {
+    triggerHaptic('light');
+    const item = result.item;
+    // Calendar events open in a new tab
+    if (result.type === 'calendar') {
+      const calEvent = item as { htmlLink?: string };
+      if (calEvent.htmlLink) window.open(calEvent.htmlLink, '_blank');
+      return;
+    }
+    // Feed items (rss, spark, news, mentor)
+    if (result.type === 'rss' || result.type === 'spark' || result.type === 'news' || result.type === 'mentor') {
+      setSelectedFeedItem(item as FeedItem);
+      return;
+    }
+    // Personal items
+    setSelectedPersonalItem(item as PersonalItem);
+  }, [triggerHaptic]);
+
+  const handleUpdatePersonalItem = useCallback(async (id: string, updates: Partial<PersonalItem>) => {
+    try {
+      await updatePersonalItem(id, updates);
+      setSelectedPersonalItem(prev => prev && prev.id === id ? { ...prev, ...updates } : prev);
+    } catch (error) {
+      console.error('Failed to update item from search:', error);
+    }
+  }, [updatePersonalItem]);
+
+  const handleDeletePersonalItem = useCallback(async (id: string) => {
+    try {
+      await removePersonalItem(id);
+      setSelectedPersonalItem(null);
+    } catch (error) {
+      console.error('Failed to delete item from search:', error);
+    }
+  }, [removePersonalItem]);
+
+  const handleUpdateFeedItem = useCallback(async (id: string, updates: Partial<FeedItem>) => {
+    try {
+      await updateFeedItem(id, updates);
+      setSelectedFeedItem(prev => prev && prev.id === id ? { ...prev, ...updates } : prev);
+    } catch (error) {
+      console.error('Failed to update feed item from search:', error);
+    }
+  }, [updateFeedItem]);
+
   // Scroll animation for header
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll({ container: containerRef });
@@ -57,9 +109,15 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
   const titleScale = useTransform(scrollY, [0, 50], [1, 0.9]);
   const titleY = useTransform(scrollY, [0, 50], [0, -5]);
 
-  // Load history on mount
+  // Load history on mount and auto-focus search input
   useEffect(() => {
     setRecentSearches(getSearchHistory());
+    // Auto-focus the search input so the user can start typing immediately
+    const timer = setTimeout(() => {
+      searchInputRef.current?.focus();
+      setIsFocused(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const allSearchableData = useMemo((): UniversalSearchResult[] => {
@@ -102,6 +160,12 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
           item.content.toLowerCase().includes(lowerCaseQuery)
       );
       setLocalResults(results);
+
+      // Save to search history when local search produces results with 3+ chars
+      if (debouncedQuery.length >= 3 && results.length > 0) {
+        saveSearchQuery(debouncedQuery);
+        setRecentSearches(getSearchHistory());
+      }
     } else if (debouncedQuery.length <= 1) {
       setLocalResults([]);
     }
@@ -169,39 +233,36 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
     }
   };
 
-  const handleQueryChange = (q: string) => {
+  const handleQueryChange = useCallback((q: string) => {
     setQuery(q);
     if (isAiSearch && q.length < debouncedQuery.length) {
       setIsAiSearch(false);
       setAiAnswer(null);
       setAiSourceIds(new Set());
     }
-  };
+  }, [isAiSearch, debouncedQuery.length]);
 
-  const handleCancelSearch = () => {
+  const handleCancelSearch = useCallback(() => {
     setQuery('');
     setIsFocused(false);
     triggerHaptic('light');
     searchInputRef.current?.blur();
-  };
+  }, [triggerHaptic]);
 
-  const handleRecentSearchSelect = (selectedQuery: string) => {
+  const handleRecentSearchSelect = useCallback((selectedQuery: string) => {
     setQuery(selectedQuery);
-    setTimeout(() => {
-      // Trigger search or just set query
-    }, 100);
-  };
+  }, []);
 
-  const handleClearHistory = () => {
+  const handleClearHistory = useCallback(() => {
     triggerHaptic('medium');
     clearSearchHistory();
     setRecentSearches([]);
-  };
+  }, [triggerHaptic]);
 
-  const handleRemoveRecent = (q: string) => {
+  const handleRemoveRecent = useCallback((q: string) => {
     removeFromHistory(q);
     setRecentSearches(prev => prev.filter(item => item !== q));
-  };
+  }, []);
 
   // Filter Logic
   const displayedResults = useMemo(() => {
@@ -243,21 +304,41 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
     });
   }, [localResults, aiSourceIds, isAiSearch, filters, allSearchableData]);
 
-  // Categories for Pills
-  const categories = [
+  // PERF: Memoize static category list to prevent re-creation on every render
+  const categories = useMemo(() => [
     { id: 'all', label: 'הכל', icon: undefined },
     { id: 'task', label: 'משימות', icon: '✓' },
     { id: 'note', label: 'פתקים', icon: '📝' },
     { id: 'spark', label: 'ספארקים', icon: '✨' },
     { id: 'workout', label: 'אימונים', icon: '💪' },
     { id: 'calendar', label: 'לוח שנה', icon: '📅' },
-  ];
+  ], []);
+
+  // PERF: Stable callbacks for filter panel / settings navigation
+  const handleCloseFilterPanel = useCallback(() => setIsFilterPanelOpen(false), []);
+  const handleOpenFilterPanel = useCallback(() => setIsFilterPanelOpen(true), []);
+  const handleGoToSettings = useCallback(() => setActiveScreen('settings'), [setActiveScreen]);
+  // PERF: Stable per-category callbacks using Map (avoids inline arrow in .map())
+  const categoryClickHandlers = useMemo(() => {
+    const map = new Map<string, () => void>();
+    for (const cat of categories) {
+      map.set(cat.id, () => {
+        setFilters(prev => ({ ...prev, type: cat.id as SearchFilters['type'] }));
+        triggerHaptic('light');
+      });
+    }
+    return map;
+  }, [categories, triggerHaptic]);
+  const handleSuggestionClick = useCallback((s: string) => {
+    setQuery(s);
+    searchInputRef.current?.focus();
+  }, []);
 
   return (
     <div className="screen-shell flex flex-col h-screen overflow-hidden font-sans">
       <SearchFilterPanel
         isOpen={isFilterPanelOpen}
-        onClose={() => setIsFilterPanelOpen(false)}
+        onClose={handleCloseFilterPanel}
         filters={filters}
         onFilterChange={setFilters}
       />
@@ -272,20 +353,13 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
       >
         <div className="flex items-center justify-between h-14 relative">
           <motion.h1
-            style={{ scale: titleScale, y: titleY, transformOrigin: 'right center' }}
+            style={{ scale: titleScale, y: titleY, transformOrigin: 'right center', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}
             className="text-2xl font-bold"
           >
-            <span style={{
-              background: 'linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%)',
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}>
-              {settings.screenLabels?.search || 'חיפוש'}
-            </span>
+            {settings.screenLabels?.search || 'חיפוש'}
           </motion.h1>
           <button
-            onClick={() => setActiveScreen('settings')}
+            onClick={handleGoToSettings}
             className="glass-action-btn p-2.5 rounded-full"
           >
             <SettingsIcon className="w-5 h-5" />
@@ -326,8 +400,8 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                                 focus:outline-none
                                 transition-all duration-300 text-[17px]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.06)',
-                      border: `0.5px solid ${isFocused ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.10)'}`,
+                      background: 'var(--gray-50)',
+                      border: `0.5px solid ${isFocused ? 'var(--border-strong)' : 'var(--border-subtle)'}`,
                     }}
                   />
                   {query && (
@@ -335,7 +409,7 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                       onClick={() => setQuery('')}
                       className="absolute inset-y-0 left-0 flex items-center pl-3 pr-2 text-theme-secondary opacity-60 hover:opacity-100 transition-colors"
                     >
-                      <div className="bg-white/10 rounded-full p-1">
+                      <div className="bg-[var(--gray-100)] rounded-full p-1">
                         <TrashIcon className="w-3 h-3" />
                       </div>
                     </button>
@@ -383,49 +457,100 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
           {/* Filters - Horizontal Scroll */}
           <div className="flex gap-2.5 overflow-x-auto pb-4 pt-4 -mx-4 px-4 scrollbar-none mask-fade-sides no-scrollbar" style={{ maskImage: 'linear-gradient(to right, transparent, black 16px, black 90%, transparent)' }}>
             <button
-              onClick={() => setIsFilterPanelOpen(true)}
+              onClick={handleOpenFilterPanel}
               className={`p-2.5 rounded-full border transition-all duration-300 shrink-0 ${
                 filters.type !== 'all' || filters.status !== 'all'
                   ? 'bg-[var(--color-accent-cyan)]/20 border-[var(--color-accent-cyan)]/50 text-[var(--color-accent-cyan)]'
-                  : 'bg-[var(--color-surface-hover)] border-white/10 text-theme-secondary hover:text-theme-primary'
+                  : 'bg-[var(--surface-hover)] border-white/10 text-theme-secondary hover:text-theme-primary'
               }`}
             >
               <FilterIcon className="w-5 h-5" />
             </button>
-            <div className="w-[1px] h-8 bg-white/10 shrink-0 my-auto mx-1" />
+            <div className="w-[1px] h-8 bg-[var(--gray-100)] shrink-0 my-auto mx-1" />
             {categories.map(cat => (
               <SearchCategoryPill
                 key={cat.id}
                 label={cat.label}
                 isActive={filters.type === cat.id}
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, type: cat.id as any }));
-                  triggerHaptic('light');
-                }}
+                onClick={categoryClickHandlers.get(cat.id)!}
                 icon={cat.icon ? <span>{cat.icon}</span> : undefined}
               />
             ))}
           </div>
 
           <AnimatePresence mode="wait">
-            {/* Loading State */}
+            {/* Loading State - Premium AI Processing */}
             {isAiLoading && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 className="flex flex-col items-center justify-center py-20"
               >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-[var(--color-accent-cyan)] blur-2xl opacity-20 rounded-full animate-pulse-slow"></div>
-                  <LoadingSpinner />
+                <div className="relative w-20 h-20">
+                  {/* Orbiting dots */}
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-3 h-3 rounded-full"
+                      style={{
+                        background: `var(--dynamic-accent-start)`,
+                        left: '50%',
+                        top: '50%',
+                        marginLeft: -6,
+                        marginTop: -6,
+                      }}
+                      animate={{
+                        x: [
+                          Math.cos((i * 120) * Math.PI / 180) * 28,
+                          Math.cos((i * 120 + 120) * Math.PI / 180) * 28,
+                          Math.cos((i * 120 + 240) * Math.PI / 180) * 28,
+                          Math.cos((i * 120 + 360) * Math.PI / 180) * 28,
+                        ],
+                        y: [
+                          Math.sin((i * 120) * Math.PI / 180) * 28,
+                          Math.sin((i * 120 + 120) * Math.PI / 180) * 28,
+                          Math.sin((i * 120 + 240) * Math.PI / 180) * 28,
+                          Math.sin((i * 120 + 360) * Math.PI / 180) * 28,
+                        ],
+                        scale: [1, 0.7, 1, 0.7, 1],
+                        opacity: [1, 0.5, 1, 0.5, 1],
+                      }}
+                      transition={{
+                        duration: 2.4,
+                        repeat: Infinity,
+                        ease: 'linear',
+                      }}
+                    />
+                  ))}
+                  {/* Center glow */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: `radial-gradient(circle, var(--dynamic-accent-glow) 0%, transparent 70%)`,
+                    }}
+                    animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  />
                 </div>
                 <motion.p
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="mt-6 text-[var(--color-accent-cyan)] font-medium text-lg tracking-wide"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-8 font-semibold text-lg tracking-wide"
+                  style={{ color: 'var(--dynamic-accent-start)' }}
                 >
                   AI מעבד את התוצאות...
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  transition={{ delay: 0.5 }}
+                  className="mt-2 text-sm"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  מנתח את הנתונים שלך
                 </motion.p>
               </motion.div>
             )}
@@ -436,23 +561,32 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                 initial={{ opacity: 0, y: 20, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="mb-8 relative group"
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className="mb-8 relative"
               >
                 <div
-                  className="relative overflow-hidden rounded-[20px] p-6"
+                  className="relative overflow-hidden rounded-[22px] p-6"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '0.5px solid rgba(255, 255, 255, 0.12)',
+                    background: 'var(--gray-50, rgba(255, 255, 255, 0.06))',
+                    border: '0.5px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
                     backdropFilter: 'blur(16px)',
                   }}
                 >
+                  {/* Subtle accent gradient top border */}
+                  <div
+                    className="absolute top-0 left-[10%] right-[10%] h-[1px] pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(to right, transparent, var(--dynamic-accent-start), transparent)',
+                      opacity: 0.3,
+                    }}
+                  />
                   <h2
-                    className="text-[10px] font-semibold uppercase tracking-[0.12em] mb-4 flex items-center gap-2 relative z-10"
-                    style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+                    className="text-[10px] font-bold uppercase tracking-[0.12em] mb-4 flex items-center gap-2 relative z-10"
+                    style={{ color: 'var(--text-muted)' }}
                   >
-                    <SparklesIcon className="w-3 h-3" /> AI Summary
+                    <SparklesIcon className="w-3.5 h-3.5" style={{ color: 'var(--dynamic-accent-start)' }} /> AI Summary
                   </h2>
-                  <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-p:leading-relaxed prose-headings:text-theme-primary prose-strong:text-theme-primary prose-a:text-[var(--color-accent-cyan)] relative z-10">
+                  <div className="prose max-w-none prose-p:leading-relaxed prose-headings:text-[var(--text-primary)] prose-strong:text-[var(--text-primary)] prose-a:text-[var(--dynamic-accent-start)] relative z-10" style={{ color: 'var(--text-secondary)' }}>
                     <MarkdownRenderer content={aiAnswer} />
                   </div>
                 </div>
@@ -465,20 +599,43 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                 layout
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="space-y-4"
+                className="space-y-3"
               >
-                <div className="flex items-center justify-between px-2 mb-2">
-                  <h3 className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                    נמצאו {displayedResults.length} תוצאות
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="flex items-center justify-between px-2 mb-3"
+                >
+                  <h3 className="text-[11px] font-bold uppercase tracking-[0.1em] flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+                    <span
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-md text-[10px] font-bold"
+                      style={{ background: 'var(--dynamic-accent-color)', color: 'var(--dynamic-accent-start)' }}
+                    >
+                      {displayedResults.length}
+                    </span>
+                    תוצאות נמצאו
                   </h3>
-                </div>
+                </motion.div>
                 {displayedResults.map((result, index) => (
-                  <SearchResultItem
+                  <motion.div
                     key={`${result.id}-${index}`}
-                    result={result}
-                    query={debouncedQuery}
-                    index={index}
-                  />
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 400,
+                      damping: 30,
+                      delay: Math.min(index * 0.04, 0.3),
+                    }}
+                  >
+                    <SearchResultItem
+                      result={result}
+                      query={debouncedQuery}
+                      index={index}
+                      onSelectItem={handleSelectSearchResult}
+                    />
+                  </motion.div>
                 ))}
               </motion.div>
             )}
@@ -490,7 +647,7 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center justify-center py-24 text-center"
               >
-                <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-6 ring-1 ring-white/10 shadow-2xl backdrop-blur-sm">
+                <div className="w-24 h-24 rounded-full bg-[var(--gray-50)] flex items-center justify-center mb-6 ring-1 ring-[var(--border-subtle)] shadow-2xl backdrop-blur-sm">
                   <SearchIcon className="w-10 h-10 text-[var(--text-muted)]" />
                 </div>
                 <h3 className="text-xl font-bold text-theme-primary mb-2">לא נמצאו תוצאות</h3>
@@ -515,7 +672,7 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                       </h3>
                       <button
                         onClick={handleClearHistory}
-                        className="text-xs font-medium text-[var(--color-accent-cyan)] hover:text-white transition-colors bg-[var(--color-accent-cyan)]/10 px-3 py-1 rounded-full hover:bg-[var(--color-accent-cyan)]/20"
+                        className="text-xs font-medium text-[var(--color-accent-cyan)] hover:text-[var(--text-primary)] transition-colors bg-[var(--color-accent-cyan)]/10 px-3 py-1 rounded-full hover:bg-[var(--color-accent-cyan)]/20"
                       >
                         נקה הכל
                       </button>
@@ -534,16 +691,31 @@ export default function SearchScreen({ setActiveScreen }: SearchScreenProps) {
                 )}
 
                 <PremiumEmptySearch
-                  onSuggestionClick={(s) => {
-                    setQuery(s);
-                    searchInputRef.current?.focus();
-                  }}
+                  onSuggestionClick={handleSuggestionClick}
                 />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Personal Item Detail Modal */}
+      {selectedPersonalItem && (
+        <PersonalItemDetailModal
+          item={selectedPersonalItem}
+          onClose={() => setSelectedPersonalItem(null)}
+          onUpdate={handleUpdatePersonalItem}
+          onDelete={handleDeletePersonalItem}
+        />
+      )}
+
+      {/* Feed Item Detail Sheet */}
+      <FeedItemDetailSheet
+        item={selectedFeedItem}
+        onClose={() => setSelectedFeedItem(null)}
+        onUpdate={handleUpdateFeedItem}
+        isSummarizing={false}
+      />
     </div>
   );
 }

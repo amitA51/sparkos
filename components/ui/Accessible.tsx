@@ -18,8 +18,8 @@ import React, {
   type InputHTMLAttributes,
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../lib/styles';
-import { fadeVariants, popInVariants, DURATION } from '../../lib/animations';
+import { cn } from '../../utils/styles';
+import { fadeVariants, popInVariants, DURATION } from '../../utils/animations';
 
 // ============================================================================
 // Accessible Button

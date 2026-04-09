@@ -1,111 +1,184 @@
 import React from 'react';
 import { useKeyboardShortcuts } from './KeyboardShortcutsProvider';
-import { CloseIcon, SparklesIcon } from './icons';
+import { CloseIcon } from './icons';
+import { motion, AnimatePresence } from 'framer-motion';
+
+/**
+ * ShortcutsHelpModal
+ *
+ * Shows all registered keyboard shortcuts in a premium overlay.
+ * Triggered by pressing Shift+? anywhere in the app.
+ *
+ * Also shows "built-in" shortcuts that are handled by AppKeyboardShortcuts
+ * and not registered in the provider (Cmd+K, Cmd+N, etc).
+ */
+
+/** Built-in shortcuts handled by AppKeyboardShortcuts (not registered in provider) */
+const BUILTIN_SHORTCUTS = [
+  { key: 'Ctrl+K', description: 'פתח/סגור לוח פקודות', category: 'quick' as const },
+  { key: 'Ctrl+N', description: 'יצירת פריט חדש', category: 'quick' as const },
+  { key: 'Ctrl+/', description: 'פתח חיפוש', category: 'quick' as const },
+  { key: 'Ctrl+,', description: 'פתח הגדרות', category: 'quick' as const },
+];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  quick: 'פעולות מהירות',
+  navigation: 'ניווט',
+  actions: 'פעולות על פריטים',
+  views: 'תצוגות',
+};
+
+const CATEGORY_ORDER = ['quick', 'navigation', 'actions', 'views'];
+
+const KeyBadge = ({ keys }: { keys: string }) => {
+  const keyParts = keys.split('+');
+  return (
+    <div className="flex gap-1 items-center">
+      {keyParts.map((key, index) => (
+        <React.Fragment key={index}>
+          <kbd
+            className="inline-flex items-center justify-center min-w-[28px] h-7 px-2 text-[11px] font-mono font-bold rounded-lg"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: 'rgba(255, 255, 255, 0.8)',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
+            }}
+          >
+            {key === 'Ctrl' ? (navigator.platform.includes('Mac') ? 'Cmd' : 'Ctrl') : key.toUpperCase()}
+          </kbd>
+          {index < keyParts.length - 1 && (
+            <span className="text-[10px] mx-0.5" style={{ color: 'rgba(255, 255, 255, 0.25)' }}>
+              {key === 'g' || keyParts[0] === 'g' ? 'then' : '+'}
+            </span>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+const ShortcutCategory = ({
+  title,
+  shortcuts,
+}: {
+  title: string;
+  shortcuts: { key: string; description: string }[];
+}) => {
+  if (shortcuts.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <h3
+        className="text-[10px] font-bold uppercase tracking-[0.12em] mb-3 px-1"
+        style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+      >
+        {title}
+      </h3>
+      <div className="space-y-1">
+        {shortcuts.map((shortcut, index) => (
+          <div
+            key={index}
+            className="flex items-center justify-between py-2.5 px-3 rounded-xl transition-colors hover:bg-white/5"
+          >
+            <span className="text-sm text-white/80">{shortcut.description}</span>
+            <KeyBadge keys={shortcut.key} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ShortcutsHelpModal: React.FC = () => {
   const { shortcuts, showHelp, toggleHelp } = useKeyboardShortcuts();
 
-  if (!showHelp) return null;
+  // Merge provider shortcuts with built-in shortcuts
+  const allCategorized: Record<string, { key: string; description: string }[]> = {};
 
-  const categorizedShortcuts = {
-    navigation: [] as (typeof shortcuts)[string][],
-    quick: [] as (typeof shortcuts)[string][],
-    actions: [] as (typeof shortcuts)[string][],
-    views: [] as (typeof shortcuts)[string][],
-  };
-
-  Object.values(shortcuts).forEach(shortcut => {
-    categorizedShortcuts[shortcut.category].push(shortcut);
+  CATEGORY_ORDER.forEach(cat => {
+    allCategorized[cat] = [];
   });
 
-  const KeyBadge = ({ keys }: { keys: string }) => {
-    const keyParts = keys.split('+');
+  // Add built-in shortcuts first
+  BUILTIN_SHORTCUTS.forEach(s => {
+    allCategorized[s.category]?.push(s);
+  });
 
-    return (
-      <div className="flex gap-1">
-        {keyParts.map((key, index) => (
-          <React.Fragment key={index}>
-            <kbd className="px-2 py-1 text-xs font-mono font-bold bg-white/10 border border-white/20 rounded text-white min-w-[28px] text-center">
-              {key.toUpperCase()}
-            </kbd>
-            {index < keyParts.length - 1 && (
-              <span className="text-muted text-xs flex items-center">then</span>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-    );
-  };
-
-  const ShortcutCategory = ({
-    title,
-    shortcuts,
-  }: {
-    title: string;
-    shortcuts: (typeof categorizedShortcuts)[keyof typeof categorizedShortcuts];
-  }) => {
-    if (shortcuts.length === 0) return null;
-
-    return (
-      <div className="mb-6">
-        <h3 className="text-sm font-bold text-white/60 uppercase tracking-wide mb-3">{title}</h3>
-        <div className="space-y-2">
-          {shortcuts.map((shortcut, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
-            >
-              <span className="text-sm text-white">{shortcut.description}</span>
-              <KeyBadge keys={shortcut.key} />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  // Add registered provider shortcuts
+  Object.values(shortcuts).forEach(shortcut => {
+    if (!allCategorized[shortcut.category]) {
+      allCategorized[shortcut.category] = [];
+    }
+    const categoryList = allCategorized[shortcut.category];
+    if (categoryList) {
+      categoryList.push({
+        key: shortcut.key,
+        description: shortcut.description,
+      });
+    }
+  });
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative max-w-2xl w-full max-h-[80vh] overflow-y-auto themed-card p-6 animate-slide-up">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6 sticky top-0 bg-[var(--bg-card)] pb-4 border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[var(--accent-gradient)]">
-              <SparklesIcon className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white font-heading">Keyboard Shortcuts</h2>
-              <p className="text-sm text-muted">Navigate faster with these shortcuts</p>
-            </div>
-          </div>
-          <button
-            onClick={toggleHelp}
-            className="p-2 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-colors"
+    <AnimatePresence>
+      {showHelp && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          style={{ background: 'rgba(0, 0, 0, 0.60)', backdropFilter: 'blur(8px)' }}
+          onClick={toggleHelp}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97, y: 5 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            className="relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-2xl p-6"
+            style={{
+              background: 'rgba(28, 28, 35, 0.95)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)',
+            }}
+            onClick={e => e.stopPropagation()}
           >
-            <CloseIcon className="w-5 h-5" />
-          </button>
-        </div>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6 pb-4" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+              <div>
+                <h2 className="text-xl font-bold text-white">קיצורי מקלדת</h2>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                  נווט מהר יותר עם קיצורי מקלדת
+                </p>
+              </div>
+              <button
+                onClick={toggleHelp}
+                className="p-2 rounded-xl transition-colors hover:bg-white/10"
+                style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+              >
+                <CloseIcon className="w-5 h-5" />
+              </button>
+            </div>
 
-        {/* Content */}
-        <div className="space-y-6">
-          <ShortcutCategory title="Quick Actions" shortcuts={categorizedShortcuts.quick} />
-          <ShortcutCategory title="Navigation" shortcuts={categorizedShortcuts.navigation} />
-          <ShortcutCategory title="Task Actions" shortcuts={categorizedShortcuts.actions} />
-          <ShortcutCategory title="View Controls" shortcuts={categorizedShortcuts.views} />
-        </div>
+            {/* Shortcuts by Category */}
+            {CATEGORY_ORDER.map(cat => (
+              <ShortcutCategory
+                key={cat}
+                title={CATEGORY_LABELS[cat] || cat}
+                shortcuts={allCategorized[cat] || []}
+              />
+            ))}
 
-        {/* Footer Tip */}
-        <div className="mt-6 pt-4 border-t border-white/10">
-          <p className="text-xs text-muted text-center">
-            💡 Press{' '}
-            <kbd className="px-1.5 py-0.5 text-xs bg-white/10 border border-white/20 rounded">
-              ESC
-            </kbd>{' '}
-            anywhere to close dialogs
-          </p>
-        </div>
-      </div>
-    </div>
+            {/* Footer */}
+            <div className="mt-4 pt-4 text-center" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+              <p className="text-[11px]" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+                לחץ <KeyBadge keys="ESC" /> או <KeyBadge keys="Shift+?" /> לסגירה
+              </p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

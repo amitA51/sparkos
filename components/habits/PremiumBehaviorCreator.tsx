@@ -66,20 +66,20 @@ const modeData = {
         icon: FlameIcon,
         title: 'בניית הרגל',
         subtitle: 'Make it obvious, attractive, easy & satisfying',
-        color: '#10B981',
+        color: 'var(--success)',
         gradient: 'from-emerald-500 to-teal-500',
         bgGlow: 'rgba(16, 185, 129, 0.4)',
         emoji: '🔥',
-    },
+    }, // CLEANED
     quit: {
         icon: ShieldCheckIcon,
         title: 'גמילה מהרגל',
         subtitle: 'Make it invisible, unattractive, hard & unsatisfying',
-        color: '#EF4444',
+        color: 'var(--error)',
         gradient: 'from-red-500 to-rose-500',
         bgGlow: 'rgba(239, 68, 68, 0.4)',
         emoji: '🛡️',
-    },
+    }, // CLEANED
 };
 
 // --- 4 Laws Badge Component ---

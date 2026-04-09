@@ -96,11 +96,12 @@ const PremiumQuickActionsFAB: React.FC<PremiumQuickActionsFABProps> = ({
                   onClick={() => handleActionClick(action)}
                 >
                   <motion.div
-                    className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium text-white whitespace-nowrap"
+                    className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap"
                     style={{
-                      background: 'rgba(0,0,0,0.8)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border-subtle)',
                       backdropFilter: 'blur(10px)',
+                      color: 'var(--text-primary)',
                     }}
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}

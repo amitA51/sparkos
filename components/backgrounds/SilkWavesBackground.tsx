@@ -28,12 +28,12 @@ export const SilkWavesBackground: React.FC<SilkWavesProps> = ({
     const enableAnimations = forceEnableAnimations || ANIMATION_CONFIG.enableBackgroundAnimations;
 
     return (
-        <div className="fixed inset-0 -z-50 overflow-hidden bg-[#050505]">
+        <div className="fixed inset-0 -z-50 overflow-hidden bg-[var(--bg-primary,#050505)]">
             {/* Deep gradient base */}
             <div
                 className="absolute inset-0"
                 style={{
-                    background: 'linear-gradient(180deg, #020617 0%, #0a1628 50%, #050505 100%)',
+                    background: 'linear-gradient(180deg, #020617 0%, #0a1628 50%, var(--bg-primary,#050505) 100%)',
                 }}
             />
 

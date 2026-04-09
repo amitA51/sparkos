@@ -158,11 +158,12 @@ const PersonalItemDetailModal: React.FC<PersonalItemDetailModalProps> = ({
     // This logic creates a delta of changes to send for update
     (Object.keys(editState) as Array<keyof typeof editState>).forEach(key => {
       if (JSON.stringify(editState[key]) !== JSON.stringify(originalState[key])) {
-        (updates as any)[key] = editState[key];
+        // Safe: editState keys are a subset of PersonalItem keys
+        (updates as Record<string, unknown>)[key] = editState[key];
       }
     });
 
-    if (updates.totalPages) updates.totalPages = parseInt(updates.totalPages as any, 10) || 0;
+    if (updates.totalPages) updates.totalPages = typeof updates.totalPages === 'string' ? parseInt(updates.totalPages, 10) || 0 : updates.totalPages;
 
     if (Object.keys(updates).length > 0) {
       onUpdate(item.id, updates);

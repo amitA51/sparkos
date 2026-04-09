@@ -377,4 +377,4 @@ const QuoteWidget: React.FC<QuoteWidgetProps> = ({ title }) => {
   );
 };
 
-export default QuoteWidget;
+export default React.memo(QuoteWidget);

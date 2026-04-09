@@ -196,7 +196,7 @@ const WorkoutSettingsOverlay = memo<WorkoutSettingsOverlayProps>(({
                 dragElastic={{ top: 0, bottom: 0.4 }}
                 onDragEnd={handleDragEnd}
                 style={{ y }}
-                className="fixed bottom-0 left-0 right-0 flex flex-col rounded-t-3xl overflow-hidden bg-[#121212] max-h-[85vh]"
+                className="fixed bottom-0 left-0 right-0 flex flex-col rounded-t-3xl overflow-hidden bg-[var(--bg-secondary,#121212)] max-h-[85vh]"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex justify-center py-3">

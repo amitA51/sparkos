@@ -29,7 +29,7 @@ const ActiveWorkoutOverlay: React.FC = () => {
     if (isExitingRef.current) return;
     isExitingRef.current = true;
     
-    console.log('[ActiveWorkoutOverlay] handleExit called for workout:', activeWorkout.id);
+    // handleExit called for workout
     
     // Mark this workout as completing to prevent re-showing
     completingWorkoutIds.add(activeWorkout.id);
@@ -43,9 +43,7 @@ const ActiveWorkoutOverlay: React.FC = () => {
     
     // Actually remove the item from context
     try {
-      console.log('[ActiveWorkoutOverlay] Removing personal item:', activeWorkout.id);
       await removePersonalItem(activeWorkout.id);
-      console.log('[ActiveWorkoutOverlay] Personal item removed successfully');
     } catch (e) {
       console.error('[ActiveWorkoutOverlay] Error removing personal item:', e);
       // Even on error, keep the ID in permanentlyCompletedIds to prevent loop

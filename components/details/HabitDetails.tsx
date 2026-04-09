@@ -23,26 +23,26 @@ export const HabitView: React.FC<ViewProps> = ({ item }) => {
   return (
     <div className="space-y-4">
       <div
-        className={`p-4 rounded-xl border ${item.habitType === 'bad' ? 'bg-red-500/10 border-red-500/30' : 'bg-green-500/10 border-green-500/30'} flex items-center gap-3`}
+        className={`p-4 rounded-xl border ${item.habitType === 'bad' ? 'bg-error/10 border-error/30' : 'bg-success/10 border-success/30'} flex items-center gap-3`}
       >
         {item.habitType === 'bad' ? (
           <>
-            <div className="p-2 bg-red-500/20 rounded-lg">
-              <ShieldCheckIcon className="w-6 h-6 text-red-400" />
+            <div className="p-2 bg-error/20 rounded-lg">
+              <ShieldCheckIcon className="w-6 h-6 text-error-light" />
             </div>
             <div>
-              <h4 className="font-bold text-red-100">גמילה מהרגל</h4>
-              <p className="text-xs text-red-300">מטרה: להימנע מביצוע הפעולה</p>
+              <h4 className="font-bold text-error-dark">גמילה מהרגל</h4>
+              <p className="text-xs text-error-muted">מטרה: להימנע מביצוע הפעולה</p>
             </div>
           </>
         ) : (
           <>
-            <div className="p-2 bg-green-500/20 rounded-lg">
-              <FlameIcon className="w-6 h-6 text-green-400" />
+            <div className="p-2 bg-success/20 rounded-lg">
+              <FlameIcon className="w-6 h-6 text-success-light" />
             </div>
             <div>
-              <h4 className="font-bold text-green-100">בניית הרגל</h4>
-              <p className="text-xs text-green-300">מטרה: לבצע את הפעולה באופן קבוע</p>
+              <h4 className="font-bold text-success-dark">בניית הרגל</h4>
+              <p className="text-xs text-success-muted">מטרה: לבצע את הפעולה באופן קבוע</p>
             </div>
           </>
         )}
@@ -50,9 +50,9 @@ export const HabitView: React.FC<ViewProps> = ({ item }) => {
 
       {/* Habit Stacking Display */}
       {anchorHabit && item.habitStack && (
-        <div className="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20 flex items-center gap-3">
-          <LinkIcon className="w-5 h-5 text-indigo-400" />
-          <p className="text-sm text-indigo-200">
+        <div className="p-3 bg-accent/10 rounded-xl border border-accent/20 flex items-center gap-3">
+          <LinkIcon className="w-5 h-5 text-accent-light" />
+          <p className="text-sm text-accent-muted">
             {item.habitStack.stackPosition === 'after' ? 'אחרי' : 'לפני'}: {anchorHabit.title}
           </p>
         </div>
@@ -60,17 +60,17 @@ export const HabitView: React.FC<ViewProps> = ({ item }) => {
 
       {/* Two-Minute Rule Display */}
       {item.twoMinuteStarter && (
-        <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-          <p className="text-xs text-emerald-400 mb-1">שלב נוכחי: {item.twoMinuteStarter.currentPhase}</p>
-          <p className="text-sm text-emerald-200">"{item.twoMinuteStarter.microVersion}"</p>
+        <div className="p-3 bg-success/10 rounded-xl border border-success/30">
+          <p className="text-xs text-success-light mb-1">שלב נוכחי: {item.twoMinuteStarter.currentPhase}</p>
+          <p className="text-sm text-success-dark">"{item.twoMinuteStarter.microVersion}"</p>
         </div>
       )}
 
       {/* Substitution Action for Bad Habits */}
       {item.habitType === 'bad' && item.breakingStrategy?.substitutionAction && (
-        <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20">
-          <p className="text-xs text-amber-400 mb-1">פעולה חלופית:</p>
-          <p className="text-sm text-amber-200">{item.breakingStrategy.substitutionAction}</p>
+        <div className="p-3 bg-warning/10 rounded-xl border border-warning/20">
+          <p className="text-xs text-warning-light mb-1">פעולה חלופית:</p>
+          <p className="text-sm text-warning-muted">{item.breakingStrategy.substitutionAction}</p>
         </div>
       )}
 

@@ -26,14 +26,14 @@ const TasksIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="tasksGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#06B6D4" />
-        <stop offset="100%" stopColor="#8B5CF6" />
+        <stop offset="0%" stopColor="var(--cyan)" />
+        <stop offset="100%" stopColor="var(--purple)" />
       </linearGradient>
     </defs>
-    <rect x="40" y="30" width="120" height="140" rx="16" fill="rgba(255,255,255,0.05)" stroke="url(#tasksGradient)" strokeWidth="2" />
-    <rect x="55" y="55" width="90" height="12" rx="6" fill="rgba(255,255,255,0.1)" />
-    <rect x="55" y="80" width="70" height="12" rx="6" fill="rgba(255,255,255,0.08)" />
-    <rect x="55" y="105" width="80" height="12" rx="6" fill="rgba(255,255,255,0.06)" />
+    <rect x="40" y="30" width="120" height="140" rx="16" fill="var(--gray-100)" stroke="url(#tasksGradient)" strokeWidth="2" />
+    <rect x="55" y="55" width="90" height="12" rx="6" fill="var(--gray-200)" />
+    <rect x="55" y="80" width="70" height="12" rx="6" fill="var(--gray-150)" />
+    <rect x="55" y="105" width="80" height="12" rx="6" fill="var(--gray-150)" />
     <circle cx="100" cy="145" r="20" fill="url(#tasksGradient)" />
     <path d="M92 145l6 6 12-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
   </svg>
@@ -43,8 +43,8 @@ const HabitsIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="habitsGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#10B981" />
-        <stop offset="100%" stopColor="#06B6D4" />
+        <stop offset="0%" stopColor="var(--green)" />
+        <stop offset="100%" stopColor="var(--cyan)" />
       </linearGradient>
     </defs>
     {[0, 1, 2, 3, 4].map((i) => (
@@ -55,7 +55,7 @@ const HabitsIllustration: React.FC = () => (
         width="20"
         height={i === 2 ? 100 : i === 1 || i === 3 ? 70 : i === 0 || i === 4 ? 40 : 30}
         rx="6"
-        fill={i === 2 ? 'url(#habitsGradient)' : 'rgba(255,255,255,0.1)'}
+        fill={i === 2 ? 'url(#habitsGradient)' : 'var(--gray-200)'}
       />
     ))}
     <circle cx="100" cy="45" r="25" fill="url(#habitsGradient)" />
@@ -67,14 +67,14 @@ const FeedIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="feedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#F59E0B" />
-        <stop offset="100%" stopColor="#EF4444" />
+        <stop offset="0%" stopColor="var(--amber)" />
+        <stop offset="100%" stopColor="var(--red)" />
       </linearGradient>
     </defs>
-    <rect x="25" y="25" width="70" height="70" rx="16" fill="rgba(255,255,255,0.05)" stroke="url(#feedGradient)" strokeWidth="2" />
-    <rect x="105" y="25" width="70" height="32" rx="10" fill="rgba(255,255,255,0.08)" />
-    <rect x="105" y="63" width="50" height="32" rx="10" fill="rgba(255,255,255,0.06)" />
-    <rect x="25" y="105" width="150" height="70" rx="16" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+    <rect x="25" y="25" width="70" height="70" rx="16" fill="var(--gray-100)" stroke="url(#feedGradient)" strokeWidth="2" />
+    <rect x="105" y="25" width="70" height="32" rx="10" fill="var(--gray-150)" />
+    <rect x="105" y="63" width="50" height="32" rx="10" fill="var(--gray-150)" />
+    <rect x="25" y="105" width="150" height="70" rx="16" fill="var(--gray-100)" stroke="var(--gray-200)" strokeWidth="1" />
     <circle cx="60" cy="60" r="18" fill="url(#feedGradient)" />
     <path d="M55 60l3 3 7-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
   </svg>
@@ -84,12 +84,12 @@ const SearchIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="searchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#8B5CF6" />
-        <stop offset="100%" stopColor="#EC4899" />
+        <stop offset="0%" stopColor="var(--purple)" />
+        <stop offset="100%" stopColor="var(--pink)" />
       </linearGradient>
     </defs>
-    <circle cx="85" cy="85" r="45" fill="rgba(255,255,255,0.05)" stroke="url(#searchGradient)" strokeWidth="3" />
-    <circle cx="85" cy="85" r="25" fill="rgba(139, 92, 246, 0.2)" />
+    <circle cx="85" cy="85" r="45" fill="var(--gray-100)" stroke="url(#searchGradient)" strokeWidth="3" />
+    <circle cx="85" cy="85" r="25" fill="var(--purple)" opacity="0.2" />
     <line x1="120" y1="120" x2="160" y2="160" stroke="url(#searchGradient)" strokeWidth="8" strokeLinecap="round" />
     <circle cx="160" cy="160" r="12" fill="url(#searchGradient)" />
   </svg>
@@ -99,11 +99,11 @@ const CalendarIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="calendarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#EC4899" />
-        <stop offset="100%" stopColor="#8B5CF6" />
+        <stop offset="0%" stopColor="var(--pink)" />
+        <stop offset="100%" stopColor="var(--purple)" />
       </linearGradient>
     </defs>
-    <rect x="30" y="40" width="140" height="130" rx="16" fill="rgba(255,255,255,0.05)" stroke="url(#calendarGradient)" strokeWidth="2" />
+    <rect x="30" y="40" width="140" height="130" rx="16" fill="var(--gray-100)" stroke="url(#calendarGradient)" strokeWidth="2" />
     <rect x="30" y="40" width="140" height="35" rx="16" fill="url(#calendarGradient)" />
     <line x1="60" y1="25" x2="60" y2="55" stroke="url(#calendarGradient)" strokeWidth="6" strokeLinecap="round" />
     <line x1="140" y1="25" x2="140" y2="55" stroke="url(#calendarGradient)" strokeWidth="6" strokeLinecap="round" />
@@ -116,7 +116,7 @@ const CalendarIllustration: React.FC = () => (
           width="20"
           height="18"
           rx="4"
-          fill={row === 1 && col === 2 ? 'url(#calendarGradient)' : 'rgba(255,255,255,0.08)'}
+          fill={row === 1 && col === 2 ? 'url(#calendarGradient)' : 'var(--gray-150)'}
         />
       ))
     )}
@@ -127,11 +127,11 @@ const NotesIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="notesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#06B6D4" />
-        <stop offset="100%" stopColor="#3B82F6" />
+        <stop offset="0%" stopColor="var(--cyan)" />
+        <stop offset="100%" stopColor="var(--blue)" />
       </linearGradient>
     </defs>
-    <rect x="40" y="25" width="120" height="150" rx="12" fill="rgba(255,255,255,0.05)" stroke="url(#notesGradient)" strokeWidth="2" />
+    <rect x="40" y="25" width="120" height="150" rx="12" fill="var(--gray-100)" stroke="url(#notesGradient)" strokeWidth="2" />
     {[0, 1, 2, 3, 4].map((i) => (
       <rect
         key={i}
@@ -140,7 +140,7 @@ const NotesIllustration: React.FC = () => (
         width={i === 0 ? 90 : i === 1 ? 70 : i === 2 ? 80 : i === 3 ? 50 : 60}
         height="10"
         rx="5"
-        fill={i === 0 ? 'url(#notesGradient)' : 'rgba(255,255,255,0.08)'}
+        fill={i === 0 ? 'url(#notesGradient)' : 'var(--gray-150)'}
       />
     ))}
     <circle cx="145" cy="160" r="18" fill="url(#notesGradient)" />
@@ -152,15 +152,15 @@ const WorkoutIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="workoutGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#EF4444" />
-        <stop offset="100%" stopColor="#F59E0B" />
+        <stop offset="0%" stopColor="var(--red)" />
+        <stop offset="100%" stopColor="var(--amber)" />
       </linearGradient>
     </defs>
     <rect x="25" y="90" width="30" height="20" rx="4" fill="url(#workoutGradient)" />
     <rect x="145" y="90" width="30" height="20" rx="4" fill="url(#workoutGradient)" />
-    <rect x="55" y="80" width="90" height="40" rx="6" fill="rgba(255,255,255,0.1)" stroke="url(#workoutGradient)" strokeWidth="2" />
-    <rect x="35" y="75" width="20" height="50" rx="4" fill="rgba(255,255,255,0.15)" />
-    <rect x="145" y="75" width="20" height="50" rx="4" fill="rgba(255,255,255,0.15)" />
+    <rect x="55" y="80" width="90" height="40" rx="6" fill="var(--gray-200)" stroke="url(#workoutGradient)" strokeWidth="2" />
+    <rect x="35" y="75" width="20" height="50" rx="4" fill="var(--gray-300)" />
+    <rect x="145" y="75" width="20" height="50" rx="4" fill="var(--gray-300)" />
     <circle cx="100" cy="155" r="25" fill="url(#workoutGradient)" />
     <path d="M90 155h20M100 145v20" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" />
   </svg>
@@ -170,11 +170,11 @@ const SuccessIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#10B981" />
-        <stop offset="100%" stopColor="#34D399" />
+        <stop offset="0%" stopColor="var(--green)" />
+        <stop offset="100%" stopColor="var(--light-green)" />
       </linearGradient>
     </defs>
-    <circle cx="100" cy="100" r="60" fill="rgba(16, 185, 129, 0.1)" stroke="url(#successGradient)" strokeWidth="3" />
+    <circle cx="100" cy="100" r="60" fill="var(--green)" opacity="0.1" stroke="url(#successGradient)" strokeWidth="3" />
     <circle cx="100" cy="100" r="40" fill="url(#successGradient)" />
     <path d="M80 100l15 15 30-30" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -194,11 +194,11 @@ const ErrorIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#EF4444" />
-        <stop offset="100%" stopColor="#F87171" />
+        <stop offset="0%" stopColor="var(--red)" />
+        <stop offset="100%" stopColor="var(--light-red)" />
       </linearGradient>
     </defs>
-    <circle cx="100" cy="100" r="60" fill="rgba(239, 68, 68, 0.1)" stroke="url(#errorGradient)" strokeWidth="3" />
+    <circle cx="100" cy="100" r="60" fill="var(--red)" opacity="0.1" stroke="url(#errorGradient)" strokeWidth="3" />
     <circle cx="100" cy="100" r="40" fill="url(#errorGradient)" />
     <path d="M85 85l30 30M115 85l-30 30" stroke="white" strokeWidth="6" strokeLinecap="round" fill="none" />
   </svg>
@@ -208,14 +208,14 @@ const GenericIllustration: React.FC = () => (
   <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
     <defs>
       <linearGradient id="genericGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#8B5CF6" />
-        <stop offset="100%" stopColor="#06B6D4" />
+        <stop offset="0%" stopColor="var(--purple)" />
+        <stop offset="100%" stopColor="var(--cyan)" />
       </linearGradient>
     </defs>
-    <rect x="30" y="50" width="140" height="100" rx="16" fill="rgba(255,255,255,0.05)" stroke="url(#genericGradient)" strokeWidth="2" />
-    <line x1="30" y1="80" x2="170" y2="80" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-    <rect x="45" y="95" width="60" height="8" rx="4" fill="rgba(255,255,255,0.1)" />
-    <rect x="45" y="115" width="40" height="8" rx="4" fill="rgba(255,255,255,0.08)" />
+    <rect x="30" y="50" width="140" height="100" rx="16" fill="var(--gray-100)" stroke="url(#genericGradient)" strokeWidth="2" />
+    <line x1="30" y1="80" x2="170" y2="80" stroke="var(--gray-200)" strokeWidth="1" />
+    <rect x="45" y="95" width="60" height="8" rx="4" fill="var(--gray-200)" />
+    <rect x="45" y="115" width="40" height="8" rx="4" fill="var(--gray-150)" />
     <circle cx="140" cy="110" r="22" fill="url(#genericGradient)" />
     <path d="M135 110h10M140 105v10" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" />
   </svg>
@@ -251,41 +251,42 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   animated = true,
 }) => {
   const IllustrationComponent = ILLUSTRATIONS[illustration];
-  
+
   // Check if animations should be enabled
   const enableAnimations = animated && ANIMATION_CONFIG.enableAnimations;
 
   return (
     <div
       className={`
-        relative flex flex-col items-center justify-center py-12 px-6 text-center
-        ${enableAnimations ? 'animate-fadeIn' : ''}
+        relative flex flex-col items-center justify-center py-14 px-6 text-center
+        ${enableAnimations ? 'animate-emptyStateReveal' : ''}
       `}
-      style={enableAnimations ? { animationDuration: '0.3s' } : undefined}
     >
+      {/* Refined ambient glow */}
       <div
-        className="absolute inset-0 -z-10 opacity-30 pointer-events-none"
+        className="absolute inset-0 -z-10 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at center, var(--color-accent-violet) 0%, transparent 50%)',
-          filter: 'blur(60px)',
+          background: 'radial-gradient(ellipse 60% 50% at center 40%, var(--dynamic-accent-color, rgba(0,122,255,0.06)) 0%, transparent 100%)',
         }}
       />
 
-      <div className={`${SIZE_CLASSES[size]} mb-6`}>
+      <div
+        className={`${SIZE_CLASSES[size]} mb-8 ${enableAnimations ? 'animate-emptyStateIllustration' : ''}`}
+      >
         {icon || <IllustrationComponent />}
       </div>
 
       <h3
-        className="font-bold text-white mb-2"
-        style={{ fontSize: FONT_SIZE.xl }}
+        className="font-bold mb-2.5"
+        style={{ color: 'var(--text-primary)', fontSize: FONT_SIZE.xl, letterSpacing: '-0.01em' }}
       >
         {title}
       </h3>
 
       {description && (
         <p
-          className="text-theme-secondary max-w-sm mb-6 leading-relaxed"
-          style={{ fontSize: FONT_SIZE.sm }}
+          className="max-w-xs mb-8 leading-relaxed"
+          style={{ color: 'var(--text-secondary)', fontSize: FONT_SIZE.sm }}
         >
           {description}
         </p>
@@ -296,17 +297,17 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             onClick={action.onClick}
             className="
-              flex items-center gap-2
-              px-6 py-3.5
+              flex items-center gap-2.5
+              px-7 py-3.5
               rounded-2xl
-              text-white font-semibold
-              transition-all duration-150
-              hover:scale-[1.02] hover:-translate-y-0.5
-              active:scale-[0.98]
+              text-white font-semibold text-[15px]
+              transition-all duration-200
+              hover:scale-[1.03] hover:-translate-y-0.5
+              active:scale-[0.97]
             "
             style={{
-              background: 'linear-gradient(135deg, var(--dynamic-accent-start) 0%, var(--dynamic-accent-end) 100%)',
-              boxShadow: '0 8px 24px -4px var(--dynamic-accent-glow), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,0.15)'
+              background: 'var(--accent-gradient, var(--dynamic-accent-start, #007AFF))',
+              boxShadow: '0 6px 20px var(--dynamic-accent-glow, rgba(0, 122, 255, 0.30))',
             }}
           >
             {action.icon}
@@ -318,27 +319,38 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             onClick={secondaryAction.onClick}
             className="
-              text-theme-secondary hover:text-white
-              font-medium 
-              px-4 py-2 
-              rounded-lg 
-              transition-all duration-150
-              hover:bg-white/5
+              font-medium text-[14px]
+              px-5 py-2.5
+              rounded-xl
+              transition-all duration-200
+              active:scale-[0.97]
+              empty-state-secondary-btn
             "
+            style={{
+              color: 'var(--text-secondary)',
+            }}
           >
             {secondaryAction.label}
           </button>
         )}
       </div>
-      
-      {/* CSS Animation */}
+
+      {/* CSS Animations */}
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
+        @keyframes emptyStateReveal {
+          from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out forwards;
+        @keyframes emptyStateIllustration {
+          from { opacity: 0; transform: scale(0.9) translateY(8px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-emptyStateReveal {
+          animation: emptyStateReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-emptyStateIllustration {
+          animation: emptyStateIllustration 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+          opacity: 0;
         }
       `}</style>
     </div>

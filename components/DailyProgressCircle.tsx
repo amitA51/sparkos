@@ -83,14 +83,26 @@ const DailyProgressCircle: React.FC<DailyProgressCircleProps> = ({
   const isComplete = percentage >= 100;
 
   const colors = useMemo(() => {
-    if (percentage >= 100) return { start: '#34D399', end: '#059669', glow: 'rgba(52, 211, 153, 0.5)' };
-    if (percentage >= 75) return { start: '#60A5FA', end: '#2563EB', glow: 'rgba(96, 165, 250, 0.4)' };
-    if (percentage >= 50) return { start: '#FBBF24', end: '#D97706', glow: 'rgba(251, 191, 36, 0.4)' };
-    return { start: '#F87171', end: '#DC2626', glow: 'rgba(248, 113, 113, 0.4)' };
+    if (percentage >= 100) return {
+      start: '#34D399', mid: '#10B981', end: '#059669',
+      glow: 'rgba(52, 211, 153, 0.5)', track: 'rgba(52, 211, 153, 0.12)'
+    };
+    if (percentage >= 75) return {
+      start: '#818CF8', mid: '#60A5FA', end: '#2563EB',
+      glow: 'rgba(96, 165, 250, 0.4)', track: 'rgba(96, 165, 250, 0.08)'
+    };
+    if (percentage >= 50) return {
+      start: '#FCD34D', mid: '#FBBF24', end: '#D97706',
+      glow: 'rgba(251, 191, 36, 0.4)', track: 'rgba(251, 191, 36, 0.08)'
+    };
+    return {
+      start: '#FCA5A5', mid: '#F87171', end: '#DC2626',
+      glow: 'rgba(248, 113, 113, 0.4)', track: 'rgba(248, 113, 113, 0.08)'
+    };
   }, [percentage]);
 
-  const gradientId = useMemo(() => `progress-gradient-${Math.random().toString(36).substr(2, 9)}`, []);
-  const glowGradientId = useMemo(() => `glow-gradient-${Math.random().toString(36).substr(2, 9)}`, []);
+  const gradientId = useMemo(() => `progress-gradient-${Math.random().toString(36).substring(2, 11)}`, []);
+  const glowGradientId = useMemo(() => `glow-gradient-${Math.random().toString(36).substring(2, 11)}`, []);
 
   // Trigger celebration when reaching 100%
   useEffect(() => {
@@ -158,21 +170,26 @@ const DailyProgressCircle: React.FC<DailyProgressCircleProps> = ({
         />
       )}
 
-      {/* Container Glow */}
+      {/* Container Glow - Layered for depth */}
       <motion.div
-        className="absolute inset-0 rounded-full blur-xl transition-colors duration-1000"
-        style={{ background: colors.start }}
-        animate={{ opacity: isComplete ? 0.4 : 0.2 }}
+        className="absolute inset-[-4px] rounded-full transition-colors duration-1000"
+        style={{
+          background: `radial-gradient(circle, ${colors.glow} 0%, transparent 70%)`,
+          filter: 'blur(8px)',
+        }}
+        animate={{ opacity: isComplete ? 0.6 : 0.25 }}
       />
 
       <svg className="relative w-full h-full transform -rotate-90">
         <defs>
-          <linearGradient id={gradientId} x1="100%" y1="0%" x2="0%" y2="100%">
+          {/* Premium 3-stop gradient for richer color */}
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={colors.start} />
+            <stop offset="50%" stopColor={colors.mid} />
             <stop offset="100%" stopColor={colors.end} />
           </linearGradient>
           <filter id={glowGradientId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feGaussianBlur stdDeviation="3" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -180,34 +197,43 @@ const DailyProgressCircle: React.FC<DailyProgressCircleProps> = ({
           </filter>
         </defs>
 
-        {/* Background Track */}
+        {/* Background Track - Tinted for cohesion */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
+          stroke={colors.track}
           strokeWidth={strokeWidth}
+          opacity={0.8}
         />
 
-        {/* Progress Arc */}
+        {/* Subtle track glow underneath */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="var(--gray-150)"
+          strokeWidth={strokeWidth * 0.6}
+          opacity={0.3}
+        />
+
+        {/* Progress Arc with glow filter */}
         <motion.circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
           stroke={`url(#${gradientId})`}
-          strokeWidth={strokeWidth}
+          strokeWidth={strokeWidth + 0.5}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           initial={animate ? { strokeDashoffset: circumference } : false}
           animate={{ strokeDashoffset: offset }}
           transition={{ duration: 1.2, ease: "circOut" }}
-          filter={isComplete ? `url(#${glowGradientId})` : undefined}
-          style={{
-            filter: isComplete ? undefined : 'drop-shadow(0 0 2px rgba(0,0,0,0.5))'
-          }}
+          filter={`url(#${glowGradientId})`}
         />
       </svg>
 
@@ -217,31 +243,44 @@ const DailyProgressCircle: React.FC<DailyProgressCircleProps> = ({
           <>
             {showPercentage && (
               <motion.span
-                className="font-display font-bold text-white tracking-tight leading-none"
-                style={{ fontSize: size * 0.28 }}
-                animate={isComplete ? { scale: [1, 1.1, 1] } : {}}
-                transition={{ duration: 0.5 }}
+                className="font-heading font-bold tracking-tight leading-none tabular-nums"
+                style={{ color: 'var(--text-primary)', fontSize: size * 0.26 }}
+                animate={isComplete ? { scale: [1, 1.15, 1] } : {}}
+                transition={{ duration: 0.5, type: 'spring', stiffness: 400 }}
               >
                 {isComplete ? (
-                  <span className="text-emerald-400">✓</span>
+                  <motion.span
+                    initial={{ scale: 0, rotate: -45 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 15, delay: 0.1 }}
+                    style={{ color: colors.end, display: 'inline-block' }}
+                  >
+                    ✓
+                  </motion.span>
                 ) : (
                   <>
                     {Math.round(displayPercentage)}
-                    <span className="text-[0.6em] opacity-60 ml-0.5">%</span>
+                    <span className="text-[0.55em] opacity-50 ml-0.5 font-medium">%</span>
                   </>
                 )}
               </motion.span>
             )}
             {label && !isComplete && (
-              <span className="text-white/40 font-medium uppercase tracking-widest mt-0.5"
-                style={{ fontSize: size * 0.14 }}>
+              <span className="font-semibold uppercase tracking-[0.12em] mt-0.5"
+                style={{ color: 'var(--text-muted)', fontSize: Math.max(size * 0.13, 8) }}>
                 {label}
               </span>
             )}
             {isComplete && (
-              <span className="text-emerald-400/80 font-medium text-[10px] mt-0.5">
+              <motion.span
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="font-semibold mt-0.5"
+                style={{ color: colors.end, fontSize: Math.max(size * 0.15, 9) }}
+              >
                 הושלם!
-              </span>
+              </motion.span>
             )}
           </>
         )}

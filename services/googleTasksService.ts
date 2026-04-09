@@ -3,7 +3,7 @@
  * Provides two-way synchronization with Google Tasks API
  */
 
-import { getToken, saveToken as _saveToken, removeToken } from './data/authTokenService';
+import { getToken, saveToken as _saveToken, removeToken } from './db/authTokensDb';
 
 // --- Constants ---
 const GOOGLE_TASKS_API = 'https://tasks.googleapis.com/tasks/v1';

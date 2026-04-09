@@ -26,8 +26,7 @@ export const parseDate = (dateStr?: string | null): Date => {
         }
 
         return date;
-    } catch (e) {
-        console.warn('Error parsing date:', dateStr, e);
+    } catch {
         return new Date();
     }
 };

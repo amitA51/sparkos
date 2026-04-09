@@ -7,28 +7,34 @@ import { toDateKey, todayKey } from '../../utils/dateUtils';
 const ProductivityStatsWidget: React.FC = () => {
   const { personalItems } = useData();
 
+  // PERF: Single-pass reduce instead of 7 separate .filter() calls (7x O(n) -> 1x O(n))
   const stats = useMemo(() => {
     const today = todayKey();
     const thisWeekStart = new Date();
     thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
     const thisWeekStartStr = toDateKey(thisWeekStart);
 
-    // Today's stats
-    const todayTasks = personalItems.filter(item => item.type === 'task' && item.dueDate === today);
-    const todayCompleted = todayTasks.filter(t => t.isCompleted).length;
-    const todayTotal = todayTasks.length;
+    let todayCompleted = 0;
+    let todayTotal = 0;
+    let weekCompleted = 0;
+    let weekTotal = 0;
+    let activeHabits = 0;
 
-    // This week's stats
-    const weekTasks = personalItems.filter(
-      item => item.type === 'task' && item.dueDate && item.dueDate >= thisWeekStartStr
-    );
-    const weekCompleted = weekTasks.filter(t => t.isCompleted).length;
-    const weekTotal = weekTasks.length;
+    for (const item of personalItems) {
+      if (item.type === 'habit') {
+        activeHabits++;
+      } else if (item.type === 'task') {
+        if (item.dueDate === today) {
+          todayTotal++;
+          if (item.isCompleted) todayCompleted++;
+        }
+        if (item.dueDate && item.dueDate >= thisWeekStartStr) {
+          weekTotal++;
+          if (item.isCompleted) weekCompleted++;
+        }
+      }
+    }
 
-    // Habits
-    const activeHabits = personalItems.filter(item => item.type === 'habit').length;
-
-    // Completion rate
     const completionRate = todayTotal > 0 ? Math.round((todayCompleted / todayTotal) * 100) : 0;
 
     return {
@@ -122,4 +128,4 @@ const ProductivityStatsWidget: React.FC = () => {
   );
 };
 
-export default ProductivityStatsWidget;
+export default React.memo(ProductivityStatsWidget);

@@ -1,4 +1,5 @@
 import React, { useCallback, useId } from 'react';
+// CLEANED - CSS vars fixed
 import { motion } from 'framer-motion';
 
 export type ViewMode = 'today' | 'tomorrow' | 'week';
@@ -69,12 +70,15 @@ function ViewSwitcher<T extends string = ViewMode>({
       aria-label="בחירת תצוגה"
       className={`
         relative flex items-center ${config.container}
-        bg-white/[0.03] rounded-full 
-        border border-white/[0.06]
+        rounded-full
         backdrop-blur-xl
         ${fullWidth ? 'w-full' : 'max-w-sm mx-auto'}
         ${className}
       `}
+      style={{
+        background: 'var(--gray-50)',
+        border: '0.5px solid var(--border-subtle)',
+      }}
     >
       {views.map((view, _index) => {
         const isActive = currentView === view.id;
@@ -97,7 +101,7 @@ function ViewSwitcher<T extends string = ViewMode>({
               focus-visible:ring-offset-1 focus-visible:ring-offset-transparent
               ${isActive
                 ? 'text-white'
-                : 'text-[var(--text-secondary)] hover:text-white/80'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }
             `}
             whileTap={{ scale: 0.97 }}

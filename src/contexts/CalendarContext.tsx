@@ -201,7 +201,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({
 
   // Auto-refresh State
   const [isAutoRefreshEnabled, setIsAutoRefreshEnabled] = useState(autoRefreshOnMount);
-  const autoRefreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const autoRefreshIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const currentAutoRefreshInterval = useRef(autoRefreshInterval);
 
   // Retry State
@@ -469,29 +469,33 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({
   // Stats
   // ========================================================================
 
+  // PERF: Single-pass reduce instead of 4 separate .filter() calls (4x O(n) -> 1x O(n))
   const stats = useMemo<CalendarStats>(() => {
     const now = new Date();
     const today = getStartOfDay(now);
     const todayEnd = getEndOfDay(now);
     const weekStart = getStartOfWeek(now);
     const weekEnd = getEndOfWeek(now);
+    const nowTime = now.getTime();
+
+    const result = calendarEvents.reduce(
+      (acc, event) => {
+        const eventDate = getEventDate(event);
+        const eventTime = eventDate.getTime();
+
+        if (isWithinRange(eventDate, today, todayEnd)) acc.todayEvents++;
+        if (eventTime >= nowTime) acc.upcomingEvents++;
+        else acc.pastEvents++;
+        if (isWithinRange(eventDate, weekStart, weekEnd)) acc.thisWeekEvents++;
+
+        return acc;
+      },
+      { todayEvents: 0, upcomingEvents: 0, pastEvents: 0, thisWeekEvents: 0 }
+    );
 
     return {
       totalEvents: calendarEvents.length,
-      todayEvents: calendarEvents.filter(event => {
-        const eventDate = getEventDate(event);
-        return isWithinRange(eventDate, today, todayEnd);
-      }).length,
-      upcomingEvents: calendarEvents.filter(event =>
-        getEventDate(event) >= now
-      ).length,
-      pastEvents: calendarEvents.filter(event =>
-        getEventDate(event) < now
-      ).length,
-      thisWeekEvents: calendarEvents.filter(event => {
-        const eventDate = getEventDate(event);
-        return isWithinRange(eventDate, weekStart, weekEnd);
-      }).length,
+      ...result,
     };
   }, [calendarEvents]);
 

@@ -29,7 +29,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ isOpen, onClose }) => {
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                    className="relative w-full max-w-lg max-h-[80vh] bg-[#1a1b26] rounded-3xl shadow-2xl border border-white/10 flex flex-col overflow-hidden"
+                    className="relative w-full max-w-lg max-h-[80vh] bg-[var(--bg-secondary,#1a1b26)] rounded-3xl shadow-2xl border border-white/10 flex flex-col overflow-hidden"
                 >
                     {/* Header */}
                     <div className="p-6 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-[var(--dynamic-accent-start)]/10 to-[var(--dynamic-accent-end)]/5">

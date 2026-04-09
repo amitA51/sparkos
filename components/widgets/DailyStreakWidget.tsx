@@ -82,7 +82,7 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
 
     if (compact) {
         return (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-fitness-streak/20 to-fitness-hot/20 border border-fitness-streak/30">
                 <span
                     className={`text-lg ${streakData.streak > 0 ? 'animate-streak-fire' : ''}`}
                     role="img"
@@ -90,7 +90,7 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
                 >
                     🔥
                 </span>
-                <span className="text-sm font-bold text-white">{streakData.streak}</span>
+                <span className="text-sm font-bold text-text-primary">{streakData.streak}</span>
             </div>
         );
     }
@@ -99,7 +99,13 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative glass-subtle rounded-2xl p-4 border border-white/10"
+            className="relative rounded-2xl p-4 border"
+            style={{
+                background: 'var(--surface-glass)',
+                backdropFilter: 'blur(20px)',
+                borderColor: 'var(--border-subtle)',
+                boxShadow: 'var(--shadow-sm)',
+            }}
         >
             {/* Celebration overlay */}
             {showCelebration && (
@@ -107,11 +113,14 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-500/30 to-red-500/30 rounded-2xl backdrop-blur-sm z-10"
+                    className="absolute inset-0 flex items-center justify-center rounded-2xl backdrop-blur-sm z-10"
+                    style={{
+                        background: 'linear-gradient(135deg, rgba(255,149,0,0.3), rgba(255,59,48,0.3))',
+                    }}
                 >
                     <div className="text-center">
                         <span className="text-4xl animate-bounce-in">🎉</span>
-                        <p className="text-lg font-bold text-white mt-2">
+                        <p className="text-lg font-bold text-text-primary mt-2">
                             {streakData.streak} ימים ברצף!
                         </p>
                     </div>
@@ -130,18 +139,21 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
                             key={streakData.streak}
                             initial={{ scale: 1.2, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="text-3xl font-bold text-white font-heading"
+                            className="text-3xl font-bold text-text-primary font-heading"
                         >
                             {streakData.streak}
                         </motion.p>
-                        <p className="text-xs text-theme-secondary uppercase tracking-wider">ימים ברצף</p>
+                        <p className="text-xs text-text-secondary uppercase tracking-wider">ימים ברצף</p>
                     </div>
                 </div>
 
                 {streakData.todayHasActivity && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-xs font-medium text-emerald-400">היום בוצע</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{
+                        background: 'rgba(48, 209, 88, 0.2)',
+                        border: '1px solid rgba(48, 209, 88, 0.3)',
+                    }}>
+                        <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                        <span className="text-xs font-medium text-success">היום בוצע</span>
                     </div>
                 )}
             </div>
@@ -161,13 +173,13 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
                             transition={{ delay: index * 0.05 }}
                             className="flex flex-col items-center gap-1"
                         >
-                            <span className="text-[10px] text-theme-muted">{dayName}</span>
+                            <span className="text-[10px] text-text-muted">{dayName}</span>
                             <div
                                 className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all
                   ${day.hasActivity
-                                        ? 'bg-gradient-to-br from-orange-400 to-red-500 shadow-lg shadow-orange-500/30'
-                                        : 'bg-white/5 border border-white/10'}
-                  ${isToday ? 'ring-2 ring-white/20' : ''}
+                                        ? 'bg-gradient-to-br from-fitness-streak to-fitness-hot shadow-lg'
+                                        : 'bg-bg-tertiary border border-border-subtle'}
+                  ${isToday ? 'ring-2 ring-spark-accent/50' : ''}
                 `}
                             >
                                 {day.hasActivity && (
@@ -184,7 +196,7 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="mt-4 text-xs text-center text-theme-secondary italic"
+                className="mt-4 text-xs text-center text-text-secondary italic"
             >
                 {streakData.streak === 0 && 'התחל את הרצף שלך היום! 💪'}
                 {streakData.streak > 0 && streakData.streak < 3 && 'התחלה נהדרת! המשך כך 🌱'}
@@ -197,4 +209,4 @@ const DailyStreakWidget: React.FC<DailyStreakWidgetProps> = ({ compact = false }
     );
 };
 
-export default DailyStreakWidget;
+export default React.memo(DailyStreakWidget);

@@ -72,7 +72,7 @@ const PremiumViewSwitcher: React.FC<PremiumViewSwitcherProps> = ({
 
   // Long press state for enabling drag mode on mobile
   const [longPressActive, setLongPressActive] = useState(false);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const LONG_PRESS_DURATION = 400; // ms
 
   // Handle reorder change
@@ -166,10 +166,9 @@ const PremiumViewSwitcher: React.FC<PremiumViewSwitcherProps> = ({
         className={`relative flex items-center gap-1 p-1 sm:p-1.5 md:p-2 rounded-2xl overflow-hidden max-w-full transition-all duration-200 ${longPressActive ? 'ring-2 ring-accent-cyan/50 bg-accent-cyan/5' : ''
           }`}
         style={{
-          background:
-            'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 2px 12px rgba(0,0,0,0.2)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: 'var(--gray-50)',
+          boxShadow: 'var(--shadow-sm)',
+          border: '1px solid var(--border-subtle)',
         }}
         role="tablist"
         aria-label="תצוגות הספרייה"
@@ -236,7 +235,7 @@ const PremiumViewSwitcher: React.FC<PremiumViewSwitcherProps> = ({
                     style={{
                       background: 'var(--dynamic-accent-color)',
                       opacity: 0.85,
-                      border: '1px solid rgba(255,255,255,0.12)',
+                      border: '1px solid var(--border-subtle)',
                     }}
                     transition={{
                       type: 'spring',

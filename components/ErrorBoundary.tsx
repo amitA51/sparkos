@@ -92,7 +92,7 @@ class ErrorBoundary extends Component<Props, State> {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-2xl font-black text-white">
+              <h2 className="text-2xl font-black text-[var(--text-primary)]">
                 {isFeatureError ? `שגיאה ב${this.props.feature}` : 'משהו השתבש'}
               </h2>
               <p className="text-[var(--text-secondary)]">
@@ -111,19 +111,20 @@ class ErrorBoundary extends Component<Props, State> {
 
             {/* SECURITY: Only show detailed errors in development mode */}
             {import.meta.env.DEV && this.state.error && (
-              <details className="bg-black/30 rounded-lg p-4 text-left border border-red-500/20">
-                <summary className="text-xs font-semibold text-red-300 cursor-pointer select-none">
+              <details className="rounded-lg p-4 text-left" style={{ background: 'var(--gray-50)', border: '1px solid var(--border-subtle)' }}>
+                <summary className="text-xs font-semibold cursor-pointer select-none" style={{ color: '#EF4444' }}>
                   פרטים טכניים (מצב פיתוח בלבד)
                 </summary>
                 <div
-                  className="mt-2 overflow-auto max-h-32 text-xs font-mono text-red-300"
+                  className="mt-2 overflow-auto max-h-32 text-xs font-mono"
                   dir="ltr"
+                  style={{ color: '#EF4444' }}
                 >
                   <p className="font-bold">
                     {this.state.error.name}: {this.state.error.message}
                   </p>
                   {this.state.errorInfo?.componentStack && (
-                    <pre className="mt-2 text-red-400/70 whitespace-pre-wrap">
+                    <pre className="mt-2 whitespace-pre-wrap" style={{ color: 'var(--text-secondary)' }}>
                       {this.state.errorInfo.componentStack}
                     </pre>
                   )}
@@ -136,7 +137,8 @@ class ErrorBoundary extends Component<Props, State> {
               {isFeatureError && (
                 <button
                   onClick={this.handleReset}
-                  className="w-full py-3 bg-[var(--cosmos-accent-primary)] hover:brightness-110 text-black rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_var(--dynamic-accent-glow)]"
+                  className="w-full py-3 hover:brightness-110 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                  style={{ background: 'var(--dynamic-accent-start, #007AFF)', color: '#FFFFFF', boxShadow: '0 4px 12px var(--dynamic-accent-glow, rgba(0,122,255,0.2))' }}
                 >
                   <RefreshIcon className="w-5 h-5" />
                   נסה שוב
@@ -145,11 +147,12 @@ class ErrorBoundary extends Component<Props, State> {
 
               <button
                 onClick={this.handleReload}
-                className={`w-full py-3 ${
-                  isFeatureError
-                    ? 'bg-white/5 hover:bg-white/10 text-white border border-white/10'
-                    : 'bg-[var(--cosmos-accent-primary)] hover:brightness-110 text-black shadow-[0_0_15px_var(--dynamic-accent-glow)]'
-                } rounded-xl font-bold transition-all flex items-center justify-center gap-2`}
+                className="w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                style={{
+                  background: isFeatureError ? 'var(--gray-100)' : 'var(--dynamic-accent-start, #007AFF)',
+                  color: isFeatureError ? 'var(--text-primary)' : '#FFFFFF',
+                  border: isFeatureError ? '1px solid var(--border-subtle)' : 'none',
+                }}
               >
                 <RefreshIcon className="w-5 h-5" />
                 רענן עמוד
@@ -158,7 +161,8 @@ class ErrorBoundary extends Component<Props, State> {
               {!isFeatureError && (
                 <button
                   onClick={this.handleGoHome}
-                  className="w-full py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all border border-white/10"
+                  className="w-full py-3 rounded-xl font-bold transition-all"
+                  style={{ background: 'var(--gray-100)', color: 'var(--text-primary)', border: '1px solid var(--border-subtle)' }}
                 >
                   חזור לדף הבית
                 </button>
@@ -187,7 +191,7 @@ export const FeatureErrorBoundary: React.FC<{
       fallback={
         loadingFallback || (
           <div className="flex items-center justify-center p-8">
-            <div className="animate-spin h-8 w-8 border-2 border-[var(--cosmos-accent-primary)] border-t-transparent rounded-full" />
+            <div className="animate-spin h-8 w-8 border-2 rounded-full" style={{ borderColor: 'var(--dynamic-accent-start, #007AFF)', borderTopColor: 'transparent' }} />
           </div>
         )
       }

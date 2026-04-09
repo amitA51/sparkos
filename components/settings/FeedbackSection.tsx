@@ -4,15 +4,10 @@ import ToggleSwitch from '../../components/ToggleSwitch';
 import { useSettings } from '../../src/contexts/SettingsContext';
 
 /**
- * FeedbackSection - Only sounds and haptics settings
- * This section handles feedback settings that affect how the app responds to user actions
+ * FeedbackSection - Sounds and haptics settings
  */
 
-interface FeedbackSectionProps {
-    setStatusMessage: (msg: { type: 'success' | 'error' | 'info'; text: string; id: number } | null) => void;
-}
-
-const FeedbackSection: React.FC<FeedbackSectionProps> = ({ setStatusMessage }) => {
+const FeedbackSection: React.FC = () => {
     const { settings, updateSettings } = useSettings();
 
     const handleSettingChange = <K extends keyof typeof settings>(
@@ -20,11 +15,6 @@ const FeedbackSection: React.FC<FeedbackSectionProps> = ({ setStatusMessage }) =
         value: (typeof settings)[K]
     ) => {
         updateSettings({ [key]: value });
-        setStatusMessage({
-            type: 'success',
-            text: 'ההגדרה עודכנה',
-            id: Date.now(),
-        });
     };
 
     return (

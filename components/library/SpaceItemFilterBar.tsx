@@ -93,7 +93,7 @@ export const SpaceItemFilterBar: React.FC<SpaceItemFilterBarProps> = ({
                 <div className="relative group">
                     <select
                         value={sortBy}
-                        onChange={(e) => onSortChange(e.target.value as any)}
+                        onChange={(e) => onSortChange(e.target.value as typeof sortBy)}
                         className="appearance-none bg-transparent pl-2 pr-6 text-xs text-white/80 border-none focus:ring-0 cursor-pointer [&>option]:bg-[#1a1d24]"
                     >
                         <option value="priority">עדיפות</option>
@@ -111,7 +111,7 @@ export const SpaceItemFilterBar: React.FC<SpaceItemFilterBarProps> = ({
                 {/* Group By */}
                 <select
                     value={groupBy}
-                    onChange={(e) => onGroupChange(e.target.value as any)}
+                    onChange={(e) => onGroupChange(e.target.value as typeof groupBy)}
                     className="bg-transparent text-xs text-white/80 border-none focus:ring-0 cursor-pointer [&>option]:bg-[#1a1d24]"
                 >
                     <option value="none">ללא קבוצות</option>

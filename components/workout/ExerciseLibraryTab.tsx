@@ -78,7 +78,7 @@ const ExerciseLibraryTab: React.FC<ExerciseLibraryTabProps> = ({
     await dataService.createPersonalExercise({
       name: newExercise.name,
       muscleGroup: newExercise.muscleGroup || 'Other',
-      category: (newExercise.category || 'strength') as any, // Cast to avoid union type issues
+      category: (newExercise.category || 'strength') as PersonalExercise['category'],
       tempo: newExercise.tempo || undefined,
       tutorialText: newExercise.tutorialText || undefined,
       defaultRestTime: newExercise.defaultRestTime,
@@ -194,7 +194,7 @@ const ExerciseLibraryTab: React.FC<ExerciseLibraryTabProps> = ({
           >
             <form
               onSubmit={handleCreate}
-              className="bg-[#16161a] p-5 rounded-2xl border border-white/10 space-y-4 shadow-2xl relative overflow-hidden"
+              className="bg-[var(--bg-secondary)] p-5 rounded-2xl border border-white/10 space-y-4 shadow-2xl relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-[var(--cosmos-accent-primary)] to-transparent opacity-50" />
 
@@ -244,7 +244,7 @@ const ExerciseLibraryTab: React.FC<ExerciseLibraryTabProps> = ({
                     <label className="text-[10px] uppercase tracking-wider text-white/40 font-bold mb-1 block">קטגוריה</label>
                     <select
                       value={newExercise.category}
-                      onChange={e => setNewExercise({ ...newExercise, category: e.target.value as any })}
+                      onChange={e => setNewExercise({ ...newExercise, category: e.target.value as PersonalExercise['category'] })}
                       className="w-full bg-black/30 border border-white/10 rounded-lg py-2 px-3 text-sm text-white focus:border-[var(--cosmos-accent-primary)] outline-none appearance-none"
                     >
                       <option value="">בחר...</option>
@@ -314,7 +314,7 @@ const ExerciseLibraryTab: React.FC<ExerciseLibraryTabProps> = ({
                   relative p-4 rounded-xl border transition-all cursor-pointer group overflow-hidden
                   ${isSelectionMode
                     ? 'hover:border-[var(--cosmos-accent-primary)] hover:bg-[var(--cosmos-accent-primary)]/5 bg-white/5 border-white/10'
-                    : 'bg-[#16161a] border-white/5 hover:border-white/20 hover:bg-white/10'
+                    : 'bg-[var(--bg-secondary)] border-white/5 hover:border-white/20 hover:bg-white/10'
                   }
                 `}
               >
@@ -371,7 +371,7 @@ const ExerciseLibraryTab: React.FC<ExerciseLibraryTabProps> = ({
 
       {exerciseToDelete && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[13000] flex items-center justify-center p-6">
-          <div className="w-full max-w-sm bg-[#16161a] border border-white/10 rounded-3xl p-6 text-center shadow-2xl">
+          <div className="w-full max-w-sm bg-[var(--bg-secondary)] border border-white/10 rounded-3xl p-6 text-center shadow-2xl">
             <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
               <TrashIcon className="w-8 h-8 text-red-500" />
             </div>

@@ -50,11 +50,9 @@ const HabitCalendarStripes: React.FC<HabitCalendarStripesProps> = ({
                 {visibleHabits.map((habitId, index) => (
                     <motion.div
                         key={habitId}
-                        className="rounded-full"
+                        className="rounded-full stripe-default"
                         style={{
                             height: stripeHeight,
-                            backgroundColor: habitColorMap[habitId] || '#6B7280',
-                            boxShadow: `0 0 4px ${(habitColorMap[habitId] || '#6B7280')}40`
                         }}
                         initial={{ scaleX: 0, originX: 0 }}
                         animate={{ scaleX: 1 }}
@@ -67,7 +65,7 @@ const HabitCalendarStripes: React.FC<HabitCalendarStripesProps> = ({
                 ))}
                 {overflow > 0 && (
                     <div
-                        className="rounded-full bg-gray-500/40 flex items-center justify-center"
+                        className="rounded-full stripe-overflow flex items-center justify-center"
                         style={{ height: stripeHeight }}
                     >
                         <span className="text-[6px] text-theme-secondary font-bold leading-none">
@@ -81,8 +79,8 @@ const HabitCalendarStripes: React.FC<HabitCalendarStripesProps> = ({
             <AnimatePresence>
                 {showTooltip && completedHabitIds.length > 0 && (
                     <motion.div
-                        className="absolute z-50 left-0 right-0 top-full mt-1 p-2 rounded-lg 
-                       bg-[var(--bg-primary)] border border-white/10 shadow-xl"
+                        className="absolute z-50 left-0 right-0 top-full mt-1 p-2 rounded-lg shadow-xl"
+                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
                         initial={{ opacity: 0, y: -5, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -5, scale: 0.95 }}
@@ -98,7 +96,7 @@ const HabitCalendarStripes: React.FC<HabitCalendarStripesProps> = ({
                                         className="w-2 h-2 rounded-full flex-shrink-0"
                                         style={{ backgroundColor: habitColorMap[habitId] }}
                                     />
-                                    <span className="text-[10px] text-white truncate">
+                                    <span className="text-[10px] truncate" style={{ color: 'var(--text-primary)' }}>
                                         {habitTitleMap[habitId]}
                                     </span>
                                 </div>

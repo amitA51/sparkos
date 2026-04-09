@@ -3,7 +3,7 @@ import { uploadBackup, findBackupFile, downloadBackup } from './googleDriveServi
 import { auth } from '../config/firebase';
 
 class SyncService {
-  private autoSaveTimer: NodeJS.Timeout | null = null;
+  private autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
   private isAutoSavePending = false;
   private readonly AUTO_SAVE_DELAY = 5000; // 5 seconds debounce
   private backupFileId: string | null = null;
@@ -25,7 +25,7 @@ class SyncService {
             if (hasToken) {
               this.backupFileId = await findBackupFile();
             } else {
-              console.log('SyncService: No Google token found, skipping initial backup search.');
+              // SyncService: No Google token found, skipping initial backup search
             }
           } catch (error) {
             // Silent fail is okay here, user might not have connected Google Drive

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ViewProps, EditProps, inputStyles } from './common';
+import { ViewProps, EditProps, inputStyles, type EditState } from './common';
 import MarkdownRenderer from '../MarkdownRenderer';
 import ToggleSwitch from '../ToggleSwitch';
 import { BanIcon, SparklesIcon, AlertTriangleIcon, CheckCircleIcon, TrashIcon, PlusIcon } from '../icons';
@@ -271,7 +271,7 @@ export const AntiGoalEdit: React.FC<EditProps> = ({ editState, dispatch }) => {
             type: 'SET_FIELD',
             payload: {
                 field: 'antiGoalData',
-                value: { ...antiGoalData, ...updates } as any,
+                value: { ...antiGoalData, ...updates } as EditState['antiGoalData'],
             },
         });
     };

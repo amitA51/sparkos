@@ -8,8 +8,10 @@ import { useUser } from '../../src/contexts/UserContext';
 import { useNotifications } from '../../hooks/notifications';
 import { useBeforeUnloadWarning } from '../../hooks/useBeforeUnloadWarning';
 import { useDoubleTapExit } from '../../hooks/useDoubleTapExit';
-import { useGoogleCalendar } from '../../hooks/useGoogleCalendar';
-import { useThemeEffect } from '../../hooks/useThemeEffect';
+import { useAndroidBackButton } from '../../hooks/useAndroidBackButton';
+import { useAndroidOptimizations } from '../../hooks/useAndroidOptimizations';
+import { useGoogleCalendar } from '../../hooks/google/useGoogleCalendar';
+import { useThemeEffect, isDarkTheme } from '../../hooks/useThemeEffect';
 import { usePwaUpdate } from '../../hooks/usePwaUpdate';
 import { useUrlActions } from '../../hooks/app/useUrlActions';
 import { useAppLifecycle } from '../../hooks/app/useAppLifecycle';
@@ -72,7 +74,8 @@ const AppCore: React.FC = () => {
   useBeforeUnloadWarning(hasUnsavedChanges);
   useNotifications();
   useGoogleCalendar(showStatus);
-  useThemeEffect({ themeSettings, uiDensity, animationIntensity, fontSizeScale });
+  const themeMode = isDarkTheme(themeSettings?.name) ? 'dark' : 'light';
+  useThemeEffect({ mode: themeMode });
   const { updateAvailable, applyUpdate } = usePwaUpdate();
 
   // App Lifecycle Management (Auth, Redirects, Data Cleanup)
@@ -90,6 +93,29 @@ const AppCore: React.FC = () => {
     onFirstTap: (msg) => {
       showStatus('info', msg);
     },
+  });
+
+  // Android back button: navigate through screens before triggering exit
+  useAndroidBackButton({
+    activeScreen,
+    setActiveScreen,
+    rootScreens: ['feed', 'today'],
+    onCloseOverlay: () => {
+      // Close command palette if open
+      if (isCommandPaletteOpen) {
+        setIsCommandPaletteOpen(false);
+        return true;
+      }
+      return false;
+    },
+    onRootBack: () => {
+      // Let double-tap-exit handle root-level back
+    },
+  });
+
+  // Android-specific optimizations (theme-color sync, background sync, persistent storage)
+  useAndroidOptimizations({
+    themeColor: themeSettings?.name?.toLowerCase().includes('light') || themeSettings?.name?.toLowerCase().includes('white') ? '#F2F2F7' : '#0A0A0F',
   });
 
   // Notify user when update is available

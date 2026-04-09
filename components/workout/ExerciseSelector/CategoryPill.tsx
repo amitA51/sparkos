@@ -22,9 +22,9 @@ export const CategoryPill = ({ label, emoji, isActive, onClick }: CategoryPillPr
       px-4 py-2 rounded-full
       font-medium text-sm
       transition-all duration-200
-      ${isActive
-                ? 'bg-white text-black font-bold'
-                : 'bg-[#2C2C2E] text-[#8E8E93] active:bg-[#3A3A3C]'
+            ${isActive
+                ? 'bg-[var(--bg-inverse)] text-[var(--text-inverse)] font-bold'
+                : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] active:bg-[var(--bg-hover)]'
             }
     `}
     >

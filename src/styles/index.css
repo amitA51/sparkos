@@ -1,0 +1,23 @@
+/**
+ * ============================================================================
+ * SPARKOS - DESIGN SYSTEM ENTRY POINT
+ * ============================================================================
+ * 
+ * Load order:
+ * 1. design-tokens.css - All CSS variables (colors, spacing, etc.)
+ * 2. base.css         - Reset and base styles
+ * 3. components.css   - Reusable component classes
+ * 
+ * IMPORTANT: NO inline styles allowed!
+ * Use predefined classes from components.css or Tailwind classes.
+ * 
+ * ============================================================================
+ */
+
+@import './design-tokens.css';
+@import './base.css';
+@import './components.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

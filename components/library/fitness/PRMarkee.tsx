@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useFitnessInsights } from '../../../hooks/useFitnessInsights';
+import { useFitnessInsights } from '../../../hooks/fitness/useFitnessInsights';
 import { TrendingUpIcon } from '../../icons';
 
 export const PRMarkee: React.FC = () => {
@@ -27,11 +27,11 @@ export const PRMarkee: React.FC = () => {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.1 }}
-                            className={`flex-shrink-0 snap-center w-[160px] h-[200px] rounded-[24px] relative bg-[#1C1C1E] shadow-sm flex flex-col justify-between p-4 border border-white/5`}
+                            className={`flex-shrink-0 snap-center w-[160px] h-[200px] rounded-[24px] relative bg-[var(--bg-secondary)] shadow-sm flex flex-col justify-between p-4 border border-white/5`}
                         >
                             {/* Top Badge */}
                             <div className="flex justify-between items-start">
-                                <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ${isRecent ? 'bg-[#FFD60A]/10 text-[#FFD60A]' : 'bg-[#2C2C2E] text-[#8E8E93]'
+                                <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ${isRecent ? 'bg-[var(--warning)]/10 text-[var(--warning)]' : 'bg-[var(--bg-tertiary)] text-[var(--gray-500)]'
                                     }`}>
                                     {isRecent ? 'NEW' : 'RECORD'}
                                 </span>
@@ -51,7 +51,7 @@ export const PRMarkee: React.FC = () => {
                             </div>
 
                             {/* Footer */}
-                            <div className="mt-auto pt-3 border-t border-[#2C2C2E] text-center">
+                            <div className="mt-auto pt-3 border-t border-[var(--bg-tertiary)] text-center">
                                 <div className="text-xs font-bold text-white truncate px-1">
                                     {pr.exerciseName}
                                 </div>

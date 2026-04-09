@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 /**
  * ItemCreationForm Field Components
  * Extracted sub-components for form fields used in the item creation form
@@ -134,7 +135,8 @@ export const KeyboardShortcutsHint: React.FC<KeyboardShortcutsHintProps> = ({ is
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in-0 duration-200" onClick={onClose}>
             <div
-                className="bg-[#1a1d24]/95 rounded-2xl p-6 max-w-md w-full mx-4 border border-white/10 shadow-2xl animate-in zoom-in-95 duration-300"
+                className="rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl animate-in zoom-in-95 duration-300"
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between mb-4">

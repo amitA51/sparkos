@@ -92,11 +92,11 @@ export const signInWithGoogle = async (additionalScopes: string[] = []): Promise
 
     // Use popup for mobile/PWA (redirect doesn't work due to third-party storage blocking)
     if (isPWAorMobile()) {
-      console.log('[Auth] Starting Google sign-in with POPUP (mobile/PWA mode)...');
+      // Auth: Starting Google sign-in with POPUP (mobile/PWA mode)
       try {
         const result = await signInWithPopup(auth, provider);
         if (result?.user) {
-          console.log('[Auth] Popup sign-in successful');
+          // Auth: Popup sign-in successful
           return handleGoogleAuthResult(result);
         }
         return null;
@@ -112,7 +112,7 @@ export const signInWithGoogle = async (additionalScopes: string[] = []): Promise
       }
     } else {
       // Desktop: use redirect for seamless experience
-      console.log('[Auth] Starting Google sign-in with REDIRECT (desktop mode)...');
+      // Auth: Starting Google sign-in with REDIRECT (desktop mode)
 
       // Store flag that we initiated auth
       try {
@@ -144,7 +144,7 @@ export const checkGoogleRedirectResult = async (): Promise<User | null> => {
     } catch { /* ignore */ }
 
     if (result && result.user) {
-      console.log('Google redirect result found');
+      // Google redirect result found
       return handleGoogleAuthResult(result);
     }
 

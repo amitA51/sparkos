@@ -265,7 +265,7 @@ const AppearanceSection: React.FC = () => {
             >
               <div>
                 <span className="text-white font-medium">{component.id}</span>
-                <span className={`text-xs mr-2 ${component.isVisible ? 'text-emerald-400' : 'text-white/50'}`}>
+                <span className={`text-xs mr-2 ${component.isVisible ? 'text-success' : 'text-white/50'}`}>
                   {component.isVisible ? 'מוצג' : 'מוסתר'}
                 </span>
               </div>

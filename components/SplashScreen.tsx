@@ -32,29 +32,32 @@ const SplashScreen: React.FC<SplashScreenProps> = ({
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden"
+                    className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden"
+                    style={{ background: 'var(--bg-primary, #FFFFFF)' }}
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 >
                     {/* Background Effects - Static by default */}
                     <div className="absolute inset-0 z-0">
-                        {/* Deep Cosmos Gradient */}
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[var(--dynamic-accent-start)]/20 via-black to-black opacity-60" />
+                        {/* Subtle gradient wash -- theme-aware */}
+                        <div className="absolute inset-0 opacity-60" style={{ background: 'radial-gradient(ellipse at center, rgba(var(--dynamic-accent-rgb, 0, 122, 255), 0.08), var(--bg-primary) 70%)' }} />
 
-                        {/* Noise Texture */}
-                        <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')] mix-blend-overlay" />
+                        {/* Subtle noise */}
+                        <div className="absolute inset-0 opacity-[0.02] bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%20200%20200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22noiseFilter%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.65%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23noiseFilter)%22%2F%3E%3C%2Fsvg%3E')] mix-blend-multiply" />
 
                         {/* Static Orbs - CSS animation only if enabled */}
                         <div
-                            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[var(--dynamic-accent-start)]/10 blur-[100px]"
+                            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px]"
                             style={{
+                                background: 'rgba(var(--dynamic-accent-rgb, 0, 122, 255), 0.06)',
                                 animation: enableAnimations ? 'splashOrb1 4s ease-in-out infinite' : 'none',
                             }}
                         />
                         <div
-                            className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-[var(--dynamic-accent-end)]/10 blur-[80px]"
+                            className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-[80px]"
                             style={{
+                                background: 'rgba(var(--dynamic-accent-rgb, 88, 86, 214), 0.06)',
                                 animation: enableAnimations ? 'splashOrb2 5s ease-in-out infinite' : 'none',
                                 animationDelay: enableAnimations ? '1s' : '0s',
                             }}
@@ -70,10 +73,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({
                             }}
                         >
                             {/* Logo Glow */}
-                            <div className="absolute inset-0 bg-[var(--dynamic-accent-highlight)] blur-2xl opacity-20" />
+                            <div className="absolute inset-0 blur-2xl opacity-10" style={{ background: 'var(--dynamic-accent-start, #007AFF)' }} />
 
                             {/* Logo Icon */}
-                            <SparklesIcon className="w-24 h-24 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+                            <SparklesIcon className="w-24 h-24" style={{ color: 'var(--dynamic-accent-start, #007AFF)', filter: 'drop-shadow(0 0 15px var(--dynamic-accent-glow, rgba(0,122,255,0.3)))' }} />
                         </div>
 
                         <div
@@ -83,20 +86,21 @@ const SplashScreen: React.FC<SplashScreenProps> = ({
                                 opacity: enableAnimations ? 0 : 1,
                             }}
                         >
-                            <h1 className="text-4xl font-bold tracking-tight text-white font-[Clash Display, sans-serif]">
-                                Spark<span className="text-[var(--dynamic-accent-highlight)]">OS</span>
+                            <h1 className="text-4xl font-bold tracking-tight font-[Clash Display, sans-serif]" style={{ color: 'var(--text-primary)' }}>
+                                Spark<span style={{ color: 'var(--dynamic-accent-start, #007AFF)' }}>OS</span>
                             </h1>
 
-                            <div className="h-1 w-12 rounded-full overflow-hidden bg-white/10 mt-4">
+                            <div className="h-1 w-12 rounded-full overflow-hidden mt-4" style={{ background: 'var(--gray-100)' }}>
                                 <div
-                                    className="h-full bg-[var(--dynamic-accent-highlight)]"
+                                    className="h-full"
                                     style={{
+                                        background: 'var(--dynamic-accent-start, #007AFF)',
                                         animation: enableAnimations ? 'splashProgress 1s ease-in-out infinite' : 'none',
                                     }}
                                 />
                             </div>
 
-                            <p className="text-white/40 text-xs tracking-[0.2em] uppercase font-medium mt-2">
+                            <p className="text-xs tracking-[0.2em] uppercase font-medium mt-2" style={{ color: 'var(--text-muted)' }}>
                                 Personal OS
                             </p>
                         </div>

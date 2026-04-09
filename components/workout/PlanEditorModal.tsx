@@ -28,7 +28,7 @@ const PlanEditorModal: React.FC<PlanEditorModalProps> = ({ isOpen, onClose, onSa
 
     const handleAddExercise = (personalExercise: PersonalExercise) => {
         const newExercise: Exercise = {
-            id: `ex-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `ex-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
             name: personalExercise.name,
             sets: Array(personalExercise.defaultSets || 3).fill({
                 reps: 10,
@@ -84,7 +84,7 @@ const PlanEditorModal: React.FC<PlanEditorModalProps> = ({ isOpen, onClose, onSa
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-4xl h-full md:h-auto md:max-h-[85vh] bg-[#0f0f13] md:rounded-3xl border-0 md:border border-white/10 flex flex-col overflow-hidden shadow-2xl relative"
+                className="w-full max-w-4xl h-full md:h-auto md:max-h-[85vh] bg-[var(--bg-secondary)] md:rounded-3xl border-0 md:border border-white/10 flex flex-col overflow-hidden shadow-2xl relative"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
@@ -189,9 +189,9 @@ const PlanEditorModal: React.FC<PlanEditorModalProps> = ({ isOpen, onClose, onSa
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: '100%', opacity: 0 }}
                                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                                className="absolute inset-0 md:relative md:w-[450px] bg-[#0c0c0f] md:border-r border-white/10 z-20 flex flex-col"
+                                className="absolute inset-0 md:relative md:w-[450px] bg-[var(--bg-primary)] md:border-r border-white/10 z-20 flex flex-col"
                             >
-                                <div className="p-4 border-b border-white/10 flex justify-between items-center bg-[#0c0c0f]">
+                                <div className="p-4 border-b border-white/10 flex justify-between items-center bg-[var(--bg-primary)]">
                                     <h3 className="font-bold text-white">בחר תרגיל להוספה</h3>
                                     <button
                                         onClick={() => setShowLibrary(false)}

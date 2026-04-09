@@ -10,6 +10,7 @@ import { useSound } from '../hooks/useSound';
 import { useData } from '../src/contexts/DataContext';
 import { isHabitForToday } from '../hooks/useTodayItems';
 import { toDateKey } from '../utils/dateUtils';
+import { CheckCircleIcon, TrashIcon, CalendarIcon, CloseIcon } from './icons';
 
 interface TodayViewProps {
   tasks: PersonalItem[];
@@ -167,6 +168,64 @@ const TodayView: React.FC<TodayViewProps> = ({
     return dayNames[date.getDay()];
   }, []);
 
+  // Bulk Selection Mode
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const toggleSelection = useCallback((id: string) => {
+    hapticSelection();
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      // Exit selection mode if nothing selected
+      if (next.size === 0) {
+        setIsSelectionMode(false);
+      }
+      return next;
+    });
+  }, [hapticSelection]);
+
+  const handleBulkComplete = useCallback(() => {
+    selectedIds.forEach(id => {
+      onUpdateItem(id, { isCompleted: true, lastCompleted: new Date().toISOString() });
+    });
+    setSelectedIds(new Set());
+    setIsSelectionMode(false);
+  }, [selectedIds, onUpdateItem]);
+
+  const handleBulkDelete = useCallback(() => {
+    selectedIds.forEach(id => {
+      onDeleteItem(id);
+    });
+    setSelectedIds(new Set());
+    setIsSelectionMode(false);
+  }, [selectedIds, onDeleteItem]);
+
+  const handleBulkPostpone = useCallback(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = toDateKey(tomorrow);
+    selectedIds.forEach(id => {
+      onUpdateItem(id, { dueDate: tomorrowStr });
+    });
+    setSelectedIds(new Set());
+    setIsSelectionMode(false);
+  }, [selectedIds, onUpdateItem]);
+
+  const handleSelectAll = useCallback(() => {
+    const allTaskIds = dateTasks.map(t => t.id);
+    setSelectedIds(new Set(allTaskIds));
+  }, [dateTasks]);
+
+  const exitSelectionMode = useCallback(() => {
+    setSelectedIds(new Set());
+    setIsSelectionMode(false);
+  }, []);
+
   return (
     <div className="w-full">
       {/* Weekly Planner - Obsidian Air Premium */}
@@ -259,13 +318,94 @@ const TodayView: React.FC<TodayViewProps> = ({
         </div>
       )}
 
+      {/* Bulk Selection Floating Toolbar */}
+      <AnimatePresence>
+        {isSelectionMode && selectedIds.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            className="fixed bottom-28 left-4 right-4 z-40 flex items-center justify-between gap-2 px-4 py-3 rounded-2xl"
+            style={{
+              background: 'rgba(28, 28, 35, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 15px 50px rgba(0, 0, 0, 0.5)',
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <button
+                onClick={exitSelectionMode}
+                className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+              >
+                <CloseIcon className="w-4 h-4 text-white/60" />
+              </button>
+              <span className="text-sm font-semibold text-white">
+                {selectedIds.size} נבחרו
+              </span>
+              <button
+                onClick={handleSelectAll}
+                className="text-[11px] font-medium px-2.5 py-1 rounded-lg text-accent-cyan bg-accent-cyan/10 hover:bg-accent-cyan/20 transition-colors"
+              >
+                בחר הכל
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleBulkComplete}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors active:scale-95"
+              >
+                <CheckCircleIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">השלם</span>
+              </button>
+              <button
+                onClick={handleBulkPostpone}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-colors active:scale-95"
+              >
+                <CalendarIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">דחה</span>
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors active:scale-95"
+              >
+                <TrashIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">מחק</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Tasks Section - Premium Glass Container */}
       <div className="px-4 mb-8">
         <div className="flex items-center justify-between mb-5">
           <span className="text-[11px] font-bold text-white/50 uppercase tracking-[0.15em]">
             {isToday ? 'משימות היום' : 'משימות'}
           </span>
-          <span className="text-[10px] text-white/35 bg-white/[0.04] px-2.5 py-1 rounded-xl border border-white/[0.05] font-semibold">{dateTasks.length} פריטים</span>
+          <div className="flex items-center gap-2">
+            {dateTasks.length > 1 && (
+              <button
+                onClick={() => {
+                  if (isSelectionMode) {
+                    exitSelectionMode();
+                  } else {
+                    setIsSelectionMode(true);
+                    hapticSelection();
+                  }
+                }}
+                className={`text-[10px] font-semibold px-2.5 py-1 rounded-xl border transition-all duration-200 ${
+                  isSelectionMode
+                    ? 'text-accent-cyan bg-accent-cyan/10 border-accent-cyan/20'
+                    : 'text-white/35 bg-white/[0.04] border-white/[0.05] hover:text-white/50 hover:bg-white/[0.06]'
+                }`}
+              >
+                {isSelectionMode ? 'בטל' : 'בחירה'}
+              </button>
+            )}
+            <span className="text-[10px] text-white/35 bg-white/[0.04] px-2.5 py-1 rounded-xl border border-white/[0.05] font-semibold">{dateTasks.length} פריטים</span>
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -281,15 +421,43 @@ const TodayView: React.FC<TodayViewProps> = ({
                   ease: [0.22, 1, 0.36, 1]
                 }}
                 layout
+                className="relative"
               >
+                {/* Selection indicator */}
+                {isSelectionMode && (
+                  <button
+                    onClick={() => toggleSelection(task.id)}
+                    className="absolute -right-1 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200"
+                    style={{
+                      background: selectedIds.has(task.id)
+                        ? 'var(--dynamic-accent-start, #00D4FF)'
+                        : 'rgba(255, 255, 255, 0.06)',
+                      border: selectedIds.has(task.id)
+                        ? 'none'
+                        : '2px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: selectedIds.has(task.id)
+                        ? '0 2px 8px var(--dynamic-accent-glow, rgba(0,212,255,0.3))'
+                        : 'none',
+                    }}
+                  >
+                    {selectedIds.has(task.id) && (
+                      <CheckCircleIcon className="w-4 h-4 text-white" />
+                    )}
+                  </button>
+                )}
+                <div
+                  className={isSelectionMode ? 'pr-8 transition-all duration-200' : ''}
+                  onClick={isSelectionMode ? (e) => { e.stopPropagation(); toggleSelection(task.id); } : undefined}
+                >
                 <TaskItem
                   item={task}
-                  onUpdate={onUpdateItem}
-                  onDelete={onDeleteItem}
-                  onSelect={onSelectItem}
+                  onUpdate={isSelectionMode ? () => {} : onUpdateItem}
+                  onDelete={isSelectionMode ? () => {} : onDeleteItem}
+                  onSelect={isSelectionMode ? () => toggleSelection(task.id) : onSelectItem}
                   onContextMenu={onContextMenu}
                   index={index}
                 />
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -306,12 +474,27 @@ const TodayView: React.FC<TodayViewProps> = ({
               animate={{ y: [0, -6, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             >
-              ✨
+              {isToday ? '✨' : '📅'}
             </motion.span>
             <p className="text-white/50 text-[15px] font-medium">
               {isToday ? 'יום נקי! אין משימות להיום' : 'אין משימות ליום זה'}
             </p>
-            <p className="text-white/25 text-[12px] mt-1.5">הוסף משימה חדשה כדי להתחיל</p>
+            <p className="text-white/25 text-[12px] mt-1.5 mb-4">
+              {isToday ? 'הקלד בשורת ההוספה למעלה כדי להתחיל' : 'בחר תאריך אחר או הוסף משימה חדשה'}
+            </p>
+            {!isToday && (
+              <button
+                onClick={() => handleDateSelect(new Date())}
+                className="text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 hover:bg-white/[0.08] active:scale-[0.97]"
+                style={{
+                  color: 'var(--dynamic-accent-start, #00D4FF)',
+                  background: 'rgba(0, 212, 255, 0.08)',
+                  border: '1px solid rgba(0, 212, 255, 0.15)',
+                }}
+              >
+                חזור להיום
+              </button>
+            )}
           </motion.div>
         )}
       </div>

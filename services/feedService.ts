@@ -45,11 +45,10 @@ export const refreshAllFeeds = async (): Promise<FeedItem[]> => {
   const existingItemIds = new Set(existingItems.map(item => item.id));
   const allNewItems: FeedItem[] = [];
 
-  const promises: Promise<any>[] = [];
+  const promises: Promise<FeedItem[]>[] = [];
 
   // 1. AI Content Generation
-  console.log(`[Feed Refresh] AI Sparks: ${settings.aiFeedSettings.isEnabled ? 'enabled' : 'disabled'} (${settings.aiFeedSettings.itemsPerRefresh} per refresh)`);
-  console.log(`[Feed Refresh] RSS Feeds: ${allFeeds.length} sources`);
+  // Feed Refresh: AI Sparks and RSS sources count — production-silent
 
   if (settings.aiFeedSettings.isEnabled && settings.aiFeedSettings.itemsPerRefresh > 0) {
     promises.push(
@@ -261,7 +260,7 @@ const cleanupOldFeedItems = async (): Promise<void> => {
 
     // Delete old items
     if (itemsToDelete.length > 0) {
-      console.log(`[Feed Cleanup] Removing ${itemsToDelete.length} old items`);
+      // Feed Cleanup: Removing old items
       await Promise.all(itemsToDelete.map(id => dataService.removeFeedItem(id)));
     }
   } catch (error) {

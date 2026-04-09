@@ -72,7 +72,7 @@ export const logEvent = (event: Omit<EventLog, 'id' | 'timestamp'>): void => {
     const eventLog = getEventLog();
     const newEvent: EventLog = {
       ...event,
-      id: `evt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `evt-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       timestamp: new Date(),
     };
 

@@ -347,18 +347,18 @@ export const ItemCreationForm: React.FC<{
       spark: 'var(--accent-start)',
       task: 'var(--success)',
       note: 'var(--warning)',
-      link: '#60A5FA',
-      idea: '#FBBF24',
-      habit: '#F472B6',
-      antigoal: '#EF4444',
-      book: '#A78BFA',
-      workout: '#F472B6',
-      goal: '#2DD4BF',
-      journal: '#F0ABFC',
-      learning: '#38BDF8',
-      roadmap: '#3B82F6',
-      ticker: 'gray',
-      gratitude: '#F59E0B',
+      link: 'var(--link)',
+      idea: 'var(--warning)',
+      habit: 'var(--pink)',
+      antigoal: 'var(--danger)',
+      book: 'var(--purple)',
+      workout: 'var(--pink)',
+      goal: 'var(--teal)',
+      journal: 'var(--purple)',
+      learning: 'var(--sky)',
+      roadmap: 'var(--blue)',
+      ticker: 'var(--gray-500)',
+      gratitude: 'var(--warning)',
     }[itemType] || 'var(--accent-start)';
 
   useEffect(() => {
@@ -769,11 +769,11 @@ export const ItemCreationForm: React.FC<{
                   type="button"
                   onClick={handleGenerateRoadmap}
                   disabled={formState.isGeneratingRoadmap || !formState.title}
-                  className="w-full sm:w-auto bg-white text-black px-6 py-3 rounded-xl text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:scale-100"
+                  className="w-full sm:w-auto bg-[var(--bg-card)] text-[var(--text-primary)] px-6 py-3 rounded-xl text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] disabled:opacity-50 disabled:scale-100"
                 >
                   {formState.isGeneratingRoadmap ? (
                     <span className="flex items-center gap-2">
-                      <LoadingSpinner className="w-4 h-4 text-black" />
+                      <LoadingSpinner className="w-4 h-4 text-[var(--text-primary)]" />
                       Creating...
                     </span>
                   ) : 'Generate Steps'}

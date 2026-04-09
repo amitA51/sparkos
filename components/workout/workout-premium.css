@@ -11,10 +11,20 @@
     --cosmos-bg-secondary: #121212;
     --cosmos-bg-tertiary: #1a1a1a;
     
+    /* Border System - Clean separators */
+    --cosmos-border-subtle: rgba(255, 255, 255, 0.03);
+    --cosmos-border-default: rgba(255, 255, 255, 0.1);
+    --cosmos-border-strong: rgba(255, 255, 255, 0.2);
+    
+    /* Surface System - Interactive states */
+    --cosmos-surface-hover: rgba(255, 255, 255, 0.08);
+    --cosmos-surface-pressed: rgba(255, 255, 255, 0.15);
+    --cosmos-surface-active: rgba(255, 255, 255, 0.2);
+    
     /* Card System - Clean surfaces */
-    --cosmos-card-bg: #1c1c1e;
-    --cosmos-card-elevated: #2c2c2e;
-    --cosmos-card-border: rgba(255, 255, 255, 0.08);
+    --cosmos-card-bg: var(--cosmos-bg-tertiary);
+    --cosmos-card-elevated: var(--cosmos-bg-secondary);
+    --cosmos-card-border: var(--cosmos-surface-hover);
     
     /* Primary Accent - Fitness Green */
     --cosmos-accent-primary: #a3e635;
@@ -31,7 +41,7 @@
     --cosmos-text-primary: #ffffff;
     --cosmos-text-secondary: #8e8e93;
     --cosmos-text-muted: #636366;
-    --cosmos-text-ghost: rgba(255, 255, 255, 0.25);
+    --cosmos-text-ghost: var(--cosmos-border-default);
     
     /* Typography */
     --cosmos-font: Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -162,9 +172,9 @@
 .workout-skeleton {
     background: linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.04) 25%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.04) 75%
+        var(--cosmos-border-subtle) 25%,
+        var(--cosmos-surface-hover) 50%,
+        var(--cosmos-border-subtle) 75%
     );
     background-size: 200% 100%;
     animation: skeleton-shimmer 1.5s ease-in-out infinite;
@@ -200,7 +210,7 @@
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--cosmos-border-default);
     color: var(--cosmos-text-primary);
     font-weight: 500;
     border-radius: 12px;
@@ -209,14 +219,14 @@
 }
 
 .btn-secondary:active {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--cosmos-surface-pressed);
     transform: scale(0.98);
     filter: brightness(0.9);
 }
 
 /* ===== INPUT STYLES ===== */
 .input-field {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--cosmos-surface-hover);
     border: 1px solid transparent;
     border-radius: 12px;
     padding: 14px 16px;
@@ -235,7 +245,7 @@
     width: 52px;
     height: 32px;
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--cosmos-border-strong);
     transition: background-color var(--cosmos-timing-fast) var(--cosmos-ease-out);
 }
 
@@ -259,7 +269,7 @@
 /* ===== PROGRESS ELEMENTS ===== */
 .progress-bar {
     height: 4px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--cosmos-border-default);
     border-radius: 2px;
     overflow: hidden;
 }
@@ -272,7 +282,7 @@
 }
 
 .progress-ring-bg {
-    stroke: rgba(255, 255, 255, 0.1);
+    stroke: var(--cosmos-border-default);
 }
 
 .progress-ring-fill {
@@ -324,7 +334,7 @@
     width: 48px;
     height: 4px;
     border-radius: 2px;
-    background: rgba(255, 255, 255, 0.3);
+background: var(--cosmos-border-strong);
     margin: 12px auto;
 }
 
@@ -394,10 +404,10 @@
 }
 
 /* ===== INTENSITY ZONES ===== */
-.zone-warmup { color: #30d158; }
+.zone-warmup { color: var(--cosmos-success); }
 .zone-fatburn { color: #ffd60a; }
-.zone-cardio { color: #ff9f0a; }
-.zone-peak { color: #ff453a; }
+.zone-cardio { color: var(--cosmos-warning); }
+.zone-peak { color: var(--cosmos-error); }
 .zone-max { color: #bf5af2; }
 
 /* ===== REDUCED MOTION ===== */
@@ -479,14 +489,14 @@
     background: rgba(28, 28, 30, 0.9);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--cosmos-border-default);
     border-radius: 100px;
     padding: 8px 16px;
 }
 
 /* ===== SWIPE COMPLETE STYLES ===== */
 .swipe-track {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--cosmos-surface-hover);
     border-radius: 100px;
     height: 56px;
     position: relative;
@@ -522,7 +532,7 @@
 }
 
 .rest-timer-bg {
-    stroke: rgba(255, 255, 255, 0.1);
+    stroke: var(--cosmos-border-default);
 }
 
 .rest-timer-progress {
@@ -554,10 +564,10 @@
 @media (prefers-contrast: more) {
     :root {
         --cosmos-text-primary: #ffffff;
-        --cosmos-text-secondary: #e0e0e0;
-        --cosmos-text-muted: #b0b0b0;
-        --cosmos-text-ghost: rgba(255, 255, 255, 0.5);
-        --cosmos-card-border: rgba(255, 255, 255, 0.25);
+        --cosmos-text-secondary: var(--cosmos-text-primary);
+        --cosmos-text-muted: var(--cosmos-text-secondary);
+        --cosmos-text-ghost: var(--cosmos-border-strong);
+        --cosmos-card-border: var(--cosmos-border-strong);
         --cosmos-accent-primary: #c4ff00;
     }
 
@@ -672,7 +682,7 @@ html {
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(255, 255, 255, 0.05),
+var(--cosmos-border-subtle)
         transparent
     );
     animation: skeleton-shimmer 1.5s infinite;
@@ -743,7 +753,7 @@ html {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--cosmos-border-default);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -759,7 +769,7 @@ html {
 .gym-mode-unlock-area {
     margin-top: 32px;
     padding: 16px 32px;
-    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border: 2px dashed var(--cosmos-border-strong);
     border-radius: 16px;
     color: var(--cosmos-text-muted);
     font-size: 12px;
@@ -776,7 +786,7 @@ html {
     background: rgba(28, 28, 30, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--cosmos-border-default);
     border-radius: 20px;
     padding: 8px 16px;
     display: flex;
@@ -883,7 +893,7 @@ html {
 }
 
 .progressive-indicator.same {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--cosmos-border-default);
     color: var(--cosmos-text-muted);
 }
 
@@ -919,7 +929,7 @@ html {
     background: rgba(18, 18, 20, 0.65);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--cosmos-surface-hover);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -933,7 +943,7 @@ html {
     background: rgba(30, 30, 32, 0.45);
     backdrop-filter: blur(20px) saturate(150%);
     -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--cosmos-border-subtle);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -960,5 +970,5 @@ html {
 
 /* Clean border for glass elements */
 .border-glass {
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--cosmos-border-subtle);
 }

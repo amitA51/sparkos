@@ -87,7 +87,7 @@ export function getAvailableApiKey(): { key: string; index: number } | null {
             if (index !== state.keyIndex) {
                 state.keyIndex = index;
                 saveApiKeyState(state);
-                console.log(`🔄 Switched to API key #${index + 1}`);
+                // Switched to next API key
             }
             return { key, index };
         }
@@ -133,7 +133,7 @@ export function markKeyAsExhausted(key: string): void {
     // Move to next key
     state.keyIndex = (state.keyIndex + 1) % ALPHA_VANTAGE_API_KEYS.length;
     saveApiKeyState(state);
-    console.log(`⚠️ API key exhausted, switching to key #${state.keyIndex + 1}`);
+    // API key exhausted, switching to next key
 }
 
 /**
@@ -180,7 +180,7 @@ export function addApiKey(newKey: string): boolean {
     state.keyUsage[newKey] = { minuteRequests: [], dayRequests: [] };
     saveApiKeyState(state);
 
-    console.log(`✅ Added new API key. Total keys: ${ALPHA_VANTAGE_API_KEYS.length}`);
+    // Added new API key
     return true;
 }
 

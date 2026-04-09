@@ -76,10 +76,10 @@ export const useHomeInteraction = (
   const handleDeleteWithConfirmation = useCallback(
     (id: string) => {
       const itemToDelete = personalItems.find(item => item.id === id);
-      if (itemToDelete && window.confirm(`האם למחוק את "${itemToDelete.title}"?`)) {
-        handleDeleteItem(id);
-        setSelectedItem(null);
-      }
+      if (!itemToDelete) return;
+      // Close the modal immediately and delete with undo toast (no jarring browser dialog)
+      setSelectedItem(null);
+      handleDeleteItem(id);
     },
     [personalItems, handleDeleteItem]
   );

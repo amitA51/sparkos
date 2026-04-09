@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useFitnessInsights } from '../../../hooks/useFitnessInsights';
+import { useFitnessInsights } from '../../../hooks/fitness/useFitnessInsights';
 import { QuickStatsHeader } from './QuickStatsHeader';
 import { LastWorkoutCard } from './LastWorkoutCard';
 import { PRMarkee } from './PRMarkee';
@@ -59,7 +59,7 @@ export const FitnessHubView: React.FC = () => {
             title: template.name,
             isActiveWorkout: true,
             exercises: template.exercises.map(ex => ({
-                id: `ex_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                id: `ex_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
                 name: ex.name,
                 muscleGroup: ex.muscleGroup,
                 sets: ex.sets?.map((s, i) => ({
@@ -81,7 +81,7 @@ export const FitnessHubView: React.FC = () => {
             isActiveWorkout: true,
             exercises: session.exercises.map(ex => ({
                 ...ex,
-                id: `ex_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                id: `ex_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
                 sets: ex.sets.map((s, i) => ({
                     ...s,
                     id: `set_${Date.now()}_${i}`,
@@ -141,7 +141,7 @@ export const FitnessHubView: React.FC = () => {
                         notes: exExtras.notes as string | undefined,
                         alternatives: exExtras.alternatives as string[] | undefined,
                         rpeTarget: exExtras.rpeTarget as string | undefined,
-                        warmupSets: exExtras.warmupSets as string | undefined,
+                        warmupSets: exExtras.warmupSets ? parseInt(String(exExtras.warmupSets)) : undefined,
                         restTime: exExtras.restTime as string | undefined,
                         intensityTechnique: exExtras.intensityTechnique as string | undefined,
                     } : undefined,
@@ -218,7 +218,7 @@ export const FitnessHubView: React.FC = () => {
                         <h2 className="text-4xl font-black text-white tracking-tight">
                             Fitness Hub
                         </h2>
-                        <p className="text-[#8E8E93] text-sm font-medium flex items-center gap-2">
+                        <p className="text-[var(--gray-500)] text-sm font-medium flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-[var(--dynamic-accent-start)]" />
                             מחובר למערכת
                         </p>
@@ -274,7 +274,7 @@ export const FitnessHubView: React.FC = () => {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="bg-[#1C1C1E] rounded-[24px] p-4 md:p-6 shadow-sm"
+                    className="bg-[var(--bg-secondary)] rounded-[24px] p-4 md:p-6 shadow-sm"
                 >
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -288,10 +288,10 @@ export const FitnessHubView: React.FC = () => {
                         <div className="relative">
                             <button
                                 onClick={() => { triggerHaptic('light'); setIsDropdownOpen(!isDropdownOpen); }}
-                                className="flex items-center gap-3 bg-[#2C2C2E] rounded-xl pl-3 pr-4 py-2 text-sm text-white hover:bg-[#3A3A3C] transition-all active:scale-95 group"
+                                className="flex items-center gap-3 bg-[var(--bg-tertiary)] rounded-xl pl-3 pr-4 py-2 text-sm text-white hover:bg-[var(--gray-600)] transition-all active:scale-95 group"
                             >
                                 <span className="font-semibold">{selectedExerciseName || 'בחר תרגיל'}</span>
-                                <ChevronDownIcon className={`w-4 h-4 text-[#8E8E93] group-hover:text-white transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                <ChevronDownIcon className={`w-4 h-4 text-[var(--gray-500)] group-hover:text-white transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                             </button>
 
                             <AnimatePresence>
@@ -300,15 +300,15 @@ export const FitnessHubView: React.FC = () => {
                                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                        className="absolute left-0 mt-2 w-56 max-h-[300px] overflow-y-auto bg-[#2C2C2E] rounded-xl shadow-xl z-50 py-1 scrollbar-hide"
+                                        className="absolute left-0 mt-2 w-56 max-h-[300px] overflow-y-auto bg-[var(--bg-tertiary)] rounded-xl shadow-xl z-50 py-1 scrollbar-hide"
                                     >
                                         {exerciseNames.map(name => (
                                             <button
                                                 key={name}
                                                 onClick={() => handleExerciseSelect(name)}
                                                 className={`w-full text-right px-4 py-3 text-sm transition-colors border-l-2 ${selectedExerciseName === name
-                                                    ? 'bg-[#3A3A3C] text-white border-[var(--dynamic-accent-start)] font-bold'
-                                                    : 'text-[#8E8E93] hover:bg-[#3A3A3C] hover:text-white border-transparent'
+                                                    ? 'bg-[var(--gray-600)] text-white border-[var(--dynamic-accent-start)] font-bold'
+                                                    : 'text-[var(--gray-500)] hover:bg-[var(--gray-600)] hover:text-white border-transparent'
                                                     }`}
                                             >
                                                 {name}
@@ -393,7 +393,7 @@ export const FitnessHubView: React.FC = () => {
                                 exit={{ y: '100%' }}
                                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                                 onClick={e => e.stopPropagation()}
-                                className="bg-[#1C1C1E] rounded-t-[28px] w-full sm:max-w-lg flex flex-col"
+                                className="bg-[var(--bg-secondary)] rounded-t-[28px] w-full sm:max-w-lg flex flex-col"
                                 style={{ maxHeight: 'calc(100dvh - 40px)' }}
                             >
                                 {/* Drag Handle */}
@@ -412,7 +412,7 @@ export const FitnessHubView: React.FC = () => {
                                             className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition-all"
                                         >✕</button>
                                     </div>
-                                    <p className="text-[#8E8E93] text-xs">{selectedProgram.progressionNotesHe}</p>
+                                    <p className="text-[var(--gray-500)] text-xs">{selectedProgram.progressionNotesHe}</p>
                                 </div>
 
                                 {/* Week Selector */}
@@ -469,7 +469,7 @@ export const FitnessHubView: React.FC = () => {
                                                         <p className={`font-semibold text-sm ${day.isRestDay ? 'text-white/30' : 'text-white'}`}>
                                                             {day.nameHe.split(' - ').pop()}
                                                         </p>
-                                                        <p className="text-[#8E8E93] text-xs">
+                                                            <p className="text-[var(--gray-500)] text-xs">
                                                             {day.isRestDay
                                                                 ? 'יום מנוחה'
                                                                 : `${day.exercises.length} תרגילים`

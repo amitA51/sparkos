@@ -168,13 +168,13 @@ const FileGallery: React.FC<FileGalleryProps> = ({
                                                     <div
                                                         className="w-14 h-14 rounded-radius-card flex items-center justify-center mb-gap-base transition-transform duration-150 hover:scale-110"
                                                         style={{
-                                                            background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
-                                                            border: '1px solid rgba(255,255,255,0.1)',
+                                                            background: 'var(--gray-100)',
+                                                            border: '1px solid var(--border-subtle)',
                                                         }}
                                                     >
                                                         <FileIcon className="w-7 h-7 text-theme-secondary group-hover:text-[var(--dynamic-accent-start)] transition-colors" />
                                                     </div>
-                                                    <span className="text-sm font-semibold text-white line-clamp-2 break-all">
+                                                    <span className="text-sm font-semibold text-[var(--text-primary)] line-clamp-2 break-all">
                                                         {attachment.name}
                                                     </span>
                                                     <span className="text-xs text-theme-muted mt-1">
@@ -277,7 +277,7 @@ const FileGallery: React.FC<FileGalleryProps> = ({
                                                     ) : (
                                                         <FileIcon className="w-12 h-12 text-theme-secondary mb-2" />
                                                     )}
-                                                    <span className="text-sm font-semibold text-white line-clamp-2 break-all">
+                                                    <span className="text-sm font-semibold text-[var(--text-primary)] line-clamp-2 break-all">
                                                         {file.name}
                                                     </span>
                                                     <span className="text-xs text-theme-muted mt-1">

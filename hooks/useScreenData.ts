@@ -26,6 +26,7 @@ const screenDataRequirements: Record<Screen, string[]> = {
     fitness: ['personalItems'],
     investments: [],
     passwords: [],
+    insights: ['personalItems', 'feedItems'],
     login: [],
     signup: [],
     logos: [],

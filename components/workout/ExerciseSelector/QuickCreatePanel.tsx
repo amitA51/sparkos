@@ -51,7 +51,7 @@ export const QuickCreatePanel = ({ isOpen, onClose, onCreate, isCreating, muscle
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                    className="rounded-3xl overflow-hidden mb-4 bg-[#2C2C2E] shadow-xl"
+                    className="rounded-3xl overflow-hidden mb-4 bg-[var(--bg-tertiary)] shadow-xl"
                 >
                     {/* Header */}
                     <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
@@ -67,7 +67,7 @@ export const QuickCreatePanel = ({ isOpen, onClose, onCreate, isCreating, muscle
                         <button
                             type="button"
                             onClick={onClose}
-                            className="w-8 h-8 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
+                            className="w-8 h-8 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--gray-500)] hover:text-white transition-colors"
                         >
                             <CloseIcon className="w-4 h-4" />
                         </button>
@@ -82,7 +82,7 @@ export const QuickCreatePanel = ({ isOpen, onClose, onCreate, isCreating, muscle
                                 value={name}
                                 onChange={handleNameChange}
                                 placeholder="שם התרגיל"
-                                className="w-full h-12 px-4 rounded-xl bg-[#1C1C1E] text-white placeholder:text-[#8E8E93] outline-none focus:ring-1 focus:ring-[#a3e635] transition-all text-[15px] font-medium"
+                                className="w-full h-12 px-4 rounded-xl bg-[var(--bg-secondary)] text-white placeholder:text-[var(--gray-500)] outline-none focus:ring-1 focus:ring-[var(--success)] transition-all text-[15px] font-medium"
                                 onKeyDown={handleKeyDown}
                             />
                         </div>
@@ -96,8 +96,8 @@ export const QuickCreatePanel = ({ isOpen, onClose, onCreate, isCreating, muscle
                                     className={`
                     flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all
                     ${muscle === group
-                                            ? 'bg-[#a3e635] text-black'
-                                            : 'bg-[#1C1C1E] text-[#8E8E93]'
+                                            ? 'bg-[var(--success)] text-black'
+                                            : 'bg-[var(--bg-secondary)] text-[var(--gray-500)]'
                                         }
                   `}
                                 >
@@ -111,7 +111,7 @@ export const QuickCreatePanel = ({ isOpen, onClose, onCreate, isCreating, muscle
                             onClick={handleSubmit}
                             disabled={!name.trim() || isCreating}
                             whileTap={{ scale: 0.97 }}
-                            className="w-full h-12 rounded-full font-bold text-base transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 bg-[#a3e635] text-black hover:bg-[#b2f050]"
+                            className="w-full h-12 rounded-full font-bold text-base transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 bg-[var(--success)] text-black hover:bg-[var(--success)]/90"
                         >
                             {isCreating ? (
                                 <>

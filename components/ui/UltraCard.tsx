@@ -14,32 +14,29 @@ interface UltraCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: 'cyan' | 'violet' | 'magenta' | 'gold' | 'neutral' | 'theme';
 }
 
-// Premium redesign: Deep black shadows, no colored glows
-const variantStyles: Record<CardVariant, string> = {
-  elevated: `
-    surface-elevated 
-    border border-white/[0.08] 
-    shadow-[0_0_0_1px_rgba(0,0,0,0.3),0_8px_40px_-12px_rgba(0,0,0,0.6)]
-  `,
-  sunken: `
-    bg-black/30 backdrop-blur-xl 
-    border border-white/[0.04] 
-    shadow-[inset_0_2px_6px_rgba(0,0,0,0.4)]
-  `,
-  floating: `
-    surface-elevated 
-    border border-white/[0.10] 
-    shadow-[0_0_0_1px_rgba(0,0,0,0.2),0_16px_48px_-12px_rgba(0,0,0,0.7)]
-  `,
-  glass: `
-    surface-elevated 
-    border border-white/[0.08] 
-    shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]
-  `,
+// Theme-aware card variants using CSS variables
+const variantStyles: Record<CardVariant, React.CSSProperties> = {
+  elevated: {
+    background: 'var(--bg-card, #FFFFFF)',
+    boxShadow: 'var(--shadow-sm)',
+  },
+  sunken: {
+    background: 'var(--bg-primary, #F2F2F7)',
+    boxShadow: 'var(--shadow-inner)',
+  },
+  floating: {
+    background: 'var(--bg-card, #FFFFFF)',
+    boxShadow: 'var(--shadow-lg)',
+  },
+  glass: {
+    background: 'var(--surface-glass)',
+    backdropFilter: 'blur(var(--glass-blur, 24px)) saturate(var(--glass-saturate, 180%))',
+    WebkitBackdropFilter: 'blur(var(--glass-blur, 24px)) saturate(var(--glass-saturate, 180%))' as string,
+    boxShadow: 'var(--shadow-sm)',
+  },
 };
 
-// Premium hover: subtle lift with deeper shadow, no color
-const hoverShadow = 'hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_20px_60px_-12px_rgba(0,0,0,0.7)]';
+// Hover shadow handled via CSS variables in theme
 
 export const UltraCard: React.FC<UltraCardProps> = ({
   children,
@@ -72,28 +69,28 @@ export const UltraCard: React.FC<UltraCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative overflow-hidden rounded-[24px]
-        ${variantStyles[variant]}
-        ${hoverEffect ? `${hoverShadow} hover:border-white/[0.12] hover-surface hover:-translate-y-[2px] hover:scale-[1.005]` : ''}
+        relative overflow-hidden rounded-2xl
+        ${hoverEffect ? 'hover:-translate-y-[2px] hover:scale-[1.003]' : ''}
         ${pressEffect ? 'active:scale-[0.985]' : ''}
         transition-all duration-200 ease-out
         animate-in fade-in slide-in-from-bottom-4
         ${className}
       `}
-      {...props}
+      style={{
+        ...variantStyles[variant],
+        ...props.style,
+      }}
+      {...(({ style: _style, ...rest }) => rest)(props)}
     >
-      {/* Subtle cursor spotlight - neutral white only */}
+      {/* Subtle cursor spotlight -- theme-aware */}
       {cursorGlow && isHovered && (
         <div
           className="absolute inset-0 pointer-events-none transition-opacity duration-300"
           style={{
-            background: `radial-gradient(350px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.04), transparent 60%)`,
+            background: `radial-gradient(350px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--dynamic-accent-rgb, 0, 122, 255), 0.04), transparent 60%)`,
           }}
         />
       )}
-
-      {/* Inner highlight for 3D depth */}
-      <div className="absolute inset-0 rounded-[24px] border border-white/[0.03] pointer-events-none" />
 
       {/* Content */}
       <div className={`relative z-10 ${noPadding ? '' : 'p-6'}`}>
@@ -121,12 +118,12 @@ export const UltraCardHeader: React.FC<UltraCardHeaderProps> = ({
   <div className={`flex items-start justify-between mb-4 ${className}`}>
     <div className="flex items-center gap-3">
       {icon && (
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-violet/20 border border-white/10 flex items-center justify-center text-accent-cyan">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-accent-surface-cyan)', color: 'var(--dynamic-accent-start, #007AFF)' }}>
           {icon}
         </div>
       )}
       <div>
-        <h3 className="font-bold text-white tracking-tight">{title}</h3>
+        <h3 className="font-bold tracking-tight" style={{ color: 'var(--text-primary)' }}>{title}</h3>
         {subtitle && (
           <p className="text-sm text-theme-secondary mt-0.5">{subtitle}</p>
         )}
@@ -161,7 +158,7 @@ export const UltraCardFooter: React.FC<UltraCardFooterProps> = ({
   className = '',
   bordered = true,
 }) => (
-  <div className={`mt-4 pt-4 ${bordered ? 'border-t border-white/5' : ''} ${className}`}>
+  <div className={`mt-4 pt-4 ${className}`} style={bordered ? { borderTop: '1px solid var(--border-subtle)' } : undefined}>
     {children}
   </div>
 );

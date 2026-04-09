@@ -1,4 +1,7 @@
+// CLEANED - CSS vars fixed
+
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { FeedItem, RssFeed } from '../types';
 import type { Screen } from '../types';
 import FeedCard from '../components/FeedCard';
@@ -25,8 +28,7 @@ import { useData } from '../src/contexts/DataContext';
 import { useSettings } from '../src/contexts/SettingsContext';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useHaptics } from '../hooks/useHaptics';
-import { useConfirmDialog } from '../hooks/useConfirmDialog';
-import { SkeletonBox, SkeletonCircle } from '../components/SkeletonLoader';
+import { SmoothLoader } from '../components/ui/SmoothLoader';
 import { Virtuoso } from 'react-virtuoso';
 import { rafThrottle } from '../utils/performance';
 import PremiumHeader from '../components/PremiumHeader';
@@ -40,40 +42,46 @@ interface FeedScreenProps {
   setActiveScreen: (screen: Screen) => void;
 }
 
-const FilterPill: React.FC<{
+// PERF: Memoized to prevent re-renders when sibling pills change active state
+const FilterPill = React.memo<{
   label: string;
   onClick: () => void;
   isActive: boolean;
   icon?: React.ReactNode;
   count?: number;
-}> = ({ label, onClick, isActive, icon, count }) => (
-  <button
+}>(({ label, onClick, isActive, icon, count }) => (
+  <motion.button
     onClick={onClick}
+    whileTap={{ scale: 0.95 }}
     className="relative flex items-center gap-2 shrink-0 px-4 py-2.5 rounded-2xl text-[13px] font-semibold tracking-wide
-      transition-all duration-300 ease-out cursor-pointer select-none"
+      cursor-pointer select-none"
     style={{
-      background: isActive ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.06)',
-      border: `0.5px solid ${isActive ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.10)'}`,
-      color: isActive ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.45)',
+      background: isActive ? 'var(--gray-150, var(--gray-100))' : 'var(--gray-50)',
+      border: `0.5px solid ${isActive ? 'var(--border-strong)' : 'var(--border-subtle)'}`,
+      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
       backdropFilter: 'blur(12px)',
       WebkitBackdropFilter: 'blur(12px)',
+      transition: 'background 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease',
+      boxShadow: isActive ? 'var(--shadow-sm)' : 'none',
     }}
   >
-    {icon && <span className={`${isActive ? 'opacity-90' : 'opacity-35'} transition-opacity duration-300`}>{icon}</span>}
+    {icon && <span className={`${isActive ? 'opacity-90' : 'opacity-35'} transition-opacity duration-200`}>{icon}</span>}
     <span>{label}</span>
     {count !== undefined && count > 0 && (
       <span
-        className="min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full text-[10px] font-bold leading-none"
+        className="min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full text-[10px] font-bold leading-none tabular-nums"
         style={{
-          background: isActive ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.06)',
-          color: isActive ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.35)',
+          background: isActive ? 'var(--dynamic-accent-color, var(--gray-200))' : 'var(--gray-100)',
+          color: isActive ? 'var(--dynamic-accent-start, var(--text-primary))' : 'var(--text-muted)',
+          transition: 'all 200ms ease',
         }}
       >
         {count > 99 ? '99+' : count}
       </span>
     )}
-  </button>
-);
+  </motion.button>
+));
+FilterPill.displayName = 'FilterPill';
 const LAST_REFRESH_KEY = 'spark_last_refresh_time';
 
 const getDateLabel = (dateStr: string): string => {
@@ -96,7 +104,6 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
   const { settings } = useSettings();
   const headerRef = useRef<HTMLElement>(null);
   const { triggerHaptic } = useHaptics();
-  const { confirm } = useConfirmDialog();
 
   // ✅ FIX: Load feed data immediately on mount for instant content
   useEffect(() => {
@@ -112,6 +119,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
   const [isSummarizing, setIsSummarizing] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filter, setFilter] = useState<string>('all'); // Can be 'all', 'sparks', or a spaceId
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [synthesisResult, setSynthesisResult] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{
@@ -124,8 +132,6 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
 
   // --- State for Add RSS Feed Modal ---
   const [isAddRssOpen, setIsAddRssOpen] = useState(false);
-  const [newRssUrl, setNewRssUrl] = useState('');
-  const [newRssCategory, setNewRssCategory] = useState<RssFeedCategory>('general');
   const [isAddingRss, setIsAddingRss] = useState(false);
 
   const { contextMenu, handleContextMenu, closeContextMenu } = useContextMenu<FeedItem>();
@@ -185,6 +191,15 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Show "scroll to top" button when user scrolls past threshold
+  useEffect(() => {
+    const handleScrollTop = rafThrottle(() => {
+      setShowScrollTop(window.scrollY > 600);
+    });
+    window.addEventListener('scroll', handleScrollTop, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollTop);
   }, []);
 
   // PERFORMANCE: Memoized status handler
@@ -328,19 +343,6 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
     [feedItems, removeFeedItem, triggerHaptic, showStatus, refreshAll]
   );
 
-  // Reserved for future use - confirmation dialog before deletion
-  // @ts-expect-error Preserved for future confirmation flow implementation
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _handleDeleteWithConfirmation = useCallback(
-    (id: string) => {
-      const itemToDelete = feedItems.find(item => item.id === id);
-      if (itemToDelete && confirm(`האם למחוק את "${itemToDelete.title}"?`)) {
-        handleDeleteItem(id);
-        setSelectedItem(null); // Close modal
-      }
-    },
-    [feedItems, handleDeleteItem, confirm]
-  );
 
   const handleAddToLibrary = useCallback(
     async (item: FeedItem) => {
@@ -417,25 +419,23 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
   }, [filteredItems, updateFeedItem, showStatus]);
 
   // --- Handle Add RSS Feed ---
-  const handleAddRssFeed = useCallback(async () => {
-    if (!newRssUrl || isAddingRss) return;
-    if (!newRssUrl.startsWith('http')) {
+  const handleAddRssFeed = useCallback(async (url: string, category: RssFeedCategory) => {
+    if (!url || isAddingRss) return;
+    if (!url.startsWith('http')) {
       showStatus('error', 'נא להזין כתובת URL תקינה');
       return;
     }
     setIsAddingRss(true);
     try {
-      const newFeed = await dataService.addFeed(newRssUrl);
+      const newFeed = await dataService.addFeed(url);
       // Update category if set
-      if (newRssCategory !== 'general') {
-        await dataService.updateFeed(newFeed.id, { category: newRssCategory });
+      if (category !== 'general') {
+        await dataService.updateFeed(newFeed.id, { category });
       }
       // Refresh feeds list
       const feeds = await dataService.getFeeds();
       setRssFeeds(feeds);
       setIsAddRssOpen(false);
-      setNewRssUrl('');
-      setNewRssCategory('general');
       showStatus('success', `פיד "${newFeed.name}" נוסף בהצלחה!`);
       // Trigger feed refresh to get new items
       handleRefresh(true);
@@ -445,7 +445,44 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
     } finally {
       setIsAddingRss(false);
     }
-  }, [newRssUrl, newRssCategory, isAddingRss, showStatus, handleRefresh]);
+  }, [isAddingRss, showStatus, handleRefresh]);
+
+  // PERF: Stable callbacks for filter pills - prevents FilterPill re-renders
+  const handleFilterAll = useCallback(() => setFilter('all'), []);
+  const handleFilterSparks = useCallback(() => setFilter('sparks'), []);
+  // PERF: Stable per-space filter callbacks - Map caches one callback per space.id,
+  // avoiding new function references in .map() that defeat FilterPill's React.memo
+  const spaceFilterCallbacks = useMemo(() => {
+    const map = new Map<string, () => void>();
+    for (const space of feedSpaces) {
+      map.set(space.id, () => setFilter(space.id));
+    }
+    return map;
+  }, [feedSpaces]);
+  // PERF: Stable callbacks for header actions
+  const handleOpenAddRss = useCallback(() => setIsAddRssOpen(true), []);
+  const handleManualRefresh = useCallback(() => handleRefresh(false), [handleRefresh]);
+  const handleGoToSettings = useCallback(() => setActiveScreen('settings'), [setActiveScreen]);
+  // PERF: Stable callbacks for modals
+  const handleCloseDetail = useCallback(() => {
+    if (!document.startViewTransition) {
+      setSelectedItem(null);
+      return;
+    }
+    document.startViewTransition(() => {
+      setSelectedItem(null);
+    });
+  }, []);
+  const handleCloseSynthesis = useCallback(() => {
+    setIsSynthesizing(false);
+    setSynthesisResult(null);
+  }, []);
+  const handleDismissStatus = useCallback(() => setStatusMessage(null), []);
+  const handleCloseAddRss = useCallback(() => setIsAddRssOpen(false), []);
+  // PERF: Stable callback for TodayHighlightsWidget
+  const handleHighlightSelect = useCallback((item: FeedItem) => setSelectedItem(item), []);
+  // PERF: Stable callback for PullToRefresh
+  const handlePullRefresh = useCallback(() => handleRefresh(false), [handleRefresh]);
 
   return (
     <div className="screen-shell">
@@ -459,7 +496,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
         actions={
           <>
             <PremiumButton
-              onClick={() => setIsAddRssOpen(true)}
+              onClick={handleOpenAddRss}
               variant="ghost"
               size="sm"
               className="rounded-full w-10 h-10 p-0"
@@ -469,7 +506,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
             </PremiumButton>
 
             <PremiumButton
-              onClick={() => handleRefresh(false)}
+              onClick={handleManualRefresh}
               disabled={isRefreshing || isLoading}
               variant="ghost"
               size="sm"
@@ -492,7 +529,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
               {null}
             </PremiumButton>
             <PremiumButton
-              onClick={() => setActiveScreen('settings')}
+              onClick={handleGoToSettings}
               variant="ghost"
               size="sm"
               className="rounded-full w-10 h-10 p-0"
@@ -507,16 +544,16 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
           <span className="badge-glow badge-glow-cyan">
             <span
               className="w-1.5 h-1.5 rounded-full"
-              style={{ background: feedStats.unread > 0 ? 'var(--color-accent-cyan)' : 'rgba(255,255,255,0.25)' }}
+              style={{ background: feedStats.unread > 0 ? 'var(--color-accent-cyan)' : 'var(--gray-300)' }}
             />
             {feedStats.unread > 0 ? `${feedStats.unread} לא נקראו` : 'הכול נקרא'}
           </span>
           <span className="badge-glow">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(167,139,250,0.7)' }} />
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#A78BFA' }} />
             {feedStats.sparks} ספארקים
           </span>
           <span className="badge-glow">
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(56,189,248,0.6)' }} />
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#38BDF8' }} />
             {sourcesCount} מקורות
           </span>
         </div>
@@ -525,14 +562,14 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
       <div
         className={`transition-all duration-500 ${selectedItem && settings.themeSettings.name === 'Obsidian Air' ? 'scale-dim-behind' : ''}`}
       >
-        <PullToRefresh onRefresh={() => handleRefresh(false)}>
+        <PullToRefresh onRefresh={handlePullRefresh}>
           {/* Premium Widgets Section */}
           {filter === 'all' && !isLoading && feedItems.length > 0 && (
             <div className="mb-6">
               {/* Today's Highlights */}
               <TodayHighlightsWidget
                 items={feedItems}
-                onSelectItem={item => setSelectedItem(item)}
+                onSelectItem={handleHighlightSelect}
               />
             </div>
           )}
@@ -541,14 +578,14 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
           <div className="flex gap-2.5 mb-6 overflow-x-auto pb-3 -mx-3 sm:-mx-4 px-3 sm:px-4 scrollbar-hide">
             <FilterPill
               label="הכל"
-              onClick={() => setFilter('all')}
+              onClick={handleFilterAll}
               isActive={filter === 'all'}
               icon={<LayoutDashboardIcon className="w-4 h-4" />}
               count={feedStats.total}
             />
             <FilterPill
               label="ספארקים"
-              onClick={() => setFilter('sparks')}
+              onClick={handleFilterSparks}
               isActive={filter === 'sparks'}
               icon={<SparklesIcon className="w-4 h-4" />}
               count={feedStats.sparks}
@@ -557,54 +594,49 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
               <FilterPill
                 key={space.id}
                 label={space.name}
-                onClick={() => setFilter(space.id)}
+                onClick={spaceFilterCallbacks.get(space.id)!}
                 isActive={filter === space.id}
               />
             ))}
           </div>
 
-          {isLoading && feedItems.length === 0 ? (
-            <FeedSkeleton count={5} />
-          ) : (
+          <SmoothLoader
+            isLoading={isLoading && feedItems.length === 0}
+            skeleton={<FeedSkeleton count={5} />}
+            minSkeletonTime={400}
+          >
             <div className="px-1">
-              {isLoading ? (
-                <div className="space-y-6">
-                  {[1, 2, 3].map(i => (
-                    <div
-                      key={i}
-                      className="bg-cosmos-depth/50 rounded-2xl p-4 space-y-3 border border-white/5"
-                    >
-                      <div className="flex items-center gap-3">
-                        <SkeletonCircle size={40} />
-                        <div className="space-y-2">
-                          <SkeletonBox width="120px" height="16px" />
-                          <SkeletonBox width="80px" height="12px" />
-                        </div>
-                      </div>
-                      <SkeletonBox width="100%" height="100px" className="rounded-xl" />
-                      <div className="flex justify-between">
-                        <SkeletonBox width="60px" height="20px" />
-                        <SkeletonBox width="60px" height="20px" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : filteredItems.length === 0 ? (
+              {filteredItems.length === 0 ? (
                 <EmptyState
-                  illustration="feed"
-                  title={feedItems.length > 0 ? 'אין פריטים כאן' : 'הפיד שלך ריק'}
+                  illustration={feedItems.length > 0 ? 'search' : 'feed'}
+                  title={feedItems.length > 0 ? 'אין פריטים בסינון זה' : 'הפיד שלך ריק'}
                   description={
                     feedItems.length > 0
-                      ? 'נסה לבחור סינון אחר או לרענן את הפידים שלך.'
-                      : 'לחץ על כפתור הרענון כדי למשוך תוכן חדש מהמקורות שהגדרת.'
+                      ? 'אין תוכן שמתאים לסינון הנבחר. נסה סינון אחר או הוסף מקורות חדשים.'
+                      : 'הוסף פידי RSS כדי לקבל תוכן חדש, או לחץ על רענון כדי למשוך עדכונים.'
                   }
-                  action={{
-                    label: 'רענן פידים',
-                    onClick: () => handleRefresh(false),
-                    icon: (
-                      <RefreshIcon className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                    ),
-                  }}
+                  action={
+                    feedItems.length > 0
+                      ? {
+                        label: 'הצג הכל',
+                        onClick: () => setFilter('all'),
+                      }
+                      : {
+                        label: sourcesCount > 0 ? 'רענן פידים' : 'הוסף פיד RSS',
+                        onClick: sourcesCount > 0 ? () => handleRefresh(false) : () => setIsAddRssOpen(true),
+                        icon: sourcesCount > 0
+                          ? <RefreshIcon className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                          : <RssIcon className="h-5 w-5" />,
+                      }
+                  }
+                  secondaryAction={
+                    feedItems.length === 0 && sourcesCount > 0
+                      ? {
+                        label: 'הוסף מקור נוסף',
+                        onClick: () => setIsAddRssOpen(true),
+                      }
+                      : undefined
+                  }
                 />
               ) : (
                 <Virtuoso
@@ -623,13 +655,13 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
                       <div className="pb-4">
                         {showDateHeader && (
                           <div className="flex items-center gap-3 mb-5 mt-2 px-1">
-                            <div className="h-[0.5px] flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.10), transparent)' }} />
+                            <div className="h-[0.5px] flex-1" style={{ background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)' }} />
                             <span
                               className="badge-glow text-[10px] font-semibold tracking-[0.1em] uppercase"
                             >
                               {currentLabel}
                             </span>
-                            <div className="h-[0.5px] flex-1" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.10), transparent)' }} />
+                            <div className="h-[0.5px] flex-1" style={{ background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)' }} />
                           </div>
                         )}
                         <FeedCard
@@ -645,20 +677,12 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
                 />
               )}
             </div>
-          )}
+          </SmoothLoader>
         </PullToRefresh>
 
         <FeedItemDetailSheet
           item={selectedItem}
-          onClose={() => {
-            if (!document.startViewTransition) {
-              setSelectedItem(null);
-              return;
-            }
-            document.startViewTransition(() => {
-              setSelectedItem(null);
-            });
-          }}
+          onClose={handleCloseDetail}
           onSummarize={handleSummarize}
           onUpdate={handleUpdateItem}
           isSummarizing={!!isSummarizing}
@@ -666,10 +690,7 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
         <SynthesisModal
           isLoading={isSynthesizing}
           synthesisResult={synthesisResult}
-          onClose={() => {
-            setIsSynthesizing(false);
-            setSynthesisResult(null);
-          }}
+          onClose={handleCloseSynthesis}
         />
         {contextMenu.isOpen && contextMenu.item && (
           <ContextMenu
@@ -684,12 +705,39 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
           />
         )}
 
+        {/* Scroll to Top FAB */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                triggerHaptic('light');
+              }}
+              className="fixed bottom-28 left-4 z-40 w-10 h-10 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+              style={{
+                background: 'var(--surface-glass, var(--bg-card))',
+                border: '1px solid var(--border-subtle)',
+                backdropFilter: 'blur(12px)',
+              }}
+              aria-label="גלול למעלה"
+            >
+              <svg className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+              </svg>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
         {statusMessage && (
           <StatusMessage
             key={statusMessage.id}
             type={statusMessage.type}
             message={statusMessage.text}
-            onDismiss={() => setStatusMessage(null)}
+            onDismiss={handleDismissStatus}
             onUndo={statusMessage.onUndo}
           />
         )}
@@ -697,18 +745,14 @@ const FeedScreen: React.FC<FeedScreenProps> = ({ setActiveScreen }) => {
         {/* Add RSS Feed Modal - Portal rendered above navigation */}
         <ModalOverlay
           isOpen={isAddRssOpen}
-          onClose={() => setIsAddRssOpen(false)}
+          onClose={handleCloseAddRss}
           variant="bottomSheet"
           blur="md"
           backdropOpacity={60}
         >
           <AddRssFeedSheet
-            onClose={() => setIsAddRssOpen(false)}
-            onAdd={async (url, category) => {
-              setNewRssUrl(url);
-              setNewRssCategory(category);
-              await handleAddRssFeed();
-            }}
+            onClose={handleCloseAddRss}
+            onAdd={handleAddRssFeed}
             isLoading={isAddingRss}
           />
         </ModalOverlay>

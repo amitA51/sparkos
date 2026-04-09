@@ -6,13 +6,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock IndexedDB
-const mockIDBRequest = {
-    result: null as any,
-    error: null as any,
-    onerror: null as any,
-    onsuccess: null as any,
-    onupgradeneeded: null as any,
-    onblocked: null as any,
+const mockIDBRequest: Partial<IDBOpenDBRequest> = {
+    result: null as unknown as IDBDatabase,
+    error: null,
+    onerror: null,
+    onsuccess: null,
+    onupgradeneeded: null,
+    onblocked: null,
 };
 
 
@@ -37,10 +37,10 @@ afterEach(() => {
 
 describe('withRetry', () => {
     // Import dynamically to ensure mocks are in place
-    let withRetry: typeof import('../../services/data/dbCore').withRetry;
+    let withRetry: typeof import('../../services/db/indexedDBCore').withRetry;
 
     beforeEach(async () => {
-        const module = await import('../../services/data/dbCore');
+        const module = await import('../../services/db/indexedDBCore');
         withRetry = module.withRetry;
     });
 
@@ -88,10 +88,10 @@ describe('withRetry', () => {
 });
 
 describe('safeDateSort', () => {
-    let safeDateSort: typeof import('../../services/data/dbCore').safeDateSort;
+    let safeDateSort: typeof import('../../services/db/indexedDBCore').safeDateSort;
 
     beforeEach(async () => {
-        const module = await import('../../services/data/dbCore');
+        const module = await import('../../services/db/indexedDBCore');
         safeDateSort = module.safeDateSort;
     });
 
@@ -133,17 +133,17 @@ describe('safeDateSort', () => {
 
 describe('Database constants', () => {
     it('should export correct DB_NAME', async () => {
-        const { DB_NAME } = await import('../../services/data/dbCore');
+        const { DB_NAME } = await import('../../services/db/indexedDBCore');
         expect(DB_NAME).toBe('SparkDB');
     });
 
     it('should export correct DB_VERSION', async () => {
-        const { DB_VERSION } = await import('../../services/data/dbCore');
+        const { DB_VERSION } = await import('../../services/db/indexedDBCore');
         expect(DB_VERSION).toBe(3);
     });
 
     it('should export OBJECT_STORES array', async () => {
-        const { OBJECT_STORES } = await import('../../services/data/dbCore');
+        const { OBJECT_STORES } = await import('../../services/db/indexedDBCore');
         expect(Array.isArray(OBJECT_STORES)).toBe(true);
         expect(OBJECT_STORES.length).toBeGreaterThan(0);
     });

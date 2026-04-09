@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock dependencies
-vi.mock('../../services/data/dbCore', () => ({
+vi.mock('../../services/db/indexedDBCore', () => ({
     dbGetAll: vi.fn(),
     dbGet: vi.fn(),
     dbPut: vi.fn(),
@@ -38,13 +38,13 @@ vi.mock('../../services/settingsService', () => ({
 }));
 
 describe('Workout Templates', () => {
-    let workoutService: typeof import('../../services/data/workoutService');
-    let dbCore: typeof import('../../services/data/dbCore');
+    let workoutService: typeof import('../../services/db/workoutDb');
+    let dbCore: typeof import('../../services/db/indexedDBCore');
 
     beforeEach(async () => {
         vi.clearAllMocks();
-        workoutService = await import('../../services/data/workoutService');
-        dbCore = await import('../../services/data/dbCore');
+        workoutService = await import('../../services/db/workoutDb');
+        dbCore = await import('../../services/db/indexedDBCore');
     });
 
     describe('getWorkoutTemplates', () => {
@@ -124,13 +124,13 @@ describe('Workout Templates', () => {
 });
 
 describe('Body Weight', () => {
-    let workoutService: typeof import('../../services/data/workoutService');
-    let dbCore: typeof import('../../services/data/dbCore');
+    let workoutService: typeof import('../../services/db/workoutDb');
+    let dbCore: typeof import('../../services/db/indexedDBCore');
 
     beforeEach(async () => {
         vi.clearAllMocks();
-        workoutService = await import('../../services/data/workoutService');
-        dbCore = await import('../../services/data/dbCore');
+        workoutService = await import('../../services/db/workoutDb');
+        dbCore = await import('../../services/db/indexedDBCore');
     });
 
     describe('getBodyWeightHistory', () => {
@@ -175,18 +175,4 @@ describe('Body Weight', () => {
     });
 });
 
-describe('Theme Preferences', () => {
-    let workoutService: typeof import('../../services/data/workoutService');
-
-    beforeEach(async () => {
-        vi.clearAllMocks();
-        workoutService = await import('../../services/data/workoutService');
-    });
-
-    describe('getThemePreference', () => {
-        it('should return the current theme preference', () => {
-            const result = workoutService.getThemePreference();
-            expect(result).toBe('deepCosmos');
-        });
-    });
-});
+// Theme Preferences tests removed - getThemePreference was removed from workoutDb

@@ -15,7 +15,7 @@ export interface BadgeProps {
 
 export const Badge = memo<BadgeProps>(({ children, variant = 'default', animate = false, icon }) => {
     const variants = {
-        default: 'bg-[#2C2C2E] text-white/80 border-white/5',
+        default: 'bg-[var(--bg-elevated)] text-white/80 border-white/5',
         success: 'bg-[#30D158]/15 text-[#30D158] border-[#30D158]/20',
         accent: 'bg-[var(--cosmos-accent-primary)]/10 text-[var(--cosmos-accent-primary)] border-[var(--cosmos-accent-primary)]/20',
         gold: 'bg-[#FFD60A]/10 text-[#FFD60A] border-[#FFD60A]/20',

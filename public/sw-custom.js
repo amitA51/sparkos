@@ -224,7 +224,55 @@ self.addEventListener('sync', (event) => {
   if (event.tag === 'check-notifications') {
     event.waitUntil(checkAndSendScheduledNotifications());
   }
+  if (event.tag === 'spark-offline-queue') {
+    event.waitUntil(replayOfflineQueue());
+  }
 });
+
+/**
+ * Replay queued offline operations from IndexedDB.
+ * Reads from 'offlineQueue' store and posts each to open clients.
+ */
+async function replayOfflineQueue() {
+  try {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('SparkOffline', 1);
+      request.onupgradeneeded = (e) => {
+        const innerDb = e.target.result;
+        if (!innerDb.objectStoreNames.contains('offlineQueue')) {
+          innerDb.createObjectStore('offlineQueue', { keyPath: 'id', autoIncrement: true });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+
+    const tx = db.transaction('offlineQueue', 'readwrite');
+    const store = tx.objectStore('offlineQueue');
+    const items = await new Promise((resolve, reject) => {
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+
+    for (const item of items) {
+      try {
+        const allClients = await clients.matchAll({ type: 'window' });
+        for (const client of allClients) {
+          client.postMessage({
+            type: 'REPLAY_OFFLINE_OPERATION',
+            operation: item,
+          });
+        }
+        store.delete(item.id);
+      } catch (err) {
+        console.error('[SW] Failed to replay offline operation:', item.id, err);
+      }
+    }
+  } catch (error) {
+    console.error('[SW] Error replaying offline queue:', error);
+  }
+}
 
 async function updateWidgetData() {
   try {

@@ -59,7 +59,13 @@ const PremiumHeader: React.FC<PremiumHeaderProps> = ({
 
     return (
         <header
-            className={`sticky top-0 z-30 -mx-3 sm:-mx-4 lg:-mx-6 px-3 sm:px-4 lg:px-6 pb-3 pt-[max(env(safe-area-inset-top,20px),1rem)] border-b border-white/5 bg-slate-950/95 ${className}`}
+            className={`sticky top-0 z-30 -mx-3 sm:-mx-4 lg:-mx-6 px-3 sm:px-4 lg:px-6 pb-3 pt-[max(env(safe-area-inset-top,20px),1rem)] ${className}`}
+            style={{
+                background: 'var(--surface-glass)',
+                backdropFilter: 'blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%))',
+                WebkitBackdropFilter: 'blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%))',
+                borderBottom: '0.33px solid var(--border-subtle)',
+            }}
         >
             <motion.div
                 className="flex flex-col gap-3 max-w-3xl mx-auto"
@@ -73,7 +79,8 @@ const PremiumHeader: React.FC<PremiumHeaderProps> = ({
                         {(icon || showTimeGreeting) && (
                             <motion.div
                                 variants={itemVariants}
-                                className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5"
+                                className="flex h-10 w-10 items-center justify-center rounded-2xl shadow-sm"
+                                style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
                             >
                                 {icon ? icon : <span className="text-xl">{timeGreeting.emoji}</span>}
                             </motion.div>
@@ -83,7 +90,8 @@ const PremiumHeader: React.FC<PremiumHeaderProps> = ({
                             {showTimeGreeting && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="mb-0.5 text-[11px] font-medium text-white/60"
+                                    className="mb-0.5 text-[11px] font-medium"
+                                    style={{ color: 'var(--text-secondary)' }}
                                 >
                                     {timeGreeting.greeting}
                                 </motion.div>
@@ -91,7 +99,8 @@ const PremiumHeader: React.FC<PremiumHeaderProps> = ({
 
                             <motion.h1
                                 variants={itemVariants}
-                                className="text-[26px] sm:text-3xl md:text-4xl font-semibold tracking-tight leading-tight text-white"
+                                className="text-[26px] sm:text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+                                style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}
                             >
                                 <span className="block truncate">{title}</span>
                             </motion.h1>
@@ -99,7 +108,8 @@ const PremiumHeader: React.FC<PremiumHeaderProps> = ({
                             {subtitle && (
                                 <motion.div
                                     variants={itemVariants}
-                                    className="mt-1 text-[13px] font-medium text-white/60 line-clamp-2"
+                                    className="mt-1 text-[13px] font-medium line-clamp-2"
+                                    style={{ color: 'var(--text-secondary)' }}
                                 >
                                     {subtitle}
                                 </motion.div>

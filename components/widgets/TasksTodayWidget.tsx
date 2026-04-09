@@ -320,4 +320,4 @@ const TasksTodayWidget: React.FC<TasksTodayWidgetProps> = ({ onTaskClick, onTask
   );
 };
 
-export default TasksTodayWidget;
+export default React.memo(TasksTodayWidget);

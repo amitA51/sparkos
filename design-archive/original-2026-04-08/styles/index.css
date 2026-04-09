@@ -1,0 +1,25 @@
+/**
+ * ===========================================================================
+ * SPARKOS DESIGN SYSTEM - ENTRY POINT
+ *
+ * Single import for the entire design system.
+ * All @import statements precede @tailwind directives (PostCSS requirement).
+ *
+ * Load order:
+ * 1. Design tokens - all CSS custom properties
+ * 2. Themes - multi-universe physics theme overrides
+ * 3. Base - font-face, html/body, scrollbar, form controls
+ * 4. Components - spark-card, glass, badge, button classes
+ * 5. Utilities - layout helpers, animations, @layer utilities/components
+ * ===========================================================================
+ */
+
+@import './design-tokens.css';
+@import './themes.css';
+@import './base.css';
+@import './components.css';
+@import './utilities.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

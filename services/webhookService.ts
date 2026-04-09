@@ -3,8 +3,6 @@
  * Manages webhook configurations and triggers external actions on events
  */
 
-import { LOCAL_STORAGE_KEYS as _LS } from '../constants';
-
 // --- Types ---
 
 export type WebhookEvent =

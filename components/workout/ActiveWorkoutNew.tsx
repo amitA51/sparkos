@@ -100,18 +100,6 @@ const WorkoutContent: React.FC<{
     const [showFinishConfirm, setShowFinishConfirm] = useState(false);
     const [finishIntent, setFinishIntent] = useState<'finish' | 'cancel'>('finish');
 
-    // Debug: Log when showFinishConfirm changes
-    useEffect(() => {
-        console.log('[ActiveWorkoutNew] showFinishConfirm changed to:', showFinishConfirm, 'intent:', finishIntent);
-    }, [showFinishConfirm, finishIntent]);
-
-    // Debug: Log mount/unmount
-    useEffect(() => {
-        console.log('[ActiveWorkoutNew] Component mounted');
-        return () => {
-            console.log('[ActiveWorkoutNew] Component unmounting');
-        };
-    }, []);
     const [nameSuggestions, setNameSuggestions] = useState<string[]>([]);
     const [personalExerciseLibrary, setPersonalExerciseLibrary] = useState<PersonalExercise[]>([]);
     const [showWaterReminder, setShowWaterReminder] = useState(false);
@@ -337,24 +325,16 @@ const WorkoutContent: React.FC<{
 
     const handleFinishRequest = useCallback(() => {
         // Go straight to confirmation - cooldown is optional via button in overlay
-        console.log('[ActiveWorkoutNew] handleFinishRequest called');
         triggerHaptic('light');
         setFinishIntent('finish');
-        setShowFinishConfirm(prev => {
-            console.log('[ActiveWorkoutNew] setShowFinishConfirm: prev =', prev, ', setting to true');
-            return true;
-        });
+        setShowFinishConfirm(true);
     }, []);
 
     const handleDiscardRequest = useCallback(() => {
         // Show confirmation dialog with cancel intent
-        console.log('[ActiveWorkoutNew] handleDiscardRequest called');
         triggerHaptic('light');
         setFinishIntent('cancel');
-        setShowFinishConfirm(prev => {
-            console.log('[ActiveWorkoutNew] setShowFinishConfirm: prev =', prev, ', setting to true');
-            return true;
-        });
+        setShowFinishConfirm(true);
     }, []);
 
     // Stable handlers for child components to prevent unnecessary re-renders
@@ -432,10 +412,7 @@ const WorkoutContent: React.FC<{
     }, [dispatch]);
 
     const handleConfirmFinish = useCallback(async () => {
-        console.log('[ActiveWorkoutNew] handleConfirmFinish called, intent:', finishIntent);
-
         if (finishIntent === 'cancel') {
-            console.log('[ActiveWorkoutNew] Cancel flow - clearing and exiting');
             setShowFinishConfirm(false);
             setSaveError(null);
 
@@ -462,10 +439,7 @@ const WorkoutContent: React.FC<{
             ex.sets.some(s => s.completedAt)
         );
 
-        console.log('[ActiveWorkoutNew] Completed exercises:', completedExercises.length, 'total exercises:', state.exercises.length);
-
         if (completedExercises.length === 0) {
-            console.log('[ActiveWorkoutNew] No completed sets - showing message');
             // No completed sets - show message to user instead of silently exiting
             // Keep overlay open and show error
             setSaveError('לא הושלמו סטים באימון זה. השלם לפחות סט אחד כדי לשמור את האימון.');
@@ -477,7 +451,6 @@ const WorkoutContent: React.FC<{
         setShowFinishConfirm(false);
         setSaveError(null);
 
-        console.log('[ActiveWorkoutNew] Starting save process...');
         setIsSaving(true);
 
         try {
@@ -494,10 +467,7 @@ const WorkoutContent: React.FC<{
                 })),
             };
 
-            console.log('[ActiveWorkoutNew] Saving session:', session.id);
-            // Save session
             await saveWorkoutSession(session);
-            console.log('[ActiveWorkoutNew] Session saved successfully');
 
             // Verify session was saved by reading it back
             try {
@@ -529,10 +499,8 @@ const WorkoutContent: React.FC<{
             // Don't delete yet! Wait until summary is closed.
             // keeping the item active allows this component to stay mounted so Summary can be shown.
 
-            console.log('[ActiveWorkoutNew] Setting showSummary to true');
             setCompletedSession(session);
             setShowSummary(true);
-            console.log('[ActiveWorkoutNew] showSummary set, should render WorkoutSummary now');
         } catch (e) {
             console.error('[ActiveWorkoutNew] Failed to save workout:', e);
             // Show user-friendly error message
@@ -555,7 +523,6 @@ const WorkoutContent: React.FC<{
                     isOpen={true}
                     session={completedSession}
                     onClose={() => {
-                        console.log('[ActiveWorkoutNew] WorkoutSummary onClose called');
                         // Clear localStorage to prevent restore
                         localStorage.removeItem('active_workout_v3_state');
                         // Call onExit - the overlay will handle removing the item

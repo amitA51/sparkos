@@ -1,62 +1,135 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Screen, PersonalItem, AddableType } from '../types';
-import CalendarView from '../components/CalendarView'; // Use the premium View
+import CalendarView from '../components/CalendarView';
+import PersonalItemDetailModal from '../components/PersonalItemDetailModal';
+import StatusMessage, { StatusMessageType } from '../components/StatusMessage';
 import { ChevronRightIcon } from '../components/icons';
 import { useData } from '../src/contexts/DataContext';
-
+import { reAddPersonalItem } from '../services/dataService';
+import { useModal } from '../state/ModalContext';
 
 interface CalendarScreenProps {
   setActiveScreen: (screen: Screen) => void;
 }
 
 const CalendarScreen: React.FC<CalendarScreenProps> = ({ setActiveScreen }) => {
-  const { personalItems, updatePersonalItem } = useData();
+  const { personalItems, updatePersonalItem, removePersonalItem, refreshAll } = useData();
+  const { openModal } = useModal();
+
+  const [selectedItem, setSelectedItem] = useState<PersonalItem | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: StatusMessageType;
+    text: string;
+    id: number;
+    onUndo?: () => void;
+  } | null>(null);
+
+  const showStatus = useCallback((type: StatusMessageType, text: string, onUndo?: () => void) => {
+    setStatusMessage({ type, text, id: Date.now(), onUndo });
+  }, []);
 
   const handleUpdateItem = useCallback((id: string, updates: Partial<PersonalItem>) => {
+    // Optimistic update for selected item
+    setSelectedItem(prev => (prev && prev.id === id ? { ...prev, ...updates } : prev));
     updatePersonalItem(id, updates);
   }, [updatePersonalItem]);
+
+  const handleDeleteItem = useCallback(async (id: string) => {
+    const itemToDelete = personalItems.find(item => item.id === id);
+    if (!itemToDelete) return;
+
+    setSelectedItem(null);
+    await removePersonalItem(id);
+
+    showStatus('success', 'הפריט נמחק.', async () => {
+      await reAddPersonalItem(itemToDelete);
+      await refreshAll();
+    });
+  }, [personalItems, removePersonalItem, showStatus, refreshAll]);
 
   const handleSelectItem = useCallback((item: PersonalItem, event: React.MouseEvent) => {
     event.stopPropagation();
     if (item.type === 'roadmap') {
-      // Handle roadmap if needed
+      openModal('roadmapScreen', {
+        item,
+        onUpdate: handleUpdateItem,
+        onDelete: handleDeleteItem,
+      });
+      return;
     }
-    // We can use the 'roadmapScreen' modal or a general detail modal.
-    // For now, let's open the standard edit modal or similar if available,
-    // or just console log as placeholder if no direct edit modal is exposed easily here.
-    // Ideally we reuse the PersonalItemDetailModal logic from Library, but that's local state there.
-    // Let's assume we can trigger the Add/Edit screen or similar.
-    // Actually, looking at LibraryScreen, strict editing usually happens via selection.
+    setSelectedItem(item);
+  }, [openModal, handleUpdateItem, handleDeleteItem]);
 
-    // Simplest approach: Open the item in the 'add' screen which doubles as edit, OR simply log it.
-    // Better: use the global modal system if available.
-    // Attempting to use openModal for a generic item detail if it exists, otherwise do nothing/toast.
-    console.log('Selected item:', item.title);
+  const handleCloseModal = useCallback((nextItem?: PersonalItem) => {
+    setSelectedItem(nextItem || null);
   }, []);
 
   const handleQuickAdd = useCallback((type: AddableType, date: string) => {
-    // Store date to pre-fill
     sessionStorage.setItem('preselect_add', type);
     sessionStorage.setItem('preselect_add_date', date);
     setActiveScreen('add');
   }, [setActiveScreen]);
 
+  // PERF: Stable callbacks for navigation and status
+  const handleGoBack = useCallback(() => setActiveScreen('today'), [setActiveScreen]);
+  const handleDismissStatus = useCallback(() => setStatusMessage(null), []);
+
+  // PERF: Memoize formatted date string - recalculated only once per render
+  const formattedDate = useMemo(
+    () => new Date().toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+    [] // Date display only changes on navigation, not within a session
+  );
+
   return (
-    <div className="h-full flex flex-col bg-[var(--bg-primary)]">
+    <div className="h-full flex flex-col" style={{ background: 'var(--bg-primary)' }}>
       {/* Premium Glass Header */}
-      <header className="px-4 py-3 flex items-center gap-4 bg-[var(--bg-secondary)]/60 backdrop-blur-xl border-b border-[var(--border-primary)]/50 sticky top-0 z-20">
-        <button
-          onClick={() => setActiveScreen('dashboard')}
-          className="p-2.5 rounded-full bg-[var(--bg-tertiary)]/50 hover:bg-[var(--bg-tertiary)] text-[var(--text-primary)] transition-all active:scale-95"
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+        className="px-4 py-4 flex items-center gap-4 sticky top-0 z-20"
+        style={{
+          background: 'var(--surface-glass)',
+          backdropFilter: 'blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%))',
+          WebkitBackdropFilter: 'blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%))',
+          borderBottom: '0.33px solid var(--border-subtle)',
+        }}
+      >
+        <motion.button
+          onClick={handleGoBack}
+          whileTap={{ scale: 0.92 }}
+          className="p-2.5 rounded-2xl transition-all duration-200"
+          style={{
+            background: 'var(--gray-50)',
+            border: '0.5px solid var(--border-subtle)',
+            color: 'var(--text-secondary)',
+          }}
         >
           <ChevronRightIcon className="w-5 h-5" />
-        </button>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
-          לוח שנה
-        </h1>
-      </header>
+        </motion.button>
+        <div className="flex-1">
+          <h1
+            className="text-2xl font-bold"
+            style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}
+          >
+            לוח שנה
+          </h1>
+          <p
+            className="text-[12px] font-medium mt-0.5"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {formattedDate}
+          </p>
+        </div>
+      </motion.header>
 
-      <div className="flex-1 overflow-hidden relative">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15, duration: 0.4 }}
+        className="flex-1 overflow-hidden relative"
+      >
         <div className="absolute inset-0 overflow-y-auto overflow-x-hidden p-4 sm:p-6 pb-24">
           <CalendarView
             items={personalItems}
@@ -65,9 +138,29 @@ const CalendarScreen: React.FC<CalendarScreenProps> = ({ setActiveScreen }) => {
             onQuickAdd={handleQuickAdd}
           />
         </div>
-      </div>
+      </motion.div>
+
+      {/* Item Detail Modal */}
+      {selectedItem && (
+        <PersonalItemDetailModal
+          item={selectedItem}
+          onClose={handleCloseModal}
+          onUpdate={handleUpdateItem}
+          onDelete={handleDeleteItem}
+        />
+      )}
+
+      {statusMessage && (
+        <StatusMessage
+          key={statusMessage.id}
+          type={statusMessage.type}
+          message={statusMessage.text}
+          onDismiss={handleDismissStatus}
+          onUndo={statusMessage.onUndo}
+        />
+      )}
     </div>
   );
 };
 
-export default CalendarScreen;
+export default React.memo(CalendarScreen);

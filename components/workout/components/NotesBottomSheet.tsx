@@ -72,7 +72,7 @@ const NotesBottomSheet = memo<NotesBottomSheetProps>(({ isOpen, currentNotes, ex
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-3xl border-t border-white/10 pb-safe"
+                className="fixed bottom-0 left-0 right-0 bg-[var(--bg-secondary)] rounded-t-3xl border-t border-white/10 pb-safe"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Handle */}
@@ -152,7 +152,7 @@ const NotesBottomSheet = memo<NotesBottomSheetProps>(({ isOpen, currentNotes, ex
                     <motion.button
                         whileTap={{ scale: 0.97 }}
                         onClick={handleSave}
-                        className="flex-1 py-3.5 rounded-2xl bg-[#BF5AF2] font-bold text-sm text-white shadow-lg shadow-[#BF5AF2]/20"
+                        className="flex-1 py-3.5 rounded-2xl bg-[var(--cosmos-pink)] font-bold text-sm text-white shadow-lg shadow-[var(--cosmos-pink)]/20"
                     >
                         שמור
                     </motion.button>

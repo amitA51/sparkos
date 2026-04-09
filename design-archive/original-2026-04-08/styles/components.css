@@ -1,0 +1,485 @@
+/**
+ * ===========================================================================
+ * SPARKOS DESIGN SYSTEM - COMPONENT STYLES
+ * Reusable component classes: cards, glass panels, badges, buttons, etc.
+ * All values use theme-aware CSS variables with light-mode fallbacks.
+ * ===========================================================================
+ */
+
+/* =================================================================
+   SPARK CARD - Primary card system
+   ================================================================= */
+
+.spark-card {
+  position: relative;
+  background: var(--bg-card, #FFFFFF);
+  border: none;
+  border-radius: var(--radius-2xl);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (hover: hover) {
+  .spark-card:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.spark-card:active {
+  transform: scale(0.98) translateZ(0);
+}
+
+/* Accent-tinted card variants */
+.spark-card-accent-cyan {
+  background: linear-gradient(135deg, var(--color-accent-surface-cyan, rgba(0, 122, 255, 0.06)) 0%, var(--bg-card, #FFFFFF) 100%);
+}
+
+.spark-card-accent-violet {
+  background: linear-gradient(135deg, var(--color-accent-surface-violet, rgba(88, 86, 214, 0.06)) 0%, var(--bg-card, #FFFFFF) 100%);
+}
+
+.spark-card-accent-success {
+  background: linear-gradient(135deg, var(--color-accent-surface-success, rgba(52, 199, 89, 0.06)) 0%, var(--bg-card, #FFFFFF) 100%);
+}
+
+.spark-card-accent-gold {
+  background: linear-gradient(135deg, var(--color-accent-surface-gold, rgba(255, 149, 0, 0.06)) 0%, var(--bg-card, #FFFFFF) 100%);
+}
+
+/* =================================================================
+   BADGE SYSTEM
+   ================================================================= */
+
+.badge-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-xl);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--color-gray-50);
+  border: 0.5px solid var(--color-border-subtle, rgba(0, 0, 0, 0.06));
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.badge-glow:hover {
+  background: var(--color-gray-100);
+  color: var(--text-primary);
+}
+
+.badge-glow-cyan {
+  background: rgba(0, 122, 255, 0.08);
+  border-color: rgba(0, 122, 255, 0.12);
+  color: #007AFF;
+}
+
+.badge-glow-error {
+  background: rgba(255, 59, 48, 0.08);
+  border-color: rgba(255, 59, 48, 0.12);
+  color: #FF3B30;
+}
+
+.badge-glow-success {
+  background: rgba(52, 199, 89, 0.08);
+  border-color: rgba(52, 199, 89, 0.12);
+  color: #34C759;
+}
+
+.badge-glow-gold {
+  background: rgba(255, 149, 0, 0.08);
+  border-color: rgba(255, 149, 0, 0.12);
+  color: #FF9500;
+}
+
+/* =================================================================
+   BUTTON SYSTEM
+   ================================================================= */
+
+.btn-aurora {
+  background: var(--aurora-gradient, linear-gradient(135deg, #7F00FF 0%, #00D1FF 100%));
+  color: #FFFFFF;
+  font-weight: 600;
+  border: none;
+  box-shadow:
+    0 4px 15px rgba(127, 0, 255, 0.25),
+    0 0 30px rgba(0, 209, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-aurora:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(127, 0, 255, 0.35),
+    0 0 40px rgba(0, 209, 255, 0.2);
+}
+
+.btn-aurora:active {
+  transform: scale(0.98);
+}
+
+.btn-titanium {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E5E5E5 100%);
+  color: #000000;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0px 1px 0px 0px rgba(255, 255, 255, 1) inset,
+    0px 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0);
+}
+
+.btn-titanium:active {
+  transform: scale(0.97);
+  box-shadow:
+    0px 1px 0px 0px rgba(255, 255, 255, 0.5) inset,
+    0px 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* =================================================================
+   GLASS ACTION BUTTON
+   ================================================================= */
+
+.glass-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--color-border-subtle, rgba(0, 0, 0, 0.06));
+  color: var(--text-primary);
+  box-shadow: var(--shadow-xs);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out,
+    transform 100ms ease-out;
+  cursor: pointer;
+}
+
+.glass-action-btn:hover {
+  background: var(--color-surface-hover, rgba(0, 0, 0, 0.04));
+  border-color: var(--color-border-strong, rgba(0, 0, 0, 0.12));
+  box-shadow: var(--shadow-md);
+}
+
+.glass-action-btn:active {
+  transform: scale(0.97);
+  background: var(--color-surface-pressed, rgba(0, 0, 0, 0.06));
+}
+
+/* =================================================================
+   GLASS SYSTEM
+   ================================================================= */
+
+.glass {
+  background: var(--glass-background, rgba(255, 255, 255, 0.80));
+  backdrop-filter: blur(var(--glass-blur, 32px)) saturate(var(--glass-saturate, 180%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 32px)) saturate(var(--glass-saturate, 180%));
+  border: var(--border-width-thin) solid var(--border-primary, rgba(0, 0, 0, 0.06));
+  box-shadow: var(--glass-inner-glow, var(--shadow-sm));
+}
+
+.glass-heavy {
+  background: var(--glass-background, rgba(255, 255, 255, 0.90));
+  backdrop-filter: blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 40px)) saturate(var(--glass-saturate, 180%));
+  border: var(--border-width-thin) solid var(--border-primary, rgba(0, 0, 0, 0.08));
+  box-shadow: var(--glass-inner-glow, var(--shadow-md));
+}
+
+.glass-subtle {
+  background: var(--color-gray-50);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: var(--border-width-hairline) solid var(--color-gray-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-nebula {
+  background: var(--glass-background, rgba(255, 255, 255, 0.85));
+  backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-saturate, 150%));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) saturate(var(--glass-saturate, 150%));
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--glass-inner-glow, inset 0 0.5px 0 0 rgba(255, 255, 255, 0.8));
+}
+
+.glass-nebula-heavy {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.8),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.glass-obsidian {
+  background: rgba(30, 30, 35, 0.70);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* =================================================================
+   AURORA GRADIENT
+   ================================================================= */
+
+.aurora-gradient {
+  background: var(--aurora-gradient, linear-gradient(135deg, #7F00FF 0%, #00D1FF 100%));
+}
+
+/* =================================================================
+   SCALE DIM BEHIND (FeedScreen sheet overlay)
+   ================================================================= */
+
+.scale-dim-behind {
+  transform: scale(0.94) translateY(10px);
+  opacity: 0.6;
+  border-radius: 20px;
+  overflow: hidden;
+  transform-origin: center top;
+  transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* =================================================================
+   SMARTTEXT COMPONENT
+   ================================================================= */
+
+.smart-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.smart-text-link {
+  color: var(--dynamic-accent-start, #007AFF);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: all 0.2s ease;
+}
+
+.smart-text-link:hover {
+  color: var(--dynamic-accent-end, #5856D6);
+  text-decoration-thickness: 2px;
+}
+
+.smart-text-code {
+  background: var(--color-gray-100, rgba(0, 0, 0, 0.04));
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.9em;
+  color: var(--text-primary);
+}
+
+.smart-text-backlink {
+  color: var(--dynamic-accent-start, #a855f7);
+  background: rgba(168, 85, 247, 0.15);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.smart-text-backlink:hover {
+  background: rgba(168, 85, 247, 0.25);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+/* =================================================================
+   SEMANTIC THEME-AWARE UTILITY CLASSES
+   ================================================================= */
+
+/* Surface Colors */
+.surface-primary { background-color: var(--bg-primary); }
+.surface-secondary { background-color: var(--bg-secondary); }
+.surface-card { background-color: var(--bg-tertiary); }
+.surface-elevated {
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+}
+.surface-hover { background-color: var(--color-surface-hover); }
+
+/* Text Colors */
+.text-theme-primary { color: var(--text-primary); }
+.text-theme-secondary { color: var(--text-secondary); }
+.text-theme-muted { color: var(--text-secondary); opacity: 0.6; }
+.text-theme-disabled { color: var(--text-secondary); opacity: 0.4; }
+
+/* Accent Colors */
+.bg-accent-theme { background: var(--dynamic-accent-start); }
+.text-accent-theme { color: var(--dynamic-accent-start); }
+.border-accent-theme { border-color: var(--dynamic-accent-start); }
+.bg-accent-gradient { background: var(--accent-gradient); }
+.text-accent-gradient {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Border Colors */
+.border-theme { border-color: var(--border-primary); }
+.border-theme-subtle { border-color: var(--color-border-subtle); }
+.border-theme-strong { border-color: var(--color-border-strong); }
+
+/* Interactive States */
+.hover-surface:hover { background-color: var(--color-surface-hover); }
+.active-surface:active { background-color: var(--color-surface-pressed); }
+
+/* =================================================================
+   PREMIUM ENHANCEMENTS - Elevated interaction patterns
+   ================================================================= */
+
+/* Premium interactive card - subtle lift on hover */
+.spark-card-interactive {
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
+}
+
+@media (hover: hover) {
+  .spark-card-interactive:hover {
+    transform: translateY(-3px) translateZ(0);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border-strong);
+  }
+}
+
+.spark-card-interactive:active {
+  transform: scale(0.98) translateZ(0);
+  transition-duration: 100ms;
+}
+
+/* Premium Badge - Pill with subtle glow animation */
+.spark-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 0.5px solid var(--color-border-subtle);
+  transition: all 0.2s ease;
+}
+
+.spark-badge-success {
+  background: var(--color-accent-surface-success);
+  color: var(--color-success);
+  border-color: rgba(52, 199, 89, 0.2);
+}
+
+/* Premium section title */
+.section-title-premium {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Completed habit - satisfying checkmark glow */
+.completed-habit {
+  position: relative;
+}
+
+.completed-habit::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px var(--dynamic-accent-start);
+  animation: habitComplete 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes habitComplete {
+  0% { opacity: 0; transform: scale(1.05); }
+  50% { opacity: 0.5; }
+  100% { opacity: 0.15; transform: scale(1); }
+}
+
+/* Celebration sparkle effect */
+.celebrate-sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--dynamic-accent-start);
+  pointer-events: none;
+  animation: celebrateSparkle 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes celebrateSparkle {
+  0% { opacity: 1; transform: scale(0); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
+/* SVG glow for active streak icons */
+.svg-glow {
+  filter: drop-shadow(0 0 6px var(--dynamic-accent-glow));
+}
+
+/* Bump-up animation for streak counter */
+@keyframes bump-up {
+  0% { transform: scale(0.6) translateY(4px); opacity: 0; }
+  60% { transform: scale(1.15) translateY(-1px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.animate-bump-up {
+  animation: bump-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Premium Button Variants */
+.spark-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+  border-radius: var(--radius-xl);
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spark-btn:active {
+  transform: scale(0.97);
+}
+
+.spark-btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+}
+
+.spark-btn-ghost:hover {
+  background: var(--color-surface-hover);
+  color: var(--text-primary);
+}
+
+.spark-btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}

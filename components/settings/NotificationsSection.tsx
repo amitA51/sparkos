@@ -33,7 +33,7 @@ const DAYS_OF_WEEK = [
 
 const NotificationsSection: React.FC = () => {
     const { settings, updateSettings } = useSettings();
-    const { requestToken, isSupported, token } = usePushToken();
+    const { requestToken, isSupported } = usePushToken();
 
     // Fallback to structure if migration didn't run (safe guard)
     const notifSettings = settings.notificationsSettings || {
@@ -69,13 +69,6 @@ const NotificationsSection: React.FC = () => {
             await requestToken();
         }
         handleUpdate({ enabled: checked });
-    };
-
-    const copyTokenToClipboard = () => {
-        if (token) {
-            navigator.clipboard.writeText(token);
-            alert("הטוקן הועתק! עכשיו הדבק אותו ב-Firebase Console.");
-        }
     };
 
     // Animation variants for smooth collapse/expand
@@ -145,7 +138,7 @@ const NotificationsSection: React.FC = () => {
                                 >
                                     <SegmentedControl
                                         value={notifSettings.taskReminderMinutes.toString()}
-                                        onChange={v => handleUpdate({ taskReminderMinutes: parseInt(v) as any })}
+                                        onChange={v => handleUpdate({ taskReminderMinutes: parseInt(v) as 5 | 15 | 30 | 60 })}
                                         options={[
                                             { label: '5 דק׳', value: '5' },
                                             { label: 'רבע שעה', value: '15' },
@@ -338,17 +331,6 @@ const NotificationsSection: React.FC = () => {
                             </SettingsRow>
                         </SettingsGroupCard>
 
-                        {/* Debug Toggle - Only visible if token exists */}
-                        {token && (
-                            <div className="flex justify-center pt-4 opacity-50 hover:opacity-100 transition-opacity">
-                                <button
-                                    onClick={copyTokenToClipboard}
-                                    className="text-xs flex items-center gap-2 text-white/40 hover:text-white transition-colors"
-                                >
-                                    <span>🔑 העתק מזהה מכשיר (Debug Token)</span>
-                                </button>
-                            </div>
-                        )}
                     </motion.div>
                 )}
             </AnimatePresence>

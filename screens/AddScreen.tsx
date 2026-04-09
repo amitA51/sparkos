@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, memo } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense, useCallback, memo, useMemo } from 'react';
 import type { Screen } from '../types';
 import {
   CheckCircleIcon,
@@ -26,6 +26,7 @@ import TemplateCarousel, { TemplatePreset } from '../components/add/TemplateCaro
 import { AddScreenSkeleton } from '../components/add';
 import { useAISuggestions } from '../hooks/add/useAISuggestions';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSmartDefaults } from '../hooks/useSmartDefaults';
 
 const VoiceInputModal = lazy(() => import('../components/VoiceInputModal'));
 
@@ -76,11 +77,11 @@ const AppleItemCard = memo<AppleItemCardProps>(({ icon, label, onClick, color, b
       damping: 35,
       delay: index * 0.025,
     }}
-    whileHover={{ scale: 1.04, y: -2 }}
-    whileTap={{ scale: 0.94 }}
+    whileHover={{ scale: 1.05, y: -3 }}
+    whileTap={{ scale: 0.93 }}
     className={`
       group relative w-full aspect-square
-      rounded-[20px]
+      rounded-[22px]
       flex flex-col items-center justify-center gap-2.5
       ${isEditing ? 'cursor-grab opacity-60' : 'cursor-pointer'}
     `}
@@ -88,15 +89,16 @@ const AppleItemCard = memo<AppleItemCardProps>(({ icon, label, onClick, color, b
       backgroundColor: bgTint,
       backdropFilter: 'blur(12px)',
       WebkitBackdropFilter: 'blur(12px)',
-      border: '0.5px solid rgba(255, 255, 255, 0.06)',
-      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(255, 255, 255, 0.03) inset',
+      border: '0.5px solid var(--border-subtle)',
+      boxShadow: 'var(--shadow-sm)',
+      transition: 'box-shadow 0.3s ease',
     }}
   >
     {/* Subtle top highlight — glass depth */}
     <div
       className="absolute top-0 left-[20%] right-[20%] h-[0.5px] pointer-events-none"
       style={{
-        background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent)',
+        background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)',
       }}
     />
 
@@ -117,7 +119,7 @@ const AppleItemCard = memo<AppleItemCardProps>(({ icon, label, onClick, color, b
     {/* Label */}
     <span
       className="font-semibold text-[13px] sm:text-sm transition-colors duration-300"
-      style={{ color: 'rgba(255, 255, 255, 0.75)' }}
+      style={{ color: 'var(--text-secondary)' }}
     >
       {label}
     </span>
@@ -130,6 +132,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
   const { settings, updateSettings } = useSettings();
   const { triggerHaptic } = useHaptics();
   const { timeGreeting, motivationalMessage } = useAISuggestions();
+  const { getDefault, saveDefault } = useSmartDefaults({ formKey: 'add-screen' });
 
   const [addScreenLayout, setAddScreenLayout] = useState(settings.addScreenLayout);
   const [selectedType, setSelectedType] = useState<AddableType | null>(null);
@@ -202,8 +205,17 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
     if (data && Object.keys(data).length > 0) {
       sessionStorage.setItem('preselect_add_defaults', JSON.stringify(data));
     }
+    saveDefault('lastType', type);
     setSelectedType(type);
   };
+
+  // Boost last-used item type to second position for faster repeat creation
+  const lastUsedType = getDefault('lastType') as AddableType | '';
+  const sortedLayout = useMemo(() => {
+    if (!lastUsedType || !addScreenLayout.includes(lastUsedType)) return addScreenLayout;
+    const without = addScreenLayout.filter(t => t !== lastUsedType);
+    return [without[0], lastUsedType, ...without.slice(1)];
+  }, [addScreenLayout, lastUsedType]);
 
   const handleCloseForm = () => {
     setSelectedType(null);
@@ -244,12 +256,12 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
               className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
               style={{
                 background: isEditing
-                  ? 'rgba(255, 255, 255, 0.95)'
-                  : 'rgba(255, 255, 255, 0.06)',
+                  ? 'var(--text-primary)'
+                  : 'var(--gray-50)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                border: '0.5px solid rgba(255, 255, 255, 0.08)',
-                color: isEditing ? '#000' : 'rgba(255, 255, 255, 0.5)',
+                border: '0.5px solid var(--border-subtle)',
+                color: isEditing ? 'var(--bg-primary)' : 'var(--text-muted)',
               }}
             >
               {isEditing ? <CloseIcon className="w-4.5 h-4.5" /> : <EditIcon className="w-4.5 h-4.5" />}
@@ -257,7 +269,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
 
             <span
               className="text-sm font-medium"
-              style={{ color: 'rgba(255, 255, 255, 0.35)', letterSpacing: '0.01em' }}
+              style={{ color: 'var(--text-muted)', letterSpacing: '0.01em' }}
             >
               {timeGreeting}
             </span>
@@ -275,14 +287,14 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                 transition={{ duration: 0.3 }}
               >
                 <h1
-                  className="text-[34px] sm:text-[40px] font-bold text-white mb-1.5"
-                  style={{ letterSpacing: '-0.02em', lineHeight: 1.15 }}
+                  className="text-[34px] sm:text-[40px] font-bold mb-1.5"
+                  style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.15 }}
                 >
                   יצירה חדשה
                 </h1>
                 <p
                   className="text-[15px] max-w-[280px] mx-auto leading-relaxed"
-                  style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+                  style={{ color: 'var(--text-muted)' }}
                 >
                   {motivationalMessage}
                 </p>
@@ -315,7 +327,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
               {isEditing && (
                 <p
                   className="text-center text-[13px] mb-4"
-                  style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+                  style={{ color: 'var(--text-muted)' }}
                 >
                   גרור כדי לסדר מחדש
                 </p>
@@ -326,7 +338,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                 onDrop={handleDrop}
                 onDragOver={e => e.preventDefault()}
               >
-                {addScreenLayout.map((type, index) => {
+                {(isEditing ? addScreenLayout : sortedLayout).map((type, index) => {
                   const item = allItemTypes.find(it => it.type === type);
                   if (!item) return null;
 
@@ -383,9 +395,9 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                     onClick={() => setShowHiddenOptions(!showHiddenOptions)}
                     className="w-full px-5 py-3 rounded-2xl font-medium text-[14px] transition-all duration-300 flex items-center justify-center gap-2"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      border: '0.5px solid rgba(255, 255, 255, 0.06)',
-                      color: 'rgba(255, 255, 255, 0.5)',
+                      background: 'var(--gray-50)',
+                      border: '0.5px solid var(--border-subtle)',
+                      color: 'var(--text-secondary)',
                       backdropFilter: 'blur(12px)',
                     }}
                   >
@@ -405,14 +417,14 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                           <div
                             className="p-4 rounded-2xl"
                             style={{
-                              background: 'rgba(255, 255, 255, 0.03)',
-                              border: '0.5px solid rgba(255, 255, 255, 0.06)',
+                              background: 'var(--gray-50)',
+                              border: '0.5px solid var(--border-subtle)',
                               backdropFilter: 'blur(16px)',
                             }}
                           >
                             <p
                               className="text-[13px] mb-4 text-center"
-                              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+                              style={{ color: 'var(--text-muted)' }}
                             >
                               לחץ על פריט כדי להוסיף אותו בחזרה
                             </p>
@@ -426,8 +438,8 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                                   className="flex flex-col items-center gap-2 p-3 rounded-[14px] transition-all duration-300"
                                   style={{
                                     color: item.color,
-                                    background: 'rgba(255, 255, 255, 0.03)',
-                                    border: '0.5px solid rgba(255, 255, 255, 0.06)',
+                                    background: 'var(--gray-50)',
+                                    border: '0.5px solid var(--border-subtle)',
                                   }}
                                 >
                                   <div className="w-8 h-8 flex items-center justify-center">
@@ -435,10 +447,11 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                                       ? React.cloneElement(item.icon, { className: 'w-6 h-6' })
                                       : item.icon}
                                   </div>
-                                  <span className="text-[11px] font-medium" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                  <span className="text-[11px] font-medium" style={{ color: 'var(--text-secondary)' }}>
                                     {item.label}
                                   </span>
-                                  <span className="text-[10px]" style={{ color: '#34D399' }}>+ הוסף</span>
+                                  <span className="text-[10px]" style={{ color: 'var(--success)' }}>+ הוסף</span>
+                                  // CLEANED
                                 </motion.button>
                               ))}
                             </div>
@@ -447,11 +460,11 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                           <div
                             className="p-4 rounded-2xl text-center"
                             style={{
-                              background: 'rgba(255, 255, 255, 0.03)',
-                              border: '0.5px solid rgba(255, 255, 255, 0.06)',
+                              background: 'var(--gray-50)',
+                              border: '0.5px solid var(--border-subtle)',
                             }}
                           >
-                            <p className="text-[13px]" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
+                            <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
                               ✨ כל האפשרויות מוצגות
                             </p>
                           </div>
@@ -479,7 +492,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
               <div
                 className="mx-auto w-[60%] h-[0.5px] mb-5"
                 style={{
-                  background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent)',
+                  background: 'linear-gradient(to right, transparent, var(--border-subtle), transparent)',
                 }}
               />
 
@@ -489,7 +502,7 @@ const AddScreen: React.FC<AddScreenProps> = ({ setActiveScreen }) => {
                   updateSettings({ hideQuickTemplates: !settings.hideQuickTemplates });
                 }}
                 className="w-full flex items-center justify-center gap-2 py-2.5 transition-colors duration-300"
-                style={{ color: 'rgba(255, 255, 255, 0.25)' }}
+                style={{ color: 'var(--text-muted)' }}
               >
                 <span className="text-[11px] uppercase tracking-[0.08em] font-semibold">
                   תבניות מהירות

@@ -43,7 +43,7 @@ const AlternativesSheet = memo<AlternativesSheetProps>(({ isOpen, alternatives, 
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed bottom-0 left-0 right-0 bg-[#1C1C1E] rounded-t-3xl border-t border-white/10 pb-safe max-h-[70vh] flex flex-col"
+                className="fixed bottom-0 left-0 right-0 bg-[var(--bg-secondary)] rounded-t-3xl border-t border-white/10 pb-safe max-h-[70vh] flex flex-col"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Handle */}
@@ -76,8 +76,8 @@ const AlternativesSheet = memo<AlternativesSheetProps>(({ isOpen, alternatives, 
                                 "
                             >
                                 {/* Number */}
-                                <div className="w-8 h-8 rounded-full bg-[#30D158]/10 border border-[#30D158]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#30D158]/20 transition-colors">
-                                    <span className="text-xs font-bold text-[#30D158]">{idx + 1}</span>
+                                <div className="w-8 h-8 rounded-full bg-[var(--success)]/10 border border-[var(--success)]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--success)]/20 transition-colors">
+                                    <span className="text-xs font-bold text-[var(--success)]">{idx + 1}</span>
                                 </div>
 
                                 {/* Name */}
@@ -87,7 +87,7 @@ const AlternativesSheet = memo<AlternativesSheetProps>(({ isOpen, alternatives, 
 
                                 {/* Arrow */}
                                 {onSelect && (
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/20 group-hover:text-[#30D158] transition-colors flex-shrink-0">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/20 group-hover:text-[var(--success)] transition-colors flex-shrink-0">
                                         <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 )}

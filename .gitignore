@@ -9,7 +9,9 @@ lerna-debug.log*
 
 node_modules
 dist
+dev-dist
 dist-ssr
+stats.html
 *.local
 
 # Environment files (contain API keys)
@@ -23,6 +25,7 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+.firebase
 *.suo
 *.ntvs*
 *.njsproj

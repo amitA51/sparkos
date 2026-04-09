@@ -1,0 +1,629 @@
+/**
+ * ===========================================================================
+ * SPARKOS DESIGN SYSTEM - DESIGN TOKENS
+ * Single source of truth for all design variables.
+ * Default: iOS Light Mode (white background).
+ * Dark themes override via [data-theme] selectors in themes.css.
+ * ===========================================================================
+ */
+
+:root {
+  /* =================================================================
+     COLOR SYSTEM - iOS Semantic Colors
+     ================================================================= */
+
+  /* iOS Primary Colors */
+  --color-ios-blue: #007AFF;
+  --color-ios-green: #34C759;
+  --color-ios-red: #FF3B30;
+  --color-ios-orange: #FF9500;
+  --color-ios-yellow: #FFCC00;
+  --color-ios-teal: #5AC8FA;
+  --color-ios-purple: #AF52DE;
+  --color-ios-indigo: #5856D6;
+  --color-ios-pink: #FF2D55;
+
+  /* Base Colors - Deep Space Palette (used by dark themes) */
+  --color-cosmos-black: #F2F2F7;
+  --color-cosmos-void: #F2F2F7;
+  --color-cosmos-depth: #FFFFFF;
+  --color-cosmos-surface: #FFFFFF;
+
+  /* Accent System */
+  --color-accent-cyan: #007AFF;
+  --color-accent-violet: #5856D6;
+  --color-accent-magenta: #FF2D55;
+  --color-accent-gold: #FF9500;
+
+  /* Neutrals - iOS Light Mode (opacity layers on black) */
+  --color-white: #FFFFFF;
+  --color-gray-50: rgba(0, 0, 0, 0.02);
+  --color-gray-100: rgba(0, 0, 0, 0.04);
+  --color-gray-150: rgba(0, 0, 0, 0.06);
+  --color-gray-200: rgba(0, 0, 0, 0.08);
+  --color-gray-300: rgba(0, 0, 0, 0.12);
+  --color-gray-400: rgba(0, 0, 0, 0.18);
+  --color-gray-500: rgba(0, 0, 0, 0.25);
+  --color-gray-600: rgba(60, 60, 67, 0.6);
+  --color-gray-700: rgba(60, 60, 67, 0.7);
+  --color-gray-800: rgba(60, 60, 67, 0.8);
+  --color-gray-900: rgba(0, 0, 0, 0.9);
+
+  /* Semantic Colors */
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-error: #FF3B30;
+  --color-info: #007AFF;
+
+  /* Surface Colors - iOS Light */
+  --color-surface-glass: rgba(255, 255, 255, 0.80);
+  --color-surface-hover: rgba(0, 0, 0, 0.04);
+  --color-surface-pressed: rgba(0, 0, 0, 0.06);
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+
+  /* Accent-tinted surfaces - iOS Light */
+  --color-accent-surface-cyan: rgba(0, 122, 255, 0.06);
+  --color-accent-surface-violet: rgba(88, 86, 214, 0.06);
+  --color-accent-surface-magenta: rgba(255, 45, 85, 0.06);
+  --color-accent-surface-gold: rgba(255, 149, 0, 0.06);
+  --color-accent-surface-success: rgba(52, 199, 89, 0.06);
+  --color-accent-surface-error: rgba(255, 59, 48, 0.06);
+
+  /* Theme palette atoms (used by dark physics themes) */
+  --color-obsidian-void: #F2F2F7;
+  --color-obsidian-depth: #FFFFFF;
+  --color-obsidian-glass: rgba(255, 255, 255, 0.92);
+  --color-oled-black: #000000;
+  --color-matrix-green: #00FF41;
+  --color-cyber-yellow: #FCEE0A;
+  --color-titanium-white: #FFFFFF;
+  --color-titanium-grey: #E5E5E5;
+
+  /* =================================================================
+     TYPOGRAPHY SYSTEM - SF Pro Font Stack
+     ================================================================= */
+
+  /* Font Families */
+  --font-body: 'Satoshi', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  --font-heading: 'Clash Display', system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Type Scale - Major Third (1.250) */
+  --font-size-xs: 0.64rem;    /* ~10px */
+  --font-size-sm: 0.8rem;     /* ~13px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem;   /* 18px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.563rem;   /* 25px */
+  --font-size-2xl: 1.953rem;  /* ~31px */
+  --font-size-3xl: 2.441rem;  /* ~39px */
+  --font-size-4xl: 3.052rem;  /* ~49px */
+  --font-size-5xl: 3.815rem;  /* ~61px */
+  --font-size-6xl: 4.768rem;  /* ~76px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+  --letter-spacing-wider: 0.05em;
+
+  /* =================================================================
+     SPACING SYSTEM - 8px Grid (iOS standard)
+     ================================================================= */
+
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-9: 2.25rem;   /* 36px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-14: 3.5rem;   /* 56px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* Semantic Spacing Aliases */
+  --gap-tight: var(--space-2);       /* 8px */
+  --gap-base: var(--space-4);        /* 16px */
+  --gap-comfortable: var(--space-6); /* 24px */
+  --gap-section: var(--space-8);     /* 32px */
+  --gap-screen: var(--space-5);      /* 20px */
+  --padding-card: var(--space-5);    /* 20px */
+
+  /* =================================================================
+     MOTION SYSTEM - iOS Spring Physics
+     ================================================================= */
+
+  /* Easing Functions */
+  --ease-spring-stiff: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring-soft: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-spring-gentle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Duration Scale */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+  --duration-slowest: 800ms;
+
+  /* =================================================================
+     ELEVATION & SHADOWS - iOS Light Mode
+     ================================================================= */
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
+  --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.15);
+
+  /* Glow Shadows (used by accent elements) */
+  --shadow-glow-cyan: 0 0 20px rgba(0, 122, 255, 0.25);
+  --shadow-glow-cyan-strong: 0 0 30px rgba(0, 122, 255, 0.4);
+  --shadow-glow-violet: 0 0 20px rgba(88, 86, 214, 0.25);
+  --shadow-glow-magenta: 0 0 20px rgba(255, 45, 85, 0.25);
+
+  /* Inner Shadows */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-inner-strong: inset 0 4px 8px rgba(0, 0, 0, 0.08);
+
+  /* =================================================================
+     BORDERS & RADIUS - iOS Rounded Rectangles
+     ================================================================= */
+
+  /* Border Widths */
+  --border-width-hairline: 0.5px;
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 3px;
+
+  /* Border Radius - iOS consistent */
+  --radius-none: 0;
+  --radius-sm: 8px;
+  --radius-md: 12px;     /* Buttons */
+  --radius-lg: 16px;     /* Cards */
+  --radius-xl: 20px;     /* Modals */
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
+  --radius-full: 9999px;
+
+  /* Semantic Radius Aliases */
+  --radius-button: var(--radius-xl);   /* 20px */
+  --radius-card: var(--radius-2xl);    /* 24px */
+  --radius-modal: var(--radius-3xl);   /* 28px */
+  --radius-pill: var(--radius-full);   /* 9999px */
+
+  /* =================================================================
+     BACKDROP BLUR
+     ================================================================= */
+
+  --blur-none: 0;
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+  --blur-xl: 32px;
+  --blur-2xl: 40px;
+  --blur-3xl: 48px;
+
+  /* =================================================================
+     Z-INDEX LAYERS
+     ================================================================= */
+
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+
+  /* =================================================================
+     MOBILE VIEWPORT SYSTEM
+     ================================================================= */
+
+  /* Navigation dimensions */
+  --nav-height: 88px;
+  --nav-bottom-offset: 24px;
+  --nav-total-height: calc(var(--nav-height) + var(--nav-bottom-offset));
+  --content-bottom-spacing: calc(var(--nav-total-height) + env(safe-area-inset-bottom, 0px));
+
+  /* Mobile-first gutters */
+  --mobile-gutter: 0.75rem;   /* 12px */
+  --tablet-gutter: 1rem;      /* 16px */
+  --desktop-gutter: 1.5rem;   /* 24px */
+
+  /* Touch targets (Android/iOS standard) */
+  --touch-target-min: 48px;
+  --touch-target-comfortable: 56px;
+
+  /* =================================================================
+     QUIET LUXURY SURFACES - iOS Light
+     ================================================================= */
+
+  --ql-surface-base: rgba(255, 255, 255, 0.80);
+  --ql-surface-subtle: rgba(255, 255, 255, 0.90);
+  --ql-surface-elevated: rgba(255, 255, 255, 0.95);
+  --ql-surface-overlay: rgba(255, 255, 255, 0.98);
+
+  /* Quiet Luxury Borders */
+  --ql-border-invisible: rgba(0, 0, 0, 0.02);
+  --ql-border-subtle: rgba(0, 0, 0, 0.06);
+  --ql-border-default: rgba(0, 0, 0, 0.08);
+  --ql-border-emphasized: rgba(0, 0, 0, 0.12);
+
+  /* Quiet Luxury Spacing */
+  --ql-space-xs: 0.375rem;  /* 6px */
+  --ql-space-sm: 0.75rem;   /* 12px */
+  --ql-space-md: 1.25rem;   /* 20px */
+  --ql-space-lg: 2rem;      /* 32px */
+  --ql-space-xl: 3rem;      /* 48px */
+  --ql-space-2xl: 4.5rem;   /* 72px */
+
+  /* Quiet Luxury Shadows */
+  --ql-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --ql-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --ql-shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --ql-shadow-heavy: 0 16px 48px rgba(0, 0, 0, 0.10);
+
+  /* Quiet Luxury Motion */
+  --ql-ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  --ql-duration-quick: 0.15s;
+  --ql-duration-smooth: 0.3s;
+  --ql-duration-gentle: 0.5s;
+
+  /* Quiet Luxury Blur */
+  --ql-blur-light: 8px;
+  --ql-blur-medium: 16px;
+  --ql-blur-heavy: 32px;
+  --ql-blur-extreme: 48px;
+
+  /* =================================================================
+     SEMANTIC VARIABLE ALIASES (theme-switchable)
+     Light theme defaults. Dark overrides in [data-theme="dark"].
+     ================================================================= */
+
+  --bg-primary: #F2F2F7;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E5E5EA;
+  --bg-card: #FFFFFF;
+  --bg-app-rgb: 242, 242, 247;
+  --bg-nav: rgba(249, 249, 249, 0.94);
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --text-primary: #000000;
+  --text-secondary: rgba(60, 60, 67, 0.6);
+  --text-muted: rgba(60, 60, 67, 0.3);
+  --text-on-accent: #FFFFFF;
+  --dynamic-accent-start: #007AFF;
+  --dynamic-accent-end: #5856D6;
+  --dynamic-accent-glow: rgba(0, 122, 255, 0.25);
+  --dynamic-accent-color: rgba(0, 122, 255, 0.08);
+  --dynamic-accent-rgb: 0, 122, 255;
+  --accent-gradient: linear-gradient(135deg, #007AFF, #5856D6);
+  --accent-rgb: 0, 122, 255;
+  --border-primary: rgba(0, 0, 0, 0.06);
+  --border-separator: rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --danger: var(--color-error);
+
+  /* Legacy variable aliases (backward compat for workout/cosmos modules) */
+  --cosmos-accent-primary: var(--dynamic-accent-start);
+  --cosmos-accent-secondary: var(--dynamic-accent-end);
+  --cosmos-accent-cyan: var(--color-accent-cyan);
+  --cosmos-bg-primary: var(--bg-primary);
+  --cosmos-text-primary: var(--text-primary);
+  --cosmos-text-secondary: var(--text-secondary);
+  --cosmos-text-muted: var(--text-muted);
+
+  /* Legacy easing aliases */
+  --fi-cubic-bezier: var(--ease-spring-soft);
+  --ease-spring: var(--ease-spring-soft);
+
+  /* =================================================================
+     SEARCH TOKENS - iOS Light
+     ================================================================= */
+
+  --search-bar-bg: rgba(0, 0, 0, 0.04);
+  --search-bar-bg-focus: rgba(0, 0, 0, 0.06);
+  --search-bar-border: rgba(0, 0, 0, 0.06);
+  --search-bar-border-focus: rgba(0, 122, 255, 0.4);
+  --search-bar-glow: 0 0 20px rgba(0, 122, 255, 0.08);
+  --search-bar-glow-focus: 0 0 30px rgba(0, 122, 255, 0.15);
+  --search-result-bg: rgba(0, 0, 0, 0.02);
+  --search-result-border: rgba(0, 0, 0, 0.06);
+
+  /* =================================================================
+     INVESTMENT MODULE TOKENS
+     ================================================================= */
+
+  --inv-surface-base: rgba(15, 15, 20, 0.95);
+  --inv-surface-card: rgba(28, 28, 35, 0.85);
+  --inv-surface-elevated: rgba(38, 38, 48, 0.9);
+  --inv-surface-overlay: rgba(255, 255, 255, 0.03);
+  --inv-border-subtle: rgba(255, 255, 255, 0.06);
+  --inv-border-default: rgba(255, 255, 255, 0.1);
+  --inv-border-strong: rgba(255, 255, 255, 0.15);
+  --inv-positive: #34C759;
+  --inv-positive-bg: rgba(52, 199, 89, 0.12);
+  --inv-positive-glow: rgba(52, 199, 89, 0.4);
+  --inv-negative: #FF3B30;
+  --inv-negative-bg: rgba(255, 59, 48, 0.12);
+  --inv-negative-glow: rgba(255, 59, 48, 0.4);
+  --inv-neutral: rgba(255, 255, 255, 0.6);
+  --inv-accent-primary: #007AFF;
+  --inv-accent-secondary: #5856D6;
+  --inv-accent-gold: #FFD60A;
+  --inv-hero-gradient: linear-gradient(180deg, rgba(0, 122, 255, 0.08) 0%, rgba(88, 86, 214, 0.05) 50%, transparent 100%);
+  --inv-card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --inv-ticker-gradient: linear-gradient(90deg, var(--inv-surface-base) 0%, transparent 5%, transparent 95%, var(--inv-surface-base) 100%);
+  --inv-hot-gradient: linear-gradient(135deg, rgba(255, 149, 0, 0.2) 0%, rgba(255, 59, 48, 0.15) 100%);
+  --inv-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --inv-shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --inv-shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.5), 0 24px 48px rgba(0, 0, 0, 0.3);
+  --inv-shadow-glow-positive: 0 0 20px var(--inv-positive-glow), 0 0 40px rgba(52, 199, 89, 0.2);
+  --inv-shadow-glow-negative: 0 0 20px var(--inv-negative-glow), 0 0 40px rgba(255, 59, 48, 0.2);
+  --inv-font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  --inv-font-text: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  --inv-font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --inv-ease-spring: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --inv-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --inv-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --inv-duration-fast: 150ms;
+  --inv-duration-normal: 250ms;
+  --inv-duration-slow: 400ms;
+  --inv-blur-card: 24px;
+  --inv-blur-modal: 40px;
+  --inv-blur-light: 12px;
+
+  /* =================================================================
+     ANIMATION DENSITY SYSTEM
+     ================================================================= */
+
+  --anim-duration: 300ms;
+  --anim-scale: 1.05;
+  --anim-translate: 4px;
+  --anim-blur: 8px;
+  --transition-speed: 200ms;
+
+  /* UI Density */
+  --spacing: 1rem;
+  --card-padding: 1.25rem;
+  --item-height: 3rem;
+  --gap: 1rem;
+
+  /* =================================================================
+     THEME SYSTEM - Light Mode Default
+     ================================================================= */
+
+  --bg-app: #F2F2F7;
+  --surface-glass: rgba(255, 255, 255, 0.92);
+  --glass-blur: 40px;
+  --glass-saturate: 180%;
+  --glass-border: rgba(0, 0, 0, 0.04);
+  --glass-inner-glow: inset 0 0.5px 0 0 rgba(255, 255, 255, 1);
+  --glass-background: rgba(255, 255, 255, 0.88);
+  --radius-primary: 20px;
+
+  /* Buttons - iOS Light */
+  --btn-primary-bg: #007AFF;
+  --btn-primary-text: #FFFFFF;
+
+  color-scheme: light;
+}
+
+/* =================================================================
+   DARK THEME - All dark overrides in one place
+   ================================================================= */
+
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: #000000;
+  --bg-secondary: #1C1C1E;
+  --bg-tertiary: #2C2C2E;
+  --bg-card: #1C1C1E;
+  --bg-app-rgb: 0, 0, 0;
+  --bg-nav: rgba(18, 18, 18, 0.94);
+  --bg-glass: rgba(30, 30, 30, 0.7);
+  --bg-app: #000000;
+
+  /* Text */
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(235, 235, 245, 0.6);
+  --text-muted: rgba(235, 235, 245, 0.3);
+  --text-on-accent: #FFFFFF;
+
+  /* Borders */
+  --border-primary: rgba(255, 255, 255, 0.10);
+  --border-separator: rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Surfaces */
+  --surface-glass: rgba(44, 44, 46, 0.80);
+  --glass-blur: 25px;
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-inner-glow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --glass-background: rgba(28, 28, 30, 0.85);
+  --color-surface-glass: rgba(44, 44, 46, 0.80);
+  --color-surface-hover: rgba(255, 255, 255, 0.06);
+  --color-surface-pressed: rgba(255, 255, 255, 0.04);
+
+  /* Neutrals (opacity on white) */
+  --color-gray-50: rgba(255, 255, 255, 0.03);
+  --color-gray-100: rgba(255, 255, 255, 0.05);
+  --color-gray-150: rgba(255, 255, 255, 0.08);
+  --color-gray-200: rgba(255, 255, 255, 0.10);
+  --color-gray-300: rgba(255, 255, 255, 0.15);
+  --color-gray-400: rgba(255, 255, 255, 0.20);
+  --color-gray-500: rgba(255, 255, 255, 0.30);
+  --color-gray-600: rgba(235, 235, 245, 0.6);
+  --color-gray-700: rgba(235, 235, 245, 0.7);
+  --color-gray-800: rgba(235, 235, 245, 0.8);
+  --color-gray-900: rgba(255, 255, 255, 0.92);
+
+  /* Semantic Colors (iOS dark) */
+  --color-success: #30D158;
+  --color-warning: #FF9F0A;
+  --color-error: #FF453A;
+  --color-info: #0A84FF;
+
+  /* Accent */
+  --dynamic-accent-start: #0A84FF;
+  --dynamic-accent-end: #5E5CE6;
+  --dynamic-accent-glow: rgba(10, 132, 255, 0.35);
+  --dynamic-accent-color: rgba(10, 132, 255, 0.10);
+  --dynamic-accent-rgb: 10, 132, 255;
+  --accent-gradient: linear-gradient(135deg, #0A84FF, #5E5CE6);
+
+  /* Accent Surfaces */
+  --color-accent-surface-cyan: rgba(10, 132, 255, 0.10);
+  --color-accent-surface-violet: rgba(94, 92, 230, 0.10);
+  --color-accent-surface-magenta: rgba(255, 45, 85, 0.10);
+  --color-accent-surface-gold: rgba(255, 159, 10, 0.10);
+  --color-accent-surface-success: rgba(48, 209, 88, 0.10);
+  --color-accent-surface-error: rgba(255, 69, 58, 0.10);
+
+  /* Shadows (deeper) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.65);
+  --shadow-3xl: 0 32px 64px rgba(0, 0, 0, 0.70);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Quiet Luxury Surfaces */
+  --ql-surface-base: rgba(28, 28, 30, 0.80);
+  --ql-surface-subtle: rgba(44, 44, 46, 0.80);
+  --ql-surface-elevated: rgba(58, 58, 60, 0.80);
+  --ql-surface-overlay: rgba(72, 72, 74, 0.80);
+  --ql-border-invisible: rgba(255, 255, 255, 0.03);
+  --ql-border-subtle: rgba(255, 255, 255, 0.06);
+  --ql-border-default: rgba(255, 255, 255, 0.08);
+  --ql-border-emphasized: rgba(255, 255, 255, 0.12);
+  --ql-shadow-subtle: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --ql-shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --ql-shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.50);
+  --ql-shadow-heavy: 0 16px 48px rgba(0, 0, 0, 0.55);
+
+  /* Cosmos palette overrides */
+  --color-cosmos-black: #000000;
+  --color-cosmos-void: #000000;
+  --color-cosmos-depth: #1C1C1E;
+  --color-cosmos-surface: #2C2C2E;
+
+  /* Buttons */
+  --btn-primary-bg: #0A84FF;
+  --btn-primary-text: #FFFFFF;
+
+  /* Search Tokens */
+  --search-bar-bg: rgba(255, 255, 255, 0.06);
+  --search-bar-bg-focus: rgba(255, 255, 255, 0.08);
+  --search-bar-border: rgba(255, 255, 255, 0.08);
+  --search-bar-border-focus: rgba(10, 132, 255, 0.5);
+  --search-bar-glow: 0 0 20px rgba(10, 132, 255, 0.10);
+  --search-bar-glow-focus: 0 0 30px rgba(10, 132, 255, 0.20);
+  --search-result-bg: rgba(255, 255, 255, 0.04);
+  --search-result-border: rgba(255, 255, 255, 0.08);
+
+  /* Glow Shadows */
+  --shadow-glow-cyan: 0 0 20px rgba(10, 132, 255, 0.4);
+  --shadow-glow-cyan-strong: 0 0 30px rgba(10, 132, 255, 0.6);
+  --shadow-glow-violet: 0 0 20px rgba(94, 92, 230, 0.4);
+  --shadow-glow-magenta: 0 0 20px rgba(255, 45, 85, 0.4);
+
+  color-scheme: dark;
+}
+
+/* =================================================================
+   ANIMATION DENSITY OVERRIDES
+   ================================================================= */
+
+body[data-animation="off"] {
+  --anim-duration: 0ms;
+  --anim-scale: 1;
+  --anim-translate: 0px;
+  --anim-blur: 0px;
+  --transition-speed: 0ms;
+}
+
+body[data-animation="off"] * {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+}
+
+body[data-animation="subtle"] {
+  --anim-duration: 150ms;
+  --anim-scale: 1.02;
+  --anim-translate: 2px;
+  --anim-blur: 4px;
+  --transition-speed: 120ms;
+}
+
+body[data-animation="default"] {
+  --anim-duration: 300ms;
+  --anim-scale: 1.05;
+  --anim-translate: 4px;
+  --anim-blur: 8px;
+  --transition-speed: 200ms;
+}
+
+body[data-animation="full"] {
+  --anim-duration: 500ms;
+  --anim-scale: 1.1;
+  --anim-translate: 8px;
+  --anim-blur: 12px;
+  --transition-speed: 300ms;
+}
+
+/* =================================================================
+   UI DENSITY OVERRIDES
+   ================================================================= */
+
+body[data-density="compact"] {
+  --spacing: 0.5rem;
+  --card-padding: 0.75rem;
+  --item-height: 2.5rem;
+  --gap: 0.5rem;
+}
+
+body[data-density="comfortable"] {
+  --spacing: 1rem;
+  --card-padding: 1.25rem;
+  --item-height: 3rem;
+  --gap: 1rem;
+}
+
+body[data-density="spacious"] {
+  --spacing: 1.5rem;
+  --card-padding: 2rem;
+  --item-height: 4rem;
+  --gap: 1.5rem;
+}

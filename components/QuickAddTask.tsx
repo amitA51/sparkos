@@ -1,3 +1,4 @@
+// CLEANED - CSS vars fixed
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircleIcon, FlameIcon, MicrophoneIcon, StopIcon } from './icons';
@@ -6,6 +7,7 @@ import { useData } from '../src/contexts/DataContext';
 import { useHaptics } from '../hooks/useHaptics';
 import { useSettings } from '../src/contexts/SettingsContext';
 import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
+import { useSmartDefaults } from '../hooks/useSmartDefaults';
 import { toDateKey } from '../utils/dateUtils';
 
 interface QuickAddProps {
@@ -18,6 +20,7 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
   const { addPersonalItem } = useData();
   const { triggerHaptic } = useHaptics();
   const { settings } = useSettings();
+  const { getDefault, saveDefault } = useSmartDefaults({ formKey: 'quick-add' });
   const [title, setTitle] = useState('');
 
   // Calculate day offset from today for the defaultDate
@@ -34,7 +37,10 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
   }, []);
 
   const [selectedDay, setSelectedDay] = useState<number>(() => getDefaultDayOffset(defaultDate));
-  const [itemType, setItemType] = useState<'task' | 'habit'>('task');
+  const [itemType, setItemType] = useState<'task' | 'habit'>(() => {
+    const saved = getDefault('quickAddType', 'task');
+    return saved === 'habit' ? 'habit' : 'task';
+  });
   const [showDayPicker, setShowDayPicker] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isSaving, setIsSaving] = useState(false); // Track save in progress to prevent double-submit
@@ -62,9 +68,7 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
       });
       triggerHaptic('light');
     },
-    onError: (_errorMessage) => {
-      // toast.error(errorMessage);
-    },
+    onError: () => {},
   });
 
   const weekDays = Array.from({ length: 7 }, (_, i) => {
@@ -150,32 +154,33 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
 
       {/* Main Input Capsule */}
       <motion.div
-        className={`
-          relative flex items-center p-1.5 pl-2 rounded-[28px] border transition-all duration-400
-          ${isFocused
-            ? 'bg-[#1C1C1E] border-[var(--dynamic-accent-start)]/20 shadow-[0_0_20px_-6px_var(--dynamic-accent-glow)]'
-            : 'bg-[#1C1C1E]/60 border-white/[0.05] hover:bg-[#1C1C1E] hover:border-white/[0.08]'
-          }
-        `}
+        className="relative flex items-center p-1.5 pl-2 rounded-[28px] border transition-all duration-400"
+        style={{
+          background: isFocused ? 'var(--bg-card)' : 'var(--surface-hover, var(--bg-card))',
+          borderColor: isFocused ? 'var(--dynamic-accent-start, var(--border-strong))' : 'var(--border-subtle)',
+          boxShadow: isFocused ? '0 0 20px -6px var(--dynamic-accent-glow, rgba(0,122,255,0.2))' : 'var(--shadow-sm)',
+        }}
         layout
       >
         {/* Type Switcher - Segmented Control Style */}
-        <div className="flex bg-white/5 rounded-[20px] p-1 mr-1">
+        <div className="flex rounded-[20px] p-1 mr-1" style={{ background: 'var(--gray-100)' }}>
           <button
-            onClick={() => { setItemType('task'); triggerHaptic('light'); }}
-            className={`p-2.5 rounded-[16px] transition-all duration-300 ${itemType === 'task'
-              ? 'bg-white/10 text-accent-cyan shadow-sm'
-              : 'text-white/20 hover:text-white/40'
-              }`}
+            onClick={() => { setItemType('task'); saveDefault('quickAddType', 'task'); triggerHaptic('light'); }}
+            className="p-2.5 rounded-[16px] transition-all duration-300"
+            style={{
+              background: itemType === 'task' ? 'var(--gray-200)' : 'transparent',
+              color: itemType === 'task' ? 'var(--dynamic-accent-start, var(--accent))' : 'var(--text-muted)',
+            }}
           >
             <CheckCircleIcon className="w-5 h-5" />
           </button>
           <button
-            onClick={() => { setItemType('habit'); triggerHaptic('light'); }}
-            className={`p-2.5 rounded-[16px] transition-all duration-300 ${itemType === 'habit'
-              ? 'bg-white/10 text-orange-400 shadow-sm'
-              : 'text-white/20 hover:text-white/40'
-              }`}
+            onClick={() => { setItemType('habit'); saveDefault('quickAddType', 'habit'); triggerHaptic('light'); }}
+            className="p-2.5 rounded-[16px] transition-all duration-300"
+            style={{
+              background: itemType === 'habit' ? 'var(--gray-200)' : 'transparent',
+              color: itemType === 'habit' ? 'var(--warning)' : 'var(--text-muted)',
+            }}
           >
             <FlameIcon className="w-5 h-5" />
           </button>
@@ -188,23 +193,40 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
           onChange={e => setTitle(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => !title && setIsFocused(false), 200)}
-          onKeyPress={e => e.key === 'Enter' && handleAdd()}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleAdd();
+            if (e.key === 'Escape') { setTitle(''); setIsFocused(false); (e.target as HTMLInputElement).blur(); }
+          }}
           placeholder={itemType === 'task' ? 'משימה חדשה...' : 'הרגל חדש...'}
-          className="flex-1 bg-transparent text-white placeholder:text-white/20 px-3 py-3 text-[17px] leading-relaxed focus:outline-none font-medium"
+          className="flex-1 bg-transparent px-3 py-3 text-[17px] leading-relaxed focus:outline-none font-medium"
+          style={{ color: 'var(--text-primary)', }}
         />
+
+        {/* Keyboard Hint - shown when input has text */}
+        <AnimatePresence>
+          {title.trim() && isFocused && (
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono shrink-0"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--gray-100)', border: '1px solid var(--border-subtle)', color: 'var(--text-muted)' }}>Enter</kbd>
+            </motion.span>
+          )}
+        </AnimatePresence>
 
         {/* Right Actions */}
         <div className="flex items-center gap-1">
           {itemType === 'task' && (
             <button
               onClick={() => { setShowDayPicker(!showDayPicker); triggerHaptic('light'); }}
-              className={`
-                h-10 px-3 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all
-                ${selectedDay === 0
-                  ? 'bg-transparent text-white/30 hover:bg-white/5 hover:text-white/60'
-                  : 'bg-accent-cyan/10 text-accent-cyan'
-                }
-              `}
+              className="h-10 px-3 rounded-full flex items-center gap-1.5 text-xs font-bold transition-all"
+              style={{
+                background: selectedDay === 0 ? 'transparent' : 'var(--color-accent-surface-cyan, rgba(0,122,255,0.08))',
+                    color: selectedDay === 0 ? 'var(--text-muted)' : 'var(--dynamic-accent-start, var(--accent))',
+              }}
             >
               {selectedDay === 0 ? 'היום' : weekDays[selectedDay]?.label}
             </button>
@@ -217,7 +239,12 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
               whileTap={{ scale: 0.9 }}
               onClick={handleAdd}
               disabled={isSaving}
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--dynamic-accent-start)] to-[var(--dynamic-accent-end)] text-white flex items-center justify-center shadow-[0_0_15px_-3px_var(--dynamic-accent-glow)] disabled:opacity-50 transition-shadow duration-300"
+              className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-50 transition-shadow duration-300"
+              style={{
+                background: 'linear-gradient(135deg, var(--dynamic-accent-start, var(--accent)), var(--dynamic-accent-end, var(--subscore-purple)))',
+                color: 'var(--white)',
+                boxShadow: '0 0 15px -3px var(--dynamic-accent-glow, rgba(0,122,255,0.3))',
+              }}
             >
               {isSaving ? <LoadingSpinner className="w-4 h-4 text-white" /> : <span className="text-xl leading-none mb-0.5">↑</span>}
             </motion.button>
@@ -225,10 +252,12 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={handleVoiceInput}
-              className={`
-                w-10 h-10 rounded-full flex items-center justify-center transition-all
-                ${isListening ? 'bg-red-500/90 text-white shadow-[0_0_12px_rgba(239,68,68,0.4)] animate-pulse' : 'text-white/30 hover:bg-white/[0.05] hover:text-white/60'}
-              `}
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
+              style={{
+                background: isListening ? 'var(--error)' : 'transparent',
+                color: isListening ? 'var(--white)' : 'var(--text-muted)',
+                boxShadow: isListening ? '0 0 12px rgba(239,68,68,0.4)' : 'none',
+              }}
             >
               {isListening ? <StopIcon className="w-5 h-5" /> : <MicrophoneIcon className="w-5 h-5" />}
             </motion.button>
@@ -254,18 +283,23 @@ const QuickAddTask: React.FC<QuickAddProps> = ({ onItemAdded, defaultDate }) => 
                     setShowDayPicker(false);
                     triggerHaptic('light');
                   }}
-                  className={`
-                    flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[60px] rounded-2xl border transition-all duration-300
-                    ${selectedDay === day.index
-                      ? 'bg-gradient-to-b from-white/[0.08] to-white/[0.03] border-[var(--dynamic-accent-start)]/25 shadow-[0_0_12px_-4px_var(--dynamic-accent-glow)]'
-                      : 'bg-white/[0.03] border-white/[0.05] text-white/40 hover:bg-white/[0.06] hover:border-white/[0.1]'
-                    }
-                  `}
+                  className="flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[60px] rounded-2xl border transition-all duration-300"
+                  style={{
+                    background: selectedDay === day.index ? 'var(--color-accent-surface-cyan, rgba(0,122,255,0.08))' : 'var(--gray-50)',
+                    borderColor: selectedDay === day.index ? 'var(--dynamic-accent-start, var(--accent))' : 'var(--border-subtle)',
+                    boxShadow: selectedDay === day.index ? '0 0 12px -4px var(--dynamic-accent-glow, rgba(0,122,255,0.2))' : 'none',
+                  }}
                 >
-                  <span className={`text-[10px] font-bold uppercase mb-0.5 ${selectedDay === day.index ? 'text-[var(--dynamic-accent-start)]' : ''}`}>
+                  <span
+                    className="text-[10px] font-bold uppercase mb-0.5"
+                    style={{ color: selectedDay === day.index ? 'var(--dynamic-accent-start, #007AFF)' : 'var(--text-muted)' }}
+                  >
                     {day.label}
                   </span>
-                  <span className={`text-xl font-display font-bold ${selectedDay === day.index ? 'text-white' : ''}`}>
+                  <span
+                    className="text-xl font-display font-bold"
+                    style={{ color: selectedDay === day.index ? 'var(--text-primary)' : 'var(--text-secondary)' }}
+                  >
                     {day.dayNum}
                   </span>
                 </button>

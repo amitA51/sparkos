@@ -40,7 +40,7 @@ export const MeditationModal: React.FC<MeditationModalProps> = ({
     const [selectedSound, setSelectedSound] = useState<AmbientSound>('silence');
     const [showBreathing, setShowBreathing] = useState(false);
 
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const { triggerHaptic, hapticSuccess } = useHaptics();
     const { request: requestWakeLock, release: releaseWakeLock } = useWakeLock();
@@ -59,7 +59,7 @@ export const MeditationModal: React.FC<MeditationModalProps> = ({
     const playBell = useCallback(() => {
         // Using Web Audio API for a simple bell sound
         try {
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
 
@@ -75,7 +75,7 @@ export const MeditationModal: React.FC<MeditationModalProps> = ({
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 2);
         } catch (e) {
-            console.log('Audio not supported');
+            // Audio not supported in this environment
         }
     }, []);
 

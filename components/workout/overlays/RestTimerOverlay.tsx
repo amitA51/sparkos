@@ -124,7 +124,7 @@ const MiniTimer = memo<MiniTimerProps>(({
                     backdrop-blur-xl border
                     ${isLastFive
                         ? 'bg-[var(--cosmos-accent-primary)]/20 border-[var(--cosmos-accent-primary)]/40'
-                        : 'bg-[#1C1C1E]/95 border-white/10'
+                        : 'bg-[var(--bg-card)]/95 border-white/10'
                     }
                 `}
                 animate={isLastFive ? { boxShadow: LAST_FIVE_BOX_SHADOW } : EMPTY_ANIMATION}

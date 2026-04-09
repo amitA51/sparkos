@@ -19,17 +19,12 @@ export type Screen =
   | 'views'
   | 'login'
   | 'signup'
-  | 'logos';
+  | 'logos'
+  | 'insights';
 export type ItemType = (typeof ITEM_TYPES)[number];
 export type PersonalItemType = (typeof PERSONAL_ITEM_TYPES)[number];
 
 // Split View configuration
-export interface SplitViewConfig {
-  isActive: boolean;
-  left: Screen | 'dashboard';
-  right: Screen | 'feed';
-}
-
 // User type for authentication
 export interface User {
   uid: string;
@@ -56,47 +51,6 @@ export interface Space {
 }
 
 // Smart Folder - Virtual folder that auto-populates based on filter criteria
-export type SmartFolderFilterField =
-  | 'type'
-  | 'tags'
-  | 'spaceId'
-  | 'dueDate'
-  | 'priority'
-  | 'isCompleted'
-  | 'createdAt'
-  | 'isImportant'
-  | 'isPinned';
-
-export type SmartFolderFilterOperator =
-  | 'equals'
-  | 'notEquals'
-  | 'contains'
-  | 'before'
-  | 'after'
-  | 'isEmpty'
-  | 'isNotEmpty'
-  | 'within'; // For relative dates like "within 7 days"
-
-export interface SmartFolderFilter {
-  field: SmartFolderFilterField;
-  operator: SmartFolderFilterOperator;
-  value: string | boolean | string[] | number;
-}
-
-export interface SmartFolder {
-  id: string;
-  name: string;
-  nameHe?: string;
-  icon: string;
-  color: string;
-  filters: SmartFolderFilter[];
-  matchMode: 'all' | 'any'; // AND vs OR for multiple filters
-  createdAt: string;
-  updatedAt: string;
-  order: number;
-  isBuiltin?: boolean; // System-defined smart folders
-}
-
 export interface Attachment {
   id: string;
   name: string;
@@ -153,9 +107,9 @@ export interface ProgramExerciseExtras {
   notes?: string;
   alternatives?: string[];
   rpeTarget?: string;
-  warmupSets?: string;
   restTime?: string;
   intensityTechnique?: string;
+  warmupSets?: string | number;
 }
 
 export interface Exercise {
@@ -519,6 +473,11 @@ export type LearningMetadata = {
   source?: string; // URL, book title, course name, etc.
   key_takeaways?: string[];
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  // Spaced repetition review fields
+  reviewCount?: number;
+  lastReviewConfidence?: number;
+  nextReviewDate?: string;  // ISO date string
+  lastReviewedAt?: string;  // ISO date string
 };
 
 /**
@@ -612,7 +571,14 @@ export type HomeScreenComponentId =
   | 'quote'
   | 'quote_comfort_row'
   | 'focus_timer'
-  | 'meditation';
+  | 'meditation'
+  | 'weather'
+  | 'weekly_goals'
+  | 'streak_dashboard'
+  | 'quick_notes'
+  | 'upcoming_events'
+  | 'mini_timer'
+  | 'daily_quote';
 export type UiDensity = 'compact' | 'comfortable' | 'spacious';
 export type FeedViewMode = 'list' | 'visual';
 export type AnimationIntensity = 'off' | 'subtle' | 'default' | 'full';
@@ -1016,8 +982,6 @@ export interface UiSettings {
   hideQuickTemplates: boolean;
 }
 
-
-
 export interface WatchlistItem {
   id: string; // e.g., 'bitcoin' for crypto, 'TSLA' for stock
   name: string; // e.g., 'Bitcoin', 'Tesla Inc.'
@@ -1282,29 +1246,6 @@ export interface SearchFilters {
   status: 'all' | 'open' | 'completed' | 'important';
 }
 
-// --- Sync Types ---
-export interface SyncState {
-  status: 'idle' | 'syncing' | 'conflict' | 'error';
-  lastSyncTime?: string;
-  lastError?: string;
-  conflictCount: number;
-}
-
-export interface Conflict<T = unknown> {
-  type: 'item' | 'setting';
-  path: string;
-  local: T;
-  remote: T;
-  timestamp: string;
-}
-
-export interface Delta<T = unknown> {
-  added: string[];
-  modified: string[];
-  deleted: string[];
-  changes: Record<string, T>;
-}
-
 // --- Authentication Types ---
 
 export interface User {
@@ -1417,13 +1358,4 @@ export interface PageTemplate {
   content: TipTapDocument;
   isBuiltin: boolean;
   category: 'productivity' | 'planning' | 'journaling' | 'custom';
-}
-
-/** Block merge operation for conflict-free sync */
-export interface BlockMergeOperation {
-  type: 'insert' | 'update' | 'delete' | 'move';
-  blockId: string;
-  data?: Partial<TipTapNode>;
-  targetPosition?: number;
-  timestamp: number;
 }

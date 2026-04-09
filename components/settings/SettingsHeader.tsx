@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { SparklesIcon, ChevronRightIcon } from '../icons';
+import { ChevronRightIcon } from '../icons';
 import { useSettings } from '../../src/contexts/SettingsContext';
 import { useUser } from '../../src/contexts/UserContext';
 
@@ -89,8 +89,8 @@ const SettingsHeader: React.FC<SettingsHeaderProps> = ({
 
                     {/* Online indicator */}
                     <div className="absolute -bottom-0.5 -left-0.5 w-4 h-4 rounded-full 
-                          bg-emerald-500 border-2 border-[var(--bg-primary)]
-                          shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                          bg-success border-2 border-[var(--bg-primary)]
+                          shadow-success-glow" />
                 </motion.div>
 
                 {/* Title Section */}
@@ -119,16 +119,6 @@ const SettingsHeader: React.FC<SettingsHeaderProps> = ({
                     </motion.div>
                 </div>
 
-                {/* Quick Action Button */}
-                <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    className="p-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] 
-                     border border-white/[0.08] hover:border-white/[0.15]
-                     transition-all duration-200
-                     shadow-lg shadow-black/10"
-                >
-                    <SparklesIcon className="w-5 h-5 text-[var(--dynamic-accent-start)]" />
-                </motion.button>
             </div>
         </motion.header>
     );

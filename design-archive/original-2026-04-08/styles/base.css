@@ -1,0 +1,219 @@
+/**
+ * ===========================================================================
+ * SPARKOS DESIGN SYSTEM - BASE STYLES
+ * Reset, body defaults, scrollbar, selection, form controls, focus,
+ * reduced-motion, Android-specific optimizations.
+ * ===========================================================================
+ */
+
+/* =================================================================
+   FONT FACES
+   ================================================================= */
+
+/* Satoshi - Body Font */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Clash Display - Heading Font */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display/ClashDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display/ClashDisplay-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display/ClashDisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =================================================================
+   HTML & BODY DEFAULTS
+   ================================================================= */
+
+html {
+  font-size: 16px;
+  overscroll-behavior: none;
+}
+
+body {
+  background-image: var(--bg-image, none);
+  background-color: var(--bg-app, #F2F2F7);
+  background-attachment: fixed;
+  color: var(--text-primary, #000000);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: var(--line-height-normal);
+  font-size: calc(var(--font-size-base) * var(--font-scale, 1));
+  transition: background-color var(--duration-slow) var(--ease-out-expo),
+              background-image var(--duration-slow) var(--ease-out-expo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior: none;
+  overscroll-behavior-y: contain;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* =================================================================
+   TOUCH OPTIMIZATION
+   ================================================================= */
+
+button,
+a,
+input[type="button"],
+input[type="submit"],
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="link"],
+.touch-target {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* =================================================================
+   FORM CONTROLS
+   ================================================================= */
+
+input,
+select,
+textarea {
+  color-scheme: inherit;
+  color: var(--text-primary);
+}
+
+/* Autofill Override - theme-aware */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  box-shadow: inset 0 0 20px 20px transparent !important;
+  background-color: transparent !important;
+  caret-color: var(--text-primary) !important;
+}
+
+/* =================================================================
+   SELECTION
+   ================================================================= */
+
+::selection {
+  background: rgba(0, 122, 255, 0.18);
+  color: inherit;
+}
+
+/* =================================================================
+   FOCUS
+   ================================================================= */
+
+*:focus-visible {
+  outline: none;
+}
+
+/* =================================================================
+   SCROLLBAR - Theme-aware
+   ================================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-200, rgba(0, 0, 0, 0.08));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400, rgba(0, 0, 0, 0.18));
+}
+
+/* =================================================================
+   REDUCED MOTION - Critical for accessibility
+   ================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =================================================================
+   ANDROID VIEWPORT FIX
+   ================================================================= */
+
+@supports (min-height: 100dvh) {
+  .app-container,
+  body {
+    min-height: 100dvh;
+  }
+}
+
+/* Narrow Android screens (360px Galaxy S series, Pixel) */
+@media (max-width: 380px) {
+  :root {
+    --mobile-gutter: 0.5rem;
+    --font-size-3xl: 2rem;
+    --font-size-2xl: 1.75rem;
+  }
+}

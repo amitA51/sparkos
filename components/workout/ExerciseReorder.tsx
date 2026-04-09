@@ -137,7 +137,7 @@ const ExerciseReorder: React.FC<ExerciseReorderProps> = ({
                 dragElastic={{ top: 0, bottom: 0.5 }}
                 onDragEnd={handleDragEnd}
                 onClick={(e) => e.stopPropagation()}
-                className="fixed bottom-0 left-0 right-0 z-[9999] bg-[#1C1C1E] rounded-t-[32px] max-h-[85vh] overflow-hidden border-t border-white/10 shadow-[0_-10px_60px_rgba(0,0,0,0.5)]"
+                className="fixed bottom-0 left-0 right-0 z-[9999] bg-[var(--bg-secondary)] rounded-t-[32px] max-h-[85vh] overflow-hidden border-t border-white/10 shadow-[0_-10px_60px_rgba(0,0,0,0.5)]"
             >
                 {/* Drag Handle */}
                 <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
@@ -147,8 +147,8 @@ const ExerciseReorder: React.FC<ExerciseReorderProps> = ({
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 pb-4 border-b border-white/5">
                     <div>
-                        <h3 className="text-lg font-bold text-white">סדר תרגילים</h3>
-                        <p className="text-xs text-[#8E8E93] mt-0.5">גרור כדי לשנות סדר • הקש ˅ לעריכת סטים</p>
+                            <h3 className="text-lg font-bold text-white">סדר תרגילים</h3>
+                        <p className="text-xs text-[var(--gray-500)] mt-0.5">גרור כדי לשנות סדר • הקש ˅ לעריכת סטים</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
@@ -158,12 +158,12 @@ const ExerciseReorder: React.FC<ExerciseReorderProps> = ({
                         >
                             שמור
                         </button>
-                        <button
+                            <button
                             type="button"
                             onClick={handleClose}
-                            className="w-8 h-8 rounded-full bg-[#2C2C2E] flex items-center justify-center hover:bg-[#3A3A3C] transition-colors"
+                            className="w-8 h-8 rounded-full bg-[var(--bg-tertiary)] flex items-center justify-center hover:bg-[var(--gray-600)] transition-colors"
                         >
-                            <CloseIcon className="w-4 h-4 text-[#8E8E93]" />
+                            <CloseIcon className="w-4 h-4 text-[var(--gray-500)]" />
                         </button>
                     </div>
                 </div>
@@ -200,7 +200,7 @@ const ExerciseReorder: React.FC<ExerciseReorderProps> = ({
                     </Reorder.Group>
 
                     {items.length === 0 && (
-                        <div className="text-center text-[#8E8E93] py-12">
+                        <div className="text-center text-[var(--gray-500)] py-12">
                             <p className="text-lg">אין תרגילים</p>
                             <p className="text-sm mt-1">הוסף תרגילים באימון</p>
                         </div>
@@ -257,8 +257,8 @@ const ExerciseReorderItem: React.FC<ExerciseReorderItemProps> = memo(({
             dragListener={false}
             dragControls={dragControls}
             className={`relative rounded-2xl overflow-hidden shadow-sm ${isActive
-                ? 'bg-[#1C1C1E] ring-1 ring-[#a3e635]'
-                : 'bg-[#2C2C2E]'
+                ? 'bg-[var(--bg-secondary)] ring-1 ring-[#a3e635]'
+                : 'bg-[var(--bg-tertiary)]'
                 }`}
             whileDrag={{
                 scale: 1.02,
@@ -491,7 +491,7 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
             <motion.div
                 initial={{ scale: 0.98 }}
                 animate={{ scale: 1 }}
-                className="bg-[#2C2C2E] rounded-2xl p-4 space-y-4 shadow-sm"
+                className="bg-[var(--bg-tertiary)] rounded-2xl p-4 space-y-4 shadow-sm"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center gap-2 text-sm font-bold text-white/90">
@@ -501,12 +501,12 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
                 <div className="grid grid-cols-2 gap-4">
                     {/* Weight Input */}
                     <div className="space-y-2">
-                        <label className="text-xs text-[#8E8E93]">משקל (ק"ג)</label>
+                        <label className="text-xs text-[var(--gray-500)]">משקל (ק"ג)</label>
                         <div className="flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={(e) => handleWeightChange(e, -2.5)}
-                                className="w-10 h-10 rounded-xl bg-[#3A3A3C] text-white font-bold hover:bg-[#48484A] active:scale-95 transition-all"
+                                className="w-10 h-10 rounded-xl bg-[var(--gray-600)] text-white font-bold hover:bg-[var(--gray-500)] active:scale-95 transition-all"
                             >
                                 -
                             </button>
@@ -519,12 +519,12 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
                                     setTempWeight(Number(e.target.value) || 0);
                                 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="flex-1 h-10 bg-[#1C1C1E] rounded-xl text-center text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#0A84FF]"
+                                className="flex-1 h-10 bg-[var(--bg-secondary)] rounded-xl text-center text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[var(--accent)]"
                             />
                             <button
                                 type="button"
                                 onClick={(e) => handleWeightChange(e, 2.5)}
-                                className="w-10 h-10 rounded-xl bg-[#3A3A3C] text-white font-bold hover:bg-[#48484A] active:scale-95 transition-all"
+                                className="w-10 h-10 rounded-xl bg-[var(--gray-600)] text-white font-bold hover:bg-[var(--gray-500)] active:scale-95 transition-all"
                             >
                                 +
                             </button>
@@ -533,12 +533,12 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
 
                     {/* Reps Input */}
                     <div className="space-y-2">
-                        <label className="text-xs text-[#8E8E93]">חזרות</label>
+                        <label className="text-xs text-[var(--gray-500)]">חזרות</label>
                         <div className="flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={(e) => handleRepsChange(e, -1)}
-                                className="w-10 h-10 rounded-xl bg-[#3A3A3C] text-white font-bold hover:bg-[#48484A] active:scale-95 transition-all"
+                                className="w-10 h-10 rounded-xl bg-[var(--gray-600)] text-white font-bold hover:bg-[var(--gray-500)] active:scale-95 transition-all"
                             >
                                 -
                             </button>
@@ -551,12 +551,12 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
                                     setTempReps(Number(e.target.value) || 0);
                                 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="flex-1 h-10 bg-[#1C1C1E] rounded-xl text-center text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#0A84FF]"
+                                className="flex-1 h-10 bg-[var(--bg-secondary)] rounded-xl text-center text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[var(--accent)]"
                             />
                             <button
                                 type="button"
                                 onClick={(e) => handleRepsChange(e, 1)}
-                                className="w-10 h-10 rounded-xl bg-[#3A3A3C] text-white font-bold hover:bg-[#48484A] active:scale-95 transition-all"
+                                className="w-10 h-10 rounded-xl bg-[var(--gray-600)] text-white font-bold hover:bg-[var(--gray-500)] active:scale-95 transition-all"
                             >
                                 +
                             </button>
@@ -569,14 +569,14 @@ const SetEditRow: React.FC<SetEditRowProps> = memo(({
                     <button
                         type="button"
                         onClick={handleCancel}
-                        className="flex-1 py-3 rounded-xl bg-[#3A3A3C] text-white/80 font-semibold active:scale-98 transition-all"
+                        className="flex-1 py-3 rounded-xl bg-[var(--gray-600)] text-white/80 font-semibold active:scale-98 transition-all"
                     >
                         ביטול
                     </button>
                     <button
                         type="button"
                         onClick={handleSave}
-                        className="flex-1 py-3 rounded-xl bg-[#0A84FF] text-white font-bold active:scale-98 transition-all"
+                        className="flex-1 py-3 rounded-xl bg-[var(--accent)] text-white font-bold active:scale-98 transition-all"
                     >
                         שמור
                     </button>

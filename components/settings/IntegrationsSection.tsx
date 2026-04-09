@@ -3,9 +3,7 @@ import {
   CloudIcon,
   DownloadIcon,
   RefreshIcon,
-  BellIcon,
   CheckCircleIcon,
-  ClockIcon,
   LinkIcon,
   CheckIcon,
 } from '../../components/icons';
@@ -15,7 +13,6 @@ import { useUser } from '../../src/contexts/UserContext';
 import { signInWithGoogle, hasGoogleApiAccess, clearGoogleAccessToken } from '../../services/authService';
 import * as googleDriveService from '../../services/googleDriveService';
 import * as dataService from '../../services/dataService';
-import * as notifications from '../../services/notificationsService';
 import { StatusMessageType } from '../../components/StatusMessage';
 import {
   SettingsSection,
@@ -37,7 +34,6 @@ const IntegrationsSection: React.FC<IntegrationsSectionProps> = ({ setStatusMess
   const { isAuthenticated } = useUser();
   const [isSyncing, setIsSyncing] = useState(false);
   const [isGoogleConnecting, setIsGoogleConnecting] = useState(false);
-  const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
 
   // Google connection status based on Firebase Auth + API access
   const isGoogleConnected = isAuthenticated && hasGoogleApiAccess();
@@ -114,14 +110,8 @@ const IntegrationsSection: React.FC<IntegrationsSectionProps> = ({ setStatusMess
     }
   };
 
-  const handleNotificationToggle = async (enabled: boolean) => {
-    handleSettingChange('notificationsEnabled', enabled);
-    if (enabled && notificationPermission === 'default')
-      setNotificationPermission(await notifications.requestPermission());
-  };
-
   return (
-    <SettingsSection title="שילובים והתראות" id="integrations">
+    <SettingsSection title="סנכרון ונתונים" id="integrations">
       {/* Google Integration */}
       <SettingsGroupCard title="חשבון Google" icon={<CloudIcon className="w-5 h-5" />}>
         <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
@@ -238,92 +228,6 @@ const IntegrationsSection: React.FC<IntegrationsSectionProps> = ({ setStatusMess
             <p className="text-sm text-[var(--text-secondary)]">
               התחבר ל-Google כדי להשתמש בסנכרון ענן
             </p>
-          </div>
-        )}
-      </SettingsGroupCard>
-
-      {/* Notifications */}
-      <SettingsGroupCard title="התראות" icon={<BellIcon className="w-5 h-5" />}>
-        <SettingsRow
-          title="אפשר התראות"
-          description="קבל התראות ועדכונים מהאפליקציה."
-        >
-          <ToggleSwitch
-            checked={settings.notificationsEnabled ?? false}
-            onChange={handleNotificationToggle}
-          />
-        </SettingsRow>
-
-        {settings.notificationsEnabled && (
-          <div className="space-y-4 mt-4 pt-4 border-t border-white/[0.06]">
-            {/* Permission Status */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02]">
-              <span className="text-sm text-[var(--text-secondary)]">סטטוס הרשאה:</span>
-              <span
-                className={`
-                  text-xs font-bold px-3 py-1 rounded-full
-                  ${notificationPermission === 'granted'
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                  }
-                `}
-              >
-                {notificationPermission === 'granted' ? 'פעיל ✓' : 'נדרשת הרשאה'}
-              </span>
-            </div>
-
-            <SettingsRow title="תזכורות למשימות" description="קבל התראה לפני שעת היעד.">
-              <ToggleSwitch
-                checked={settings.taskRemindersEnabled ?? false}
-                onChange={val => handleSettingChange('taskRemindersEnabled', val)}
-              />
-            </SettingsRow>
-
-            {settings.taskRemindersEnabled && (
-              <SettingsRow
-                title="זמן לפני התראה"
-                description="כמה זמן לפני לקבל את התזכורת."
-                icon={<ClockIcon className="w-4 h-4" />}
-              >
-                <SegmentedControl
-                  value={settings.taskReminderTime ?? 15}
-                  onChange={val => handleSettingChange('taskReminderTime', parseInt(val, 10) as 5 | 15 | 30 | 60)}
-                  options={[
-                    { label: '5 דק׳', value: '5' },
-                    { label: '15 דק׳', value: '15' },
-                    { label: '30 דק׳', value: '30' },
-                    { label: 'שעה', value: '60' },
-                  ]}
-                />
-              </SettingsRow>
-            )}
-
-            <SettingsRow
-              title="תזכורות להרגלים"
-              description="קבל התראות על הרגלים שלא הושלמו."
-            >
-              <ToggleSwitch
-                checked={settings.enableHabitReminders ?? false}
-                onChange={val => handleSettingChange('enableHabitReminders', val)}
-              />
-            </SettingsRow>
-
-            {/* Test Notification Button */}
-            {notificationPermission === 'granted' && (
-              <button
-                onClick={async () => {
-                  const result = await notifications.showTestNotification();
-                  setStatusMessage({
-                    type: result.success ? 'success' : 'error',
-                    text: result.message,
-                    id: Date.now()
-                  });
-                }}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-[var(--dynamic-accent-start)] to-[var(--dynamic-accent-end)] text-white font-semibold hover:brightness-110 transition-all shadow-lg shadow-[var(--dynamic-accent-glow)]/20"
-              >
-                שלח התראת בדיקה 🔔
-              </button>
-            )}
           </div>
         )}
       </SettingsGroupCard>

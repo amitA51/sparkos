@@ -1,6 +1,7 @@
+// CLEANED - CSS vars fixed
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { PersonalItem, Space } from '../../types';
+import type { PersonalItem, Space, LearningMetadata } from '../../types';
 import {
     BookOpenIcon,
     PlusIcon,
@@ -151,10 +152,11 @@ const NotebookCard: React.FC<NotebookCardProps> = ({
                 }}
                 className="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium rounded-lg z-10"
                 style={{
-                    background: 'rgba(255,255,255,0.1)',
-                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'var(--gray-100)',
+                    border: '1px solid var(--border-subtle)',
+                    color: 'var(--text-secondary)',
                 }}
-                whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.15)' }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
                 צפייה מלאה
@@ -177,8 +179,8 @@ const SubjectCard: React.FC<SubjectCardProps> = ({ subject, items, dueCount, onO
             onClick={onOpen}
             className="relative p-4 rounded-2xl text-right w-full group"
             style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
             }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -314,7 +316,7 @@ const NotebookView: React.FC<NotebookViewProps> = ({
                     lastReviewConfidence: confidence,
                     nextReviewDate: nextReviewDate.toISOString(),
                     lastReviewedAt: new Date().toISOString(),
-                } as any, // TS cannot infer union overlap correctly here
+                } as LearningMetadata,
             });
 
             // Flip back after review

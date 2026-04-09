@@ -154,9 +154,9 @@ const PremiumSpaceCard: React.FC<PremiumSpaceCardProps> = ({
                 key={tag}
                 className="px-2 py-0.5 rounded-md text-[10px] font-medium truncate max-w-[80px]"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '0.5px solid rgba(255,255,255,0.06)',
-                  color: 'rgba(255,255,255,0.35)',
+                  background: 'var(--gray-50)',
+                  border: '0.5px solid var(--border-subtle)',
+                  color: 'var(--text-muted)',
                 }}
               >
                 {tag}
@@ -178,4 +178,5 @@ const PremiumSpaceCard: React.FC<PremiumSpaceCardProps> = ({
   );
 };
 
-export default PremiumSpaceCard;
+// PERF: Memoized list item - prevents re-render when sibling spaces change
+export default React.memo(PremiumSpaceCard);

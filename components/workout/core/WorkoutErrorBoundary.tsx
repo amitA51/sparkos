@@ -56,7 +56,7 @@ class WorkoutErrorBoundary extends Component<Props, State> {
             if (currentState) {
                 const backupKey = `workout_backup_${Date.now()}`;
                 localStorage.setItem(backupKey, currentState);
-                console.log('Workout state backed up to:', backupKey);
+                // Workout state backed up
             }
         } catch (e) {
             console.error('Failed to backup workout state:', e);
@@ -95,7 +95,7 @@ class WorkoutErrorBoundary extends Component<Props, State> {
     render(): ReactNode {
         if (this.state.hasError) {
             return (
-                <div className="fixed inset-0 bg-[#0A0A0A] flex flex-col items-center justify-center p-6 z-50">
+                <div className="fixed inset-0 bg-[var(--bg-base)] flex flex-col items-center justify-center p-6 z-50">
                     {/* Error Icon */}
                     <motion.div
                         initial={{ scale: 0, rotate: -180 }}
@@ -149,7 +149,7 @@ class WorkoutErrorBoundary extends Component<Props, State> {
                         <summary className="text-white/40 text-sm cursor-pointer hover:text-white/60 transition-colors">
                             פרטי השגיאה (למפתחים)
                         </summary>
-                        <div className="mt-2 p-3 bg-[#1C1C1E] rounded-xl border border-white/10 overflow-auto max-h-32">
+                        <div className="mt-2 p-3 bg-[var(--bg-secondary,#1C1C1E)] rounded-xl border border-white/10 overflow-auto max-h-32">
                             <code className="text-xs text-red-400 font-mono whitespace-pre-wrap">
                                 {this.state.error?.message || 'Unknown error'}
                             </code>
@@ -182,10 +182,10 @@ class WorkoutErrorBoundary extends Component<Props, State> {
                             onClick={this.handleReset}
                             className="
                                 w-full py-4 rounded-2xl
-                                bg-[#2C2C2E] text-white/80
+                                bg-[var(--bg-elevated)] text-white/80
                                 font-semibold text-base
                                 border border-white/10
-                                hover:bg-[#3A3A3C] active:scale-[0.98] transition-all
+                                hover:bg-[var(--bg-hover)] active:scale-[0.98] transition-all
                             "
                         >
                             אפס ונסה מחדש

@@ -117,6 +117,60 @@ self.addEventListener('fetch', (event) => {
 
 // --- PWA Features: Background Sync & Notifications ---
 
+// Background Sync: Replay queued mutations when connectivity is restored
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'spark-offline-queue') {
+    event.waitUntil(replayOfflineQueue());
+  }
+});
+
+/**
+ * Replay queued offline operations from IndexedDB.
+ * Reads from 'offlineQueue' store and attempts each operation.
+ */
+async function replayOfflineQueue() {
+  try {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('SparkOffline', 1);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('offlineQueue')) {
+          db.createObjectStore('offlineQueue', { keyPath: 'id', autoIncrement: true });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+
+    const tx = db.transaction('offlineQueue', 'readwrite');
+    const store = tx.objectStore('offlineQueue');
+    const items = await new Promise((resolve, reject) => {
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+
+    for (const item of items) {
+      try {
+        // Post the operation back to any open client for processing
+        const allClients = await clients.matchAll({ type: 'window' });
+        for (const client of allClients) {
+          client.postMessage({
+            type: 'REPLAY_OFFLINE_OPERATION',
+            operation: item,
+          });
+        }
+        // Remove from queue after successful relay
+        store.delete(item.id);
+      } catch (err) {
+        console.error('[SW] Failed to replay offline operation:', item.id, err);
+      }
+    }
+  } catch (error) {
+    console.error('[SW] Error replaying offline queue:', error);
+  }
+}
+
 // Periodic Sync: Triggers roughly every 12 hours to re-engage the user.
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'feed-sync') {

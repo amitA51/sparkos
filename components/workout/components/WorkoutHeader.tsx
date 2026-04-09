@@ -104,9 +104,9 @@ const DynamicIslandTimer = memo<DynamicIslandTimerProps>((props) => {
             >
                 {/* Status Indicator */}
                 <div className="relative flex items-center justify-center">
-                    {isPaused ? (
+                        {isPaused ? (
                         <motion.div
-                            className="w-3 h-3 rounded-sm bg-[#FFD60A]"
+                            className="w-3 h-3 rounded-sm bg-[var(--warning)]"
                             animate={{ opacity: [1, 0.5, 1] }}
                             transition={{ duration: 1, repeat: Infinity }}
                         />
@@ -145,7 +145,7 @@ const DynamicIslandTimer = memo<DynamicIslandTimerProps>((props) => {
                         layout
                         className={`
                             text-[9px] uppercase font-bold tracking-[0.2em] mb-1
-                            ${isPaused ? 'text-[#FFD60A]' : 'text-white/40'}
+                            ${isPaused ? 'text-[var(--warning)]' : 'text-white/40'}
                         `}
                     >
                         {isPaused ? 'PAUSED' : 'ACTIVE'}
@@ -157,7 +157,7 @@ const DynamicIslandTimer = memo<DynamicIslandTimerProps>((props) => {
                         className={`
                             font-mono font-bold tracking-tight
                             ${isExpanded ? 'text-2xl' : 'text-xl'}
-                            ${isPaused ? 'text-[#FFD60A]' : 'text-white'}
+                            ${isPaused ? 'text-[var(--warning)]' : 'text-white'}
                         `}
                         style={{
                             fontFamily: 'var(--cosmos-font)',
@@ -183,7 +183,7 @@ const DynamicIslandTimer = memo<DynamicIslandTimerProps>((props) => {
                     {[0.4, 0.7, 1, 0.6, 0.8].map((height, i) => (
                         <motion.div
                             key={i}
-                            className={`w-[3px] rounded-full ${isPaused ? 'bg-[#FFD60A]/50' : 'bg-[var(--cosmos-accent-primary)]'
+                            className={`w-[3px] rounded-full ${isPaused ? 'bg-[var(--warning)]/50' : 'bg-[var(--cosmos-accent-primary)]'
                                 }`}
                             animate={isPaused ? {} : {
                                 height: [`${height * 100}%`, `${(1 - height + 0.3) * 100}%`, `${height * 100}%`],
@@ -252,7 +252,6 @@ const ActionButton = memo<ActionButtonProps>(({
     };
 
     const handleClick = useCallback((e: React.MouseEvent) => {
-        console.log('[ActionButton] handleClick called, label:', label);
         e.stopPropagation();
         onClick();
     }, [onClick, label]);
@@ -302,14 +301,12 @@ const WorkoutHeader = memo<WorkoutHeaderProps>(({
 
     // Handle finish button tap - single tap, confirmation is in overlay
     const handleFinishTap = useCallback(() => {
-        console.log('[WorkoutHeader] handleFinishTap called');
         triggerHaptic('light');
         onFinish();
     }, [onFinish]);
 
     // Handle discard button tap - single tap, confirmation is in overlay
     const handleDiscardTap = useCallback(() => {
-        console.log('[WorkoutHeader] handleDiscardTap called');
         triggerHaptic('light');
         onDiscard();
     }, [onDiscard]);

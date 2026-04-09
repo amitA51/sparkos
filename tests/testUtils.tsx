@@ -623,22 +623,6 @@ export function getFormValues(form: HTMLFormElement): Record<string, string> {
 // Debug Helpers
 // ============================================================================
 
-/**
- * Log element tree for debugging
- */
-export function debugElement(element: HTMLElement, depth = 0): void {
-  const indent = '  '.repeat(depth);
-  const tag = element.tagName.toLowerCase();
-  const id = element.id ? `#${element.id}` : '';
-  const classes = element.className ? `.${element.className.split(' ').join('.')}` : '';
-  
-  console.log(`${indent}<${tag}${id}${classes}>`);
-  
-  Array.from(element.children).forEach(child => {
-    debugElement(child as HTMLElement, depth + 1);
-  });
-}
-
 // Re-export testing-library utilities
 export { screen, within, waitForElement };
 export type { RenderResult };

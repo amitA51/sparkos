@@ -102,7 +102,7 @@ const GratitudeTracker: React.FC<GratitudeTrackerProps> = ({ inputCount = 3, sho
         type: 'gratitude',
         title: `הכרת תודה - ${new Date().toLocaleDateString('he-IL')}`,
         content: savedInputs.join('\n'),
-      } as any);
+      } as Omit<PersonalItem, 'id' | 'createdAt' | 'updatedAt'>);
     } catch (error) {
       // 🎯 ROLLBACK: Restore inputs on failure
       setInputs(savedInputs);

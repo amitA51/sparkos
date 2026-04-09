@@ -158,7 +158,7 @@ const STORAGE_KEYS = {
 // ============================================================================
 
 const generateId = (): string => {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 };
 
 const getDateKey = (date: Date = new Date()): string => {
@@ -269,7 +269,8 @@ export const FocusProvider: React.FC<FocusProviderProps> = ({ children }) => {
   const [pomodorosCompleted, setPomodorosCompleted] = useState<number>(initialState.pomodorosCompleted);
 
   // Refs for timer
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // PERF: Use ReturnType<typeof setInterval> for cross-env compat instead of NodeJS.Timeout
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastTickRef = useRef<number>(Date.now());
 
   // ========================================================================
@@ -423,7 +424,6 @@ export const FocusProvider: React.FC<FocusProviderProps> = ({ children }) => {
 
     // Safety check: Ensure minimum duration of 1 minute
     if (duration < 60 * 1000) {
-      console.warn('Focus duration too short, defaulting to 25 minutes');
       duration = 25 * 60 * 1000;
     }
 
@@ -776,7 +776,14 @@ export const useFocusSession = (): FocusContextValue => {
 /**
  * Hook for timer display
  */
-export const useFocusTimer = () => {
+export const useFocusTimer = (): {
+  timeRemaining: number;
+  timeElapsed: number;
+  progress: number;
+  formattedRemaining: string;
+  formattedElapsed: string;
+  mode: FocusMode;
+} => {
   const sessionCtx = useContext(FocusContext);
   const timerCtx = useContext(FocusTimerContext);
 
@@ -797,7 +804,13 @@ export const useFocusTimer = () => {
 /**
  * Hook for focus statistics
  */
-export const useFocusStats = () => {
+export const useFocusStats = (): {
+  stats: FocusStats;
+  streak: FocusStreak;
+  dailyGoal: DailyGoal;
+  pomodorosCompleted: number;
+  dailyProgress: number;
+} => {
   const { stats, streak, dailyGoal, pomodorosCompleted } = useFocusSession();
   return {
     stats,

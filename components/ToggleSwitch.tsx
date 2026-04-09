@@ -104,10 +104,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           animate={{
             backgroundColor: checked
               ? 'var(--dynamic-accent-start)'
-              : 'rgba(255, 255, 255, 0.1)',
+              : 'var(--gray-200, rgba(120, 120, 128, 0.2))',
             boxShadow: checked
               ? '0 0 12px var(--dynamic-accent-glow), inset 0 1px 1px rgba(255,255,255,0.1)'
-              : 'inset 0 2px 4px rgba(0,0,0,0.4)',
+              : 'inset 0 1px 3px rgba(0,0,0,0.15)',
           }}
           transition={{ duration: 0.2 }}
         />
@@ -144,7 +144,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       {label && (
         <span className={`
           text-sm font-medium transition-colors duration-200
-          ${checked ? 'text-white' : 'text-[var(--text-secondary)]'}
+          ${checked ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}
         `}>
           {label}
         </span>

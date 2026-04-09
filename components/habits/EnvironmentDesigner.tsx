@@ -36,7 +36,7 @@ const EnvironmentDesigner: React.FC<EnvironmentDesignerProps> = ({ value, onChan
         if (!newCue.trim()) return;
 
         const cue: EnvironmentCue = {
-            id: `cue-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `cue-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
             type: selectedType,
             description: newCue.trim(),
             location: '',

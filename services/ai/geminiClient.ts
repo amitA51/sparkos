@@ -12,20 +12,12 @@ import { GoogleGenAI } from '@google/genai';
 // SECURITY: Use Vite's import.meta.env for client-side environment variables
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-// DEBUG: Log API key status at startup (only in development)
-if (import.meta.env.DEV) {
-    console.log('[GeminiService] API Key loaded:', API_KEY ? `${API_KEY.substring(0, 10)}...` : 'NOT SET');
-    console.log('[GeminiService] All env vars:', Object.keys(import.meta.env).filter(k => k.startsWith('VITE_')));
-}
-
 // Singleton AI client instance
 export let ai: GoogleGenAI | null = null;
 
 if (API_KEY) {
     ai = new GoogleGenAI({ apiKey: API_KEY });
-    if (import.meta.env.DEV) {
-        console.log('[GeminiService] GoogleGenAI initialized successfully');
-    }
+    // GoogleGenAI initialized successfully
 } else {
     console.warn(
         'VITE_GEMINI_API_KEY is not set. AI features will be disabled. ' +

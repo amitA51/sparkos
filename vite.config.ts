@@ -70,10 +70,22 @@ export default defineConfig(({ mode }) => {
               purpose: 'any',
             },
             {
+              src: 'images/spark192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
+            {
               src: 'images/spark512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
+            },
+            {
+              src: 'images/spark512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
             },
           ],
           shortcuts: [
@@ -108,9 +120,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
         devOptions: {
-          enabled: false, // Disabled to fix Fast Refresh and dev-sw.js MIME type issues
-          // type: 'classic',
-          // navigateFallback: 'index.html',
+          enabled: false,
         },
       }),
       // Bundle analyzer - run with ANALYZE=true npm run build to generate stats.html
@@ -144,7 +154,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       // Performance optimizations
-      target: 'es2020',
+      target: ['es2020', 'chrome89', 'safari15'],
       minify: 'esbuild', // ✅ PERF: Re-enabled minification with esbuild (fast & safe)
       sourcemap: true, // Keep for debugging, can disable in CI if needed
 
@@ -263,8 +273,7 @@ export default defineConfig(({ mode }) => {
             }
             if (
               id.includes('/components/calendar/') ||
-              id.includes('CalendarView') ||
-              id.includes('FullCalendarView')
+              id.includes('CalendarView')
             ) {
               return 'feature-calendar';
             }
@@ -282,6 +291,12 @@ export default defineConfig(({ mode }) => {
 
       // Reduce chunk size warnings threshold
       chunkSizeWarningLimit: 1000,
+
+      // PERF: Skip compressed size reporting during build -- saves 30-50% build time
+      reportCompressedSize: false,
+
+      // PERF: Enable CSS code splitting so each lazy chunk gets its own CSS
+      cssCodeSplit: true,
 
       // ✅ PERF: Drop console.logs in production for smaller bundle and better performance
       ...(isProd && {
@@ -304,9 +319,7 @@ export default defineConfig(({ mode }) => {
         'clsx',
         'tailwind-merge',
       ],
-      exclude: [
-        // Large dependencies that should be loaded on demand
-      ],
+      exclude: [],
       // ✅ PERF: Force pre-bundling to avoid runtime discovery
       force: false,
     },

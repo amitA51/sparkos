@@ -4,6 +4,14 @@ import { motion, Variants, Transition } from 'framer-motion';
 export type TransitionDirection = 'left' | 'right' | 'up' | 'down' | 'fade' | 'scale' | 'slide-up';
 export type TransitionStyle = 'spring' | 'smooth' | 'snappy' | 'elastic';
 
+/**
+ * Detect if we're on a mobile device where blur transitions are expensive.
+ * On Android, filter:blur() triggers software rasterization which kills frame rate.
+ * We skip blur entirely on mobile and use transform+opacity only (GPU-composited).
+ */
+const isMobileDevice = typeof window !== 'undefined' &&
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 interface PageTransitionProps {
   children: React.ReactNode;
   className?: string;
@@ -43,156 +51,86 @@ const transitionStyles: Record<TransitionStyle, Transition> = {
   },
 };
 
+// Helper type for variant objects (framer-motion compatible)
+type VariantTarget = {
+  opacity?: number;
+  x?: number;
+  y?: number;
+  scale?: number;
+  filter?: string;
+  rotateX?: number;
+};
+
 // Direction-based variants
+// On mobile: skip filter:blur (causes software rasterization on Android, kills FPS)
+// Only use transform + opacity (GPU-composited, 60fps)
 const getVariants = (direction: TransitionDirection): Variants => {
-  const baseBlur = 'blur(8px)';
-  const clearBlur = 'blur(0px)';
-  
+  // Mobile uses smaller displacement values for snappier feel
+  const d = isMobileDevice ? 0.6 : 1;
+
+  const withBlur = (target: VariantTarget, blur: string): VariantTarget => {
+    if (isMobileDevice) return target;
+    return { ...target, filter: blur };
+  };
+
+  const enter = (target: VariantTarget) => withBlur(target, 'blur(8px)');
+  const done = (target: VariantTarget) => withBlur(target, 'blur(0px)');
+
   switch (direction) {
     case 'left':
       return {
-        initial: {
-          opacity: 0,
-          x: 100,
-          scale: 0.95,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          x: -100,
-          scale: 0.95,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, x: 100 * d, scale: 0.95 }),
+        in: done({ opacity: 1, x: 0, scale: 1 }),
+        out: enter({ opacity: 0, x: -100 * d, scale: 0.95 }),
       };
     case 'right':
       return {
-        initial: {
-          opacity: 0,
-          x: -100,
-          scale: 0.95,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          x: 100,
-          scale: 0.95,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, x: -100 * d, scale: 0.95 }),
+        in: done({ opacity: 1, x: 0, scale: 1 }),
+        out: enter({ opacity: 0, x: 100 * d, scale: 0.95 }),
       };
     case 'up':
       return {
-        initial: {
-          opacity: 0,
-          y: 60,
-          scale: 0.97,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          y: -40,
-          scale: 0.97,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, y: 60 * d, scale: 0.97 }),
+        in: done({ opacity: 1, y: 0, scale: 1 }),
+        out: enter({ opacity: 0, y: -40 * d, scale: 0.97 }),
       };
     case 'down':
       return {
-        initial: {
-          opacity: 0,
-          y: -60,
-          scale: 0.97,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          y: 40,
-          scale: 0.97,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, y: -60 * d, scale: 0.97 }),
+        in: done({ opacity: 1, y: 0, scale: 1 }),
+        out: enter({ opacity: 0, y: 40 * d, scale: 0.97 }),
       };
     case 'fade':
       return {
-        initial: {
-          opacity: 0,
-          scale: 1,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          scale: 1,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, scale: 1 }),
+        in: done({ opacity: 1, scale: 1 }),
+        out: enter({ opacity: 0, scale: 1 }),
       };
     case 'scale':
       return {
-        initial: {
+        initial: enter({
           opacity: 0,
           scale: 0.85,
-          filter: baseBlur,
-          rotateX: 10,
-        },
-        in: {
+          ...(isMobileDevice ? {} : { rotateX: 10 }),
+        }),
+        in: done({
           opacity: 1,
           scale: 1,
-          filter: clearBlur,
-          rotateX: 0,
-        },
-        out: {
+          ...(isMobileDevice ? {} : { rotateX: 0 }),
+        }),
+        out: enter({
           opacity: 0,
           scale: 1.1,
-          filter: baseBlur,
-          rotateX: -5,
-        },
+          ...(isMobileDevice ? {} : { rotateX: -5 }),
+        }),
       };
     case 'slide-up':
     default:
       return {
-        initial: {
-          opacity: 0,
-          y: 30,
-          scale: 0.98,
-          filter: baseBlur,
-        },
-        in: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: clearBlur,
-        },
-        out: {
-          opacity: 0,
-          y: -20,
-          scale: 0.98,
-          filter: baseBlur,
-        },
+        initial: enter({ opacity: 0, y: 30 * d, scale: 0.98 }),
+        in: done({ opacity: 1, y: 0, scale: 1 }),
+        out: enter({ opacity: 0, y: -20 * d, scale: 0.98 }),
       };
   }
 };
@@ -310,19 +248,19 @@ export const FadeScaleTransition: React.FC<PageTransitionProps & {
       opacity: 0,
       scale: 0.92,
       y: originY,
-      filter: 'blur(10px)',
+      ...(isMobileDevice ? {} : { filter: 'blur(10px)' }),
     },
     in: {
       opacity: 1,
       scale: 1,
       y: 0,
-      filter: 'blur(0px)',
+      ...(isMobileDevice ? {} : { filter: 'blur(0px)' }),
     },
     out: {
       opacity: 0,
       scale: 0.95,
       y: -originY / 2,
-      filter: 'blur(5px)',
+      ...(isMobileDevice ? {} : { filter: 'blur(5px)' }),
     },
   };
 
